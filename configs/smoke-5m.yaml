@@ -1,0 +1,49 @@
+seed: 1337
+
+model:
+  vocab_size: 4096
+  hidden_size: 256
+  num_layers: 6
+  num_attention_heads: 8
+  num_key_value_heads: 2
+  intermediate_size: 736
+  max_seq_len: 1024
+  activation: swiglu
+  normalization: rmsnorm
+  positional_encoding: rope
+  tie_word_embeddings: true
+  attention_bias: false
+  mlp_bias: false
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  min_frequency: 2
+  path: data/tokenizer/tokenizer.json
+
+training:
+  optimizer: adamw
+  batch_size: 16
+  gradient_accumulation_steps: 4
+  epochs: 15
+  max_steps: 420
+  learning_rate: 1.0e-3
+  min_learning_rate: 1.0e-4
+  warmup_steps: 21
+  weight_decay: 0.1
+  grad_clip: 1.0
+  eval_interval: 28
+  eval_steps: 20
+  checkpoint_interval: 56
+  precision: bf16
+
+data:
+  corpus_path: data/corpus/stories.jsonl
+  split_path: data/corpus/stories.splits.json
+  packed_metadata_path: data/packed/metadata.json
+  train_path: data/packed/train.bin
+  validation_path: data/packed/validation.bin
+  test_path: data/packed/test.bin
+
+logging:
+  tensorboard_dir: runs/smoke-5m
