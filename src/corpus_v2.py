@@ -19,7 +19,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 import yaml
 from tokenizers import Tokenizer
@@ -44,6 +44,7 @@ from src.train_tokenizer import load_corpus, sha256_file, write_json_atomic
 
 
 PREPROCESSING_VERSION = 2
+CHECKPOINT_VERSION = 1
 MIN_STORY_WORDS = 500
 MAX_STORY_WORDS = 20_000
 ALLOWED_RIGHTS = {"public_domain", "public_domain_us"}
@@ -76,10 +77,104 @@ class SourceArtifact:
     byte_count: int
     retrieval_method: str
     retrieved_at: str
+    etag: str | None = None
+    last_modified: str | None = None
 
 
 def utc_timestamp() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def canonical_jsonl_sha256(records: Iterable[dict[str, Any]]) -> str:
+    digest = hashlib.sha256()
+    for record in records:
+        digest.update((json.dumps(record, ensure_ascii=False) + "\n").encode("utf-8"))
+    return digest.hexdigest()
+
+
+def processing_fingerprint(
+    *,
+    selection: dict[str, Any],
+    tokenizer_sha256: str,
+    review_sha256: str,
+    builder_sha256: str,
+    collection: dict[str, str] | None = None,
+) -> str:
+    """Identify every deterministic input to a source processing shard."""
+    payload = {
+        "checkpoint_version": CHECKPOINT_VERSION,
+        "preprocessing_version": PREPROCESSING_VERSION,
+        "selection": selection,
+        "tokenizer_sha256": tokenizer_sha256,
+        "review_sha256": review_sha256,
+        "builder_sha256": builder_sha256,
+        "collection": collection,
+    }
+    serialized = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def load_source_ledger(path: Path) -> dict[str, dict[str, Any]]:
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("version") != CHECKPOINT_VERSION or not isinstance(payload.get("sources"), dict):
+        raise ValueError(f"Invalid Corpus-v2 source ledger: {path}")
+    return payload["sources"]
+
+
+def save_source_ledger(path: Path, sources: dict[str, dict[str, Any]]) -> None:
+    write_json_atomic(path, {"version": CHECKPOINT_VERSION, "sources": sources})
+
+
+def save_source_shard(path: Path, shard: dict[str, Any]) -> None:
+    write_json_atomic(path, shard)
+
+
+def load_valid_source_shard(
+    entry: dict[str, Any],
+    shard_path: Path,
+    *,
+    source_id: str,
+    url: str,
+    fingerprint: str,
+) -> tuple[dict[str, Any], SourceArtifact] | None:
+    """Load a completed source only after verifying its cached bytes and identity."""
+    if (
+        entry.get("source_id") != source_id
+        or entry.get("url") != url
+        or entry.get("processing_status") not in {"processed", "completed"}
+        or entry.get("processing_fingerprint") != fingerprint
+        or not shard_path.exists()
+    ):
+        return None
+    artifact_payload = entry.get("artifact")
+    if not isinstance(artifact_payload, dict):
+        return None
+    raw_path = Path(str(artifact_payload.get("path", "")))
+    expected_sha = entry.get("raw_sha256")
+    expected_shard_sha = entry.get("shard_sha256")
+    if (
+        not raw_path.is_file()
+        or not isinstance(expected_sha, str)
+        or artifact_payload.get("sha256") != expected_sha
+        or not isinstance(expected_shard_sha, str)
+        or sha256_file(shard_path) != expected_shard_sha
+    ):
+        return None
+    raw_bytes = raw_path.read_bytes()
+    if hashlib.sha256(raw_bytes).hexdigest() != expected_sha:
+        return None
+    shard = json.loads(shard_path.read_text(encoding="utf-8"))
+    if (
+        shard.get("version") != CHECKPOINT_VERSION
+        or shard.get("source_id") != source_id
+        or shard.get("url") != url
+        or shard.get("raw_sha256") != expected_sha
+        or shard.get("processing_fingerprint") != fingerprint
+    ):
+        return None
+    return shard, SourceArtifact(**artifact_payload)
 
 
 def file_timestamp(path: Path) -> str:
@@ -458,9 +553,16 @@ def source_concentration_metrics(
             result["top_10_token_share"] = sum(
                 count for _, count in ordered_tokens[:10]
             ) / total_tokens
+            result["top_20_token_share"] = sum(
+                count for _, count in ordered_tokens[:20]
+            ) / total_tokens
             result["top_10_by_tokens"] = [
                 {"value": value, "tokens": count, "token_share": count / total_tokens}
                 for value, count in ordered_tokens[:10]
+            ]
+            result["top_20_by_tokens"] = [
+                {"value": value, "tokens": count, "token_share": count / total_tokens}
+                for value, count in ordered_tokens[:20]
             ]
         return result
 
@@ -542,12 +644,16 @@ def acquire(
         method = "existing_cache"
         timestamp = file_timestamp(existing)
         path = existing
+        etag = None
+        last_modified = None
     else:
         path = write_dir / relative_path
         path.parent.mkdir(parents=True, exist_ok=True)
         request = urllib.request.Request(url, headers={"User-Agent": "FictionPulper/2.0"})
         with urllib.request.urlopen(request, timeout=timeout) as response:
             data = response.read()
+            etag = response.headers.get("ETag")
+            last_modified = response.headers.get("Last-Modified")
         temporary = path.with_suffix(path.suffix + ".tmp")
         temporary.write_bytes(data)
         temporary.replace(path)
@@ -561,6 +667,8 @@ def acquire(
         byte_count=len(data),
         retrieval_method=method,
         retrieved_at=timestamp,
+        etag=etag,
+        last_modified=last_modified,
     )
     return data.decode("utf-8-sig", errors="replace"), artifact
 
@@ -577,6 +685,233 @@ def _git_worktree_dirty() -> bool | None:
         ["git", "status", "--porcelain"], capture_output=True, text=True, check=False
     )
     return bool(result.stdout.strip()) if result.returncode == 0 else None
+
+
+def process_source_to_shard(
+    collection: dict[str, str],
+    raw_text: str,
+    artifact: SourceArtifact,
+    tokenizer: Tokenizer,
+    selection: dict[str, Any],
+    fingerprint: str,
+) -> dict[str, Any]:
+    """Extract and locally validate one source without corpus-global decisions."""
+    book_id = collection["Text#"]
+    source_id = f"pg-{book_id}"
+    cleaned = clean_gutenberg_text(raw_text)
+    extractions, evidence = extract_collection_v2(
+        cleaned,
+        minimum_matches=int(selection["minimum_toc_matches"]),
+        high_match_ratio=float(selection["high_confidence_match_ratio"]),
+    )
+    diagnostic = {
+        "source_id": source_id,
+        "source_title": collection["Title"],
+        "source_url": artifact.url,
+        "beginning_snippet": cleaned[:1200],
+        "ending_snippet": cleaned[-1200:],
+        "candidate_story_snippets": [
+            {
+                "title": item.title,
+                "opening": item.text[:500],
+                "ending": item.text[-500:],
+                "start_line": item.start_line,
+                "end_line": item.end_line,
+            }
+            for item in extractions[:10]
+        ],
+        **evidence,
+    }
+    source_summary: dict[str, Any] = {
+        "source_id": source_id,
+        "source_title": collection["Title"],
+        "source_url": artifact.url,
+        "raw_sha256": artifact.sha256,
+        "extraction_confidence": evidence.get("confidence"),
+        "toc_title_count": evidence.get("toc_title_count", 0),
+        "matched_heading_count": evidence.get("matched_heading_count", 0),
+        "extracted_candidates": len(extractions),
+        "accepted_stories": 0,
+        "accepted_tokens": 0,
+        "rejection_counts": {},
+    }
+    shard: dict[str, Any] = {
+        "version": CHECKPOINT_VERSION,
+        "source_id": source_id,
+        "url": artifact.url,
+        "raw_sha256": artifact.sha256,
+        "processing_fingerprint": fingerprint,
+        "collection": collection,
+        "evidence": evidence,
+        "diagnostic": diagnostic,
+        "source_summary": source_summary,
+        "events": [],
+    }
+    confidence = evidence.get("confidence")
+    if confidence in {"low", "medium"}:
+        reason = (
+            "low_confidence_collection" if confidence == "low" else "medium_confidence_collection"
+        )
+        source_summary["status"] = (
+            "low_confidence_rejected" if confidence == "low" else "medium_confidence_review"
+        )
+        source_summary["rejection_counts"] = {reason: 1}
+        return shard
+
+    source_summary["status"] = "processed_high_confidence"
+    lines = cleaned.splitlines()
+    for extraction in extractions:
+        sample = review_sample(extraction, collection, lines)
+        event: dict[str, Any] = {"review_sample": sample}
+        reason = classify_story_rejection(
+            extraction,
+            minimum_words=int(selection["minimum_story_words"]),
+            maximum_words=int(selection["maximum_story_words"]),
+        )
+        if reason is None and normalize_heading(extraction.title) == normalize_heading(
+            collection["Title"]
+        ):
+            reason = "source_title_match_possible_whole_book"
+        chapter_count = chapter_heading_count(extraction.text)
+        if chapter_count or is_structural_title(extraction.title):
+            finding = {
+                "source_id": source_id,
+                "title": extraction.title,
+                "chapter_heading_count": chapter_count,
+                "decision": reason or "accepted",
+            }
+            event["chapter_audit"] = finding
+        if normalize_heading(extraction.title) == normalize_heading(collection["Title"]):
+            finding = {
+                "source_id": source_id,
+                "source_title": collection["Title"],
+                "story_title": extraction.title,
+                "decision": reason or "accepted",
+            }
+            event["source_title_audit"] = finding
+        if reason:
+            rejected = {
+                "source_id": source_id,
+                "title": extraction.title,
+                "words": len(extraction.text.split()),
+                "reason": reason,
+                "opening_snippet": extraction.text[:500],
+            }
+            event["rejection"] = rejected
+            shard["events"].append(event)
+            continue
+        record = make_story_record(extraction, collection, artifact, evidence)
+        record["tokenizer_v1_tokens"] = exact_document_tokens(tokenizer, record)
+        event["candidate_record"] = record
+        shard["events"].append(event)
+    return shard
+
+
+REQUIRED_CONTENT_AUDITS = {
+    "schema",
+    "rights",
+    "exact_deduplication",
+    "near_duplicate_review",
+    "chapter_contamination",
+    "source_title_contamination",
+    "quality",
+    "author_concentration",
+    "source_concentration",
+    "source_collection_concentration",
+    "genre_distribution",
+    "story_length",
+    "token_length",
+    "canonical_content",
+}
+
+
+def failed_required_audits(audits: dict[str, Any]) -> list[str]:
+    failures = []
+    for name in sorted(REQUIRED_CONTENT_AUDITS):
+        audit = audits.get(name)
+        if not isinstance(audit, dict) or audit.get("passed") is not True:
+            failures.append(name)
+    return failures
+
+
+def replay_source_shard(
+    shard: dict[str, Any],
+    *,
+    accepted: list[dict[str, Any]],
+    additions: list[dict[str, Any]],
+    token_counts: list[int],
+    exact_hashes: dict[str, dict[str, Any]],
+    exact_report: list[dict[str, Any]],
+    review_universe: list[dict[str, Any]],
+    reviewed_records: dict[str, dict[str, Any]],
+    reviewed_exclusions: set[str],
+    review_samples: list[dict[str, Any]],
+    medium_queue: list[dict[str, Any]],
+    low_queue: list[dict[str, Any]],
+    rejections: list[dict[str, Any]],
+    chapter_audit: list[dict[str, Any]],
+    source_title_audit: list[dict[str, Any]],
+    counters: Counter[str],
+    target_tokens: int,
+    on_accept: Callable[[int], None] | None = None,
+) -> tuple[dict[str, Any], int]:
+    """Replay deterministic local evidence and apply corpus-global decisions in order."""
+    summary = dict(shard["source_summary"])
+    summary_counts: Counter[str] = Counter(summary.get("rejection_counts", {}))
+    confidence = shard["evidence"].get("confidence")
+    total_tokens = sum(token_counts)
+    if confidence == "low":
+        low_queue.append(shard["diagnostic"])
+        counters["low_confidence_collection"] += 1
+    elif confidence == "medium":
+        medium_queue.append(shard["diagnostic"])
+        counters["medium_confidence_collection"] += 1
+    else:
+        events = shard.get("events")
+        if not events:
+            events = [{"candidate_record": record} for record in shard["candidate_records"]]
+        for event in events:
+            sample = event.get("review_sample")
+            if sample is not None and len(review_samples) < 500:
+                review_samples.append(sample)
+            if event.get("chapter_audit") is not None:
+                chapter_audit.append(event["chapter_audit"])
+            if event.get("source_title_audit") is not None:
+                source_title_audit.append(event["source_title_audit"])
+            rejection = event.get("rejection")
+            if rejection is not None:
+                rejections.append(rejection)
+                counters[rejection["reason"]] += 1
+                summary_counts[rejection["reason"]] += 1
+                continue
+            record = event["candidate_record"]
+            if record["id"] in reviewed_exclusions:
+                # A locked base exclusion may reappear with the same stable ID when
+                # its Gutenberg source is replayed. Preserve the original provenance
+                # and keep each review identity unique.
+                if record["id"] not in reviewed_records:
+                    review_universe.append(record)
+                    reviewed_records[record["id"]] = record
+                counters["reviewed_near_duplicate"] += 1
+                summary_counts["reviewed_near_duplicate"] += 1
+                continue
+            if not add_if_not_exact_duplicate(record, accepted, exact_hashes, exact_report):
+                counters["exact_duplicate"] += 1
+                summary_counts["exact_duplicate"] += 1
+                continue
+            additions.append(record)
+            review_universe.append(record)
+            count = record["tokenizer_v1_tokens"]
+            token_counts.append(count)
+            total_tokens += count
+            summary["accepted_stories"] += 1
+            summary["accepted_tokens"] += count
+            if on_accept is not None:
+                on_accept(total_tokens)
+            if target_reached(total_tokens, target_tokens):
+                break
+    summary["rejection_counts"] = dict(sorted(summary_counts.items()))
+    return summary, sum(token_counts)
 
 
 def corpus_audits(
@@ -633,6 +968,39 @@ def corpus_audits(
             float(limits["maximum_author_token_share"]),
         ),
     }
+    author_checks = {
+        name: value for name, value in concentration_checks.items() if name.startswith("author_")
+    }
+    collection_checks = {
+        name: value
+        for name, value in concentration_checks.items()
+        if name.startswith("source_collection_")
+    }
+    new_records = [record for record in records if not record["provenance"].get("base_record")]
+    invalid_genres = sorted(
+        {
+            genre
+            for record in records
+            for genre in record["broad_genres"]
+            if genre not in GENRE_TERMS
+        }
+    )
+    new_story_length_findings = [
+        record["id"]
+        for record in new_records
+        if not int(selection["minimum_story_words"])
+        <= record["words"]
+        <= int(selection["maximum_story_words"])
+    ]
+    immutable_story_length_findings = [
+        record["id"]
+        for record in records
+        if record["provenance"].get("base_record")
+        and not int(selection["minimum_story_words"])
+        <= record["words"]
+        <= int(selection["maximum_story_words"])
+    ]
+    stats = corpus_statistics(records, token_counts)
     return {
         "schema": {"passed": True, "records_checked": len(records)},
         "base_id_preservation": {"passed": True, "ids_checked": len(expected_base_ids)},
@@ -669,8 +1037,102 @@ def corpus_audits(
             },
             "metrics": concentration,
         },
-        "lengths": corpus_statistics(records, token_counts),
+        "author_concentration": {
+            "passed": all(actual <= limit for actual, limit in author_checks.values()),
+            "checks": {
+                name: {"actual": actual, "maximum": limit, "passed": actual <= limit}
+                for name, (actual, limit) in author_checks.items()
+            },
+            "unique_authors": concentration["author"]["unique_count"],
+            "largest_token_share": concentration["author"]["largest_token_share"],
+            "top_10_token_share": concentration["author"]["top_10_token_share"],
+            "top_20_token_share": concentration["author"]["top_20_token_share"],
+        },
+        "source_concentration": {
+            "passed": (
+                concentration["source"]["unique_count"] > 0
+                and 0.0 < concentration["source"]["largest_token_share"] <= 1.0
+            ),
+            "unique_sources": concentration["source"]["unique_count"],
+            "largest_token_share": concentration["source"]["largest_token_share"],
+            "top_10_token_share": concentration["source"]["top_10_token_share"],
+            "note": "Reported as an integrity/concentration audit; no source-platform cap is configured.",
+        },
+        "source_collection_concentration": {
+            "passed": all(actual <= limit for actual, limit in collection_checks.values()),
+            "checks": {
+                name: {"actual": actual, "maximum": limit, "passed": actual <= limit}
+                for name, (actual, limit) in collection_checks.items()
+            },
+            "unique_source_collections": concentration["source_collection"]["unique_count"],
+            "largest_token_share": concentration["source_collection"]["largest_token_share"],
+        },
+        "genre_distribution": {
+            "passed": not invalid_genres,
+            "invalid_genres": invalid_genres,
+            "story_counts": concentration["genre"]["story_counts"],
+            "token_counts": concentration["genre"]["token_counts"],
+        },
+        "story_length": {
+            "passed": not new_story_length_findings,
+            "accepted_new_record_findings": new_story_length_findings,
+            "immutable_base_findings": immutable_story_length_findings,
+            "statistics": stats["story_words"],
+        },
+        "token_length": {
+            "passed": len(token_counts) == len(records) and all(count > 0 for count in token_counts),
+            "records_checked": len(token_counts),
+            "statistics": stats["story_tokens"],
+        },
+        "canonical_content": {
+            "passed": True,
+            "sha256": canonical_jsonl_sha256(records),
+            "record_ids_sha256": hashlib.sha256(
+                "\n".join(record["id"] for record in records).encode("utf-8")
+            ).hexdigest(),
+        },
+        "lengths": stats,
     }
+
+
+def near_duplicate_audit(
+    review_universe: list[dict[str, Any]],
+    accepted: list[dict[str, Any]],
+    dedup: dict[str, Any],
+    reviewed_exclusions: set[str],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    edges, clusters = near_duplicate_graph(
+        review_universe,
+        max_hamming=int(dedup["simhash_max_hamming"]),
+        minimum_jaccard=float(dedup["minimum_jaccard"]),
+        minimum_length_ratio=float(dedup["minimum_length_ratio"]),
+    )
+    accepted_ids = {record["id"] for record in accepted}
+    unresolved_clusters = [
+        cluster
+        for cluster in clusters
+        if sum(record_id in accepted_ids for record_id in cluster["record_ids"]) > 1
+    ]
+    unresolved_cluster_ids = {cluster["cluster_id"] for cluster in unresolved_clusters}
+    unresolved_edges = [
+        edge for edge in edges if edge["cluster_id"] in unresolved_cluster_ids
+    ]
+    audit = {
+        "passed": not unresolved_clusters,
+        "status": "clear" if not unresolved_clusters else "human_review_required_before_freeze",
+        "candidate_edges": len(edges),
+        "candidate_clusters": len(clusters),
+        "reviewed_exclusions_applied": len(reviewed_exclusions & set().union(
+            *(set(cluster["record_ids"]) for cluster in clusters)
+        )) if clusters else 0,
+        "unresolved_edges": len(unresolved_edges),
+        "unresolved_clusters": len(unresolved_clusters),
+    }
+    return edges, clusters, unresolved_edges, audit
+
+
+def _rejection_total(counters: Counter[str], terms: tuple[str, ...]) -> int:
+    return sum(count for reason, count in counters.items() if any(term in reason for term in terms))
 
 
 def _write_stage(
@@ -682,31 +1144,89 @@ def _write_stage(
     *,
     expected_base_ids: set[str],
     selection: dict[str, Any],
-) -> None:
+    dedup: dict[str, Any],
+    review_universe: list[dict[str, Any]],
+    reviewed_exclusions: set[str],
+    exact_report: list[dict[str, Any]],
+    medium_queue: list[dict[str, Any]],
+    low_queue: list[dict[str, Any]],
+    counters: Counter[str],
+    prior_story_count: int,
+    prior_token_count: int,
+) -> dict[str, int]:
     token_count = sum(token_counts)
     audits = corpus_audits(
         records, token_counts, expected_base_ids=expected_base_ids, selection=selection
     )
+    near_edges, near_clusters, unresolved_edges, near_audit = near_duplicate_audit(
+        review_universe, records, dedup, reviewed_exclusions
+    )
+    audits["near_duplicate_review"] = near_audit
     audits["token_threshold"] = {
         "passed": token_count >= stage,
         "threshold": stage,
         "actual": token_count,
     }
-    write_json_atomic(
-        output_dir / "stages" / f"{stage // 1_000_000}m.json",
-        {
-            "threshold_tokens": stage,
-            "actual_tokens": token_count,
-            "story_count": len(records),
-            "last_catalog_cursor": cursor,
-            "last_record_id": records[-1]["id"],
-            "audits": audits,
-            "record_ids_sha256": hashlib.sha256(
-                "\n".join(record["id"] for record in records).encode()
-            ).hexdigest(),
-            "record_ids": [record["id"] for record in records],
+    concentration = audits["concentration"]["metrics"]
+    stage_name = f"{stage // 1_000_000}m"
+    stage_dir = output_dir / "stages"
+    write_jsonl(stage_dir / f"{stage_name}-near-duplicate-candidates.jsonl", near_edges)
+    write_jsonl(stage_dir / f"{stage_name}-near-duplicate-clusters.jsonl", near_clusters)
+    write_jsonl(stage_dir / f"{stage_name}-near-duplicate-unresolved.jsonl", unresolved_edges)
+    required_failures = failed_required_audits(audits)
+    report = {
+        "threshold_tokens": stage,
+        "actual_tokens": token_count,
+        "story_count": len(records),
+        "delta_from_prior_stage": {
+            "stories": len(records) - prior_story_count,
+            "tokens": token_count - prior_token_count,
         },
+        "unique_authors": concentration["author"]["unique_count"],
+        "unique_source_collections": concentration["source_collection"]["unique_count"],
+        "exact_duplicates_rejected": len(exact_report),
+        "near_candidates": len(near_edges),
+        "medium_review_items": len(medium_queue),
+        "low_confidence_items": len(low_queue),
+        "rights_rejections": _rejection_total(counters, ("rights", "copyright")),
+        "quality_ocr_rejections": _rejection_total(
+            counters, ("quality", "ocr", "damaged", "nonprose", "poetry", "paragraph", "too_short")
+        ),
+        "chapter_novel_rejections": _rejection_total(
+            counters, ("chapter", "structural", "novel", "whole_book")
+        ),
+        "largest_author_token_share": concentration["author"]["largest_token_share"],
+        "top_10_author_token_share": concentration["author"]["top_10_token_share"],
+        "top_20_author_token_share": concentration["author"]["top_20_token_share"],
+        "largest_source_collection_token_share": concentration["source_collection"][
+            "largest_token_share"
+        ],
+        "largest_source_token_share": concentration["source"]["largest_token_share"],
+        "last_catalog_cursor": cursor,
+        "last_record_id": records[-1]["id"],
+        "audits": audits,
+        "required_audits_passed": not required_failures,
+        "failed_required_audits": required_failures,
+        "canonical_content_sha256": audits["canonical_content"]["sha256"],
+        "canonical_index": [
+            {"id": record["id"], "text_hash": record["text_hash"]} for record in records
+        ],
+        "record_ids_sha256": audits["canonical_content"]["record_ids_sha256"],
+        "record_ids": [record["id"] for record in records],
+        "near_duplicate_evidence": {
+            "candidates_path": str(stage_dir / f"{stage_name}-near-duplicate-candidates.jsonl"),
+            "clusters_path": str(stage_dir / f"{stage_name}-near-duplicate-clusters.jsonl"),
+            "unresolved_path": str(stage_dir / f"{stage_name}-near-duplicate-unresolved.jsonl"),
+        },
+    }
+    write_json_atomic(
+        stage_dir / f"{stage_name}.json",
+        report,
     )
+    if required_failures or not audits["token_threshold"]["passed"]:
+        failed = required_failures or ["token_threshold"]
+        raise RuntimeError(f"Corpus-v2 {stage_name} stage failed audits: {', '.join(failed)}")
+    return {"stories": len(records), "tokens": token_count}
 
 
 def build_corpus_v2(config_path: Path) -> dict[str, Any]:
@@ -794,164 +1314,208 @@ def build_corpus_v2(config_path: Path) -> dict[str, Any]:
             })
     stages = sorted(int(value) for value in selection["stage_tokens"])
     completed_stages = {stage for stage in stages if total_tokens >= stage}
+    prior_stage = {"stories": len(base), "tokens": total_tokens}
 
     readable_dirs = [Path(value) for value in source_config["readable_cache_dirs"]]
     write_dir = Path(source_config["raw_write_dir"])
+    state_dir = output_dir / "state"
+    shard_dir = state_dir / "sources"
+    ledger_path = state_dir / "processed-sources.json"
+    ledger = load_source_ledger(ledger_path)
+    builder_sha = sha256_file(Path(__file__))
+    tokenizer_sha = sha256_file(tokenizer_path)
+    review_sha = sha256_file(review_path)
     catalog_url = source_config.get("catalog_url", CATALOG_URL)
     catalog_text, catalog_artifact = acquire(
         catalog_url, Path("pg_catalog.csv"), readable_dirs=readable_dirs,
         write_dir=write_dir, timeout=int(source_config["request_timeout_seconds"]),
     )
     source_manifest.append(asdict(catalog_artifact))
+    ledger[catalog_artifact.source_id] = {
+        "source_id": catalog_artifact.source_id,
+        "url": catalog_artifact.url,
+        "retrieval_status": "retrieved",
+        "raw_sha256": catalog_artifact.sha256,
+        "etag": catalog_artifact.etag,
+        "last_modified": catalog_artifact.last_modified,
+        "processing_status": "catalog_loaded",
+        "accepted_story_ids": [],
+        "outcome": "catalog_loaded",
+        "processed_at": utc_timestamp(),
+        "processing_fingerprint": processing_fingerprint(
+            selection=selection,
+            tokenizer_sha256=tokenizer_sha,
+            review_sha256=review_sha,
+            builder_sha256=builder_sha,
+        ),
+        "artifact": asdict(catalog_artifact),
+    }
+    save_source_ledger(ledger_path, ledger)
     candidates = catalog_candidates(csv.DictReader(io.StringIO(catalog_text)))
     processed = 0
+    sources_replayed = 0
+    sources_processed = 0
     target = int(selection["target_tokens"])
     for cursor, collection in enumerate(candidates[: int(source_config["max_collections"])]):
         if target_reached(total_tokens, target):
             break
         book_id = collection["Text#"]
+        source_id = f"pg-{book_id}"
         text_url = source_config.get("text_url", TEXT_URL).format(book_id=book_id)
-        try:
-            raw_text, artifact = acquire(
-                text_url, Path("texts") / f"pg-{book_id}.txt", readable_dirs=readable_dirs,
-                write_dir=write_dir, timeout=int(source_config["request_timeout_seconds"]),
+        fingerprint = processing_fingerprint(
+            selection=selection,
+            tokenizer_sha256=tokenizer_sha,
+            review_sha256=review_sha,
+            builder_sha256=builder_sha,
+            collection=collection,
+        )
+        shard_path = shard_dir / f"{source_id}.json"
+        loaded = load_valid_source_shard(
+            ledger.get(source_id, {}),
+            shard_path,
+            source_id=source_id,
+            url=text_url,
+            fingerprint=fingerprint,
+        )
+        if loaded is not None:
+            shard, artifact = loaded
+            sources_replayed += 1
+        else:
+            try:
+                raw_text, artifact = acquire(
+                    text_url,
+                    Path("texts") / f"pg-{book_id}.txt",
+                    readable_dirs=readable_dirs,
+                    write_dir=write_dir,
+                    timeout=int(source_config["request_timeout_seconds"]),
+                )
+            except (urllib.error.URLError, TimeoutError, UnicodeError, OSError) as error:
+                rejection = {"source_id": source_id, "reason": "acquisition_failure", "error": str(error)}
+                rejections.append(rejection)
+                summary = {
+                    "source_id": source_id, "source_title": collection["Title"],
+                    "source_url": text_url, "status": "acquisition_failure",
+                    "accepted_stories": 0, "accepted_tokens": 0,
+                    "rejection_counts": {"acquisition_failure": 1},
+                }
+                source_summaries.append(summary)
+                ledger[source_id] = {
+                    "source_id": source_id,
+                    "url": text_url,
+                    "retrieval_status": "failed",
+                    "raw_sha256": None,
+                    "etag": None,
+                    "last_modified": None,
+                    "processing_status": "acquisition_failure",
+                    "accepted_story_ids": [],
+                    "outcome": summary,
+                    "processed_at": utc_timestamp(),
+                    "processing_fingerprint": fingerprint,
+                    "artifact": None,
+                }
+                save_source_ledger(ledger_path, ledger)
+                counters["acquisition_failure"] += 1
+                continue
+            shard = process_source_to_shard(
+                collection, raw_text, artifact, tokenizer, selection, fingerprint
             )
-        except (urllib.error.URLError, TimeoutError, UnicodeError, OSError) as error:
-            rejections.append({"source_id": f"pg-{book_id}", "reason": "acquisition_failure", "error": str(error)})
-            source_summaries.append({
-                "source_id": f"pg-{book_id}", "source_title": collection["Title"],
-                "source_url": text_url, "status": "acquisition_failure",
-                "accepted_stories": 0, "accepted_tokens": 0,
-                "rejection_counts": {"acquisition_failure": 1},
-            })
-            counters["acquisition_failure"] += 1
-            continue
+            save_source_shard(shard_path, shard)
+            sources_processed += 1
+            ledger[source_id] = {
+                "source_id": source_id,
+                "url": text_url,
+                "retrieval_status": "retrieved",
+                "raw_sha256": artifact.sha256,
+                "etag": artifact.etag,
+                "last_modified": artifact.last_modified,
+                "processing_status": "processed",
+                "accepted_story_ids": [],
+                "outcome": {
+                    "status": shard["source_summary"]["status"],
+                    "rejection_counts": shard["source_summary"]["rejection_counts"],
+                },
+                "processed_at": utc_timestamp(),
+                "processing_fingerprint": fingerprint,
+                "shard_sha256": sha256_file(shard_path),
+                "artifact": asdict(artifact),
+            }
+            save_source_ledger(ledger_path, ledger)
         source_manifest.append(asdict(artifact))
         processed += 1
-        cleaned = clean_gutenberg_text(raw_text)
-        extractions, evidence = extract_collection_v2(
-            cleaned,
-            minimum_matches=int(selection["minimum_toc_matches"]),
-            high_match_ratio=float(selection["high_confidence_match_ratio"]),
-        )
-        diagnostic = {
-            "source_id": f"pg-{book_id}", "source_title": collection["Title"],
-            "source_url": artifact.url,
-            "beginning_snippet": cleaned[:1200],
-            "ending_snippet": cleaned[-1200:],
-            "candidate_story_snippets": [
-                {
-                    "title": item.title,
-                    "opening": item.text[:500],
-                    "ending": item.text[-500:],
-                    "start_line": item.start_line,
-                    "end_line": item.end_line,
-                }
-                for item in extractions[:10]
-            ],
-            **evidence,
-        }
-        source_summary: dict[str, Any] = {
-            "source_id": f"pg-{book_id}", "source_title": collection["Title"],
-            "source_url": artifact.url, "raw_sha256": artifact.sha256,
-            "extraction_confidence": evidence.get("confidence"),
-            "toc_title_count": evidence.get("toc_title_count", 0),
-            "matched_heading_count": evidence.get("matched_heading_count", 0),
-            "extracted_candidates": len(extractions), "accepted_stories": 0,
-            "accepted_tokens": 0, "rejection_counts": Counter(),
-        }
-        if evidence.get("confidence") == "low":
-            low_queue.append(diagnostic)
-            source_summary["status"] = "low_confidence_rejected"
-            source_summary["rejection_counts"]["low_confidence_collection"] += 1
-            source_summary["rejection_counts"] = dict(source_summary["rejection_counts"])
-            source_summaries.append(source_summary)
-            counters["low_confidence_collection"] += 1
-            continue
-        if evidence.get("confidence") == "medium":
-            medium_queue.append(diagnostic)
-            source_summary["status"] = "medium_confidence_review"
-            source_summary["rejection_counts"]["medium_confidence_collection"] += 1
-            source_summary["rejection_counts"] = dict(source_summary["rejection_counts"])
-            source_summaries.append(source_summary)
-            counters["medium_confidence_collection"] += 1
-            continue
-        source_summary["status"] = "processed_high_confidence"
-        lines = cleaned.splitlines()
-        for extraction in extractions:
-            sample = review_sample(extraction, collection, lines)
-            if len(review_samples) < 500:
-                review_samples.append(sample)
-            reason = classify_story_rejection(
-                extraction,
-                minimum_words=int(selection["minimum_story_words"]),
-                maximum_words=int(selection["maximum_story_words"]),
-            )
-            if (
-                reason is None
-                and normalize_heading(extraction.title) == normalize_heading(collection["Title"])
-            ):
-                reason = "source_title_match_possible_whole_book"
-            chapter_count = chapter_heading_count(extraction.text)
-            if chapter_count or is_structural_title(extraction.title):
-                chapter_audit.append({
-                    "source_id": f"pg-{book_id}", "title": extraction.title,
-                    "chapter_heading_count": chapter_count, "decision": reason or "accepted",
-                })
-            if normalize_heading(extraction.title) == normalize_heading(collection["Title"]):
-                source_title_audit.append({
-                    "source_id": f"pg-{book_id}", "source_title": collection["Title"],
-                    "story_title": extraction.title, "decision": reason or "accepted",
-                })
-            if reason:
-                counters[reason] += 1
-                source_summary["rejection_counts"][reason] += 1
-                rejections.append({
-                    "source_id": f"pg-{book_id}", "title": extraction.title,
-                    "words": len(extraction.text.split()), "reason": reason,
-                    "opening_snippet": extraction.text[:500],
-                })
-                continue
-            record = make_story_record(extraction, collection, artifact, evidence)
-            count = exact_document_tokens(tokenizer, record)
-            record["tokenizer_v1_tokens"] = count
-            if record["id"] in reviewed_exclusions:
-                review_universe.append(record)
-                reviewed_records[record["id"]] = record
-                counters["reviewed_near_duplicate"] += 1
-                source_summary["rejection_counts"]["reviewed_near_duplicate"] += 1
-                continue
-            if not add_if_not_exact_duplicate(record, accepted, exact_hashes, exact_report):
-                counters["exact_duplicate"] += 1
-                source_summary["rejection_counts"]["exact_duplicate"] += 1
-                continue
-            additions.append(record)
-            review_universe.append(record)
-            token_counts.append(count)
-            total_tokens += count
-            source_summary["accepted_stories"] += 1
-            source_summary["accepted_tokens"] += count
+        accepted_before = len(additions)
+
+        def audit_reached_stages(current_tokens: int) -> None:
             for stage in stages:
-                if stage not in completed_stages and total_tokens >= stage:
-                    _write_stage(
-                        output_dir,
-                        stage,
-                        accepted,
-                        token_counts,
-                        cursor,
-                        expected_base_ids=expected_base_ids,
-                        selection=selection,
-                    )
-                    completed_stages.add(stage)
-            if target_reached(total_tokens, target):
-                break
-        source_summary["rejection_counts"] = dict(sorted(source_summary["rejection_counts"].items()))
+                if stage in completed_stages or current_tokens < stage:
+                    continue
+                snapshot = _write_stage(
+                    output_dir,
+                    stage,
+                    accepted,
+                    token_counts,
+                    cursor,
+                    expected_base_ids=expected_base_ids,
+                    selection=selection,
+                    dedup=dedup,
+                    review_universe=review_universe,
+                    reviewed_exclusions=reviewed_exclusions,
+                    exact_report=exact_report,
+                    medium_queue=medium_queue,
+                    low_queue=low_queue,
+                    counters=counters,
+                    prior_story_count=prior_stage["stories"],
+                    prior_token_count=prior_stage["tokens"],
+                )
+                prior_stage.update(snapshot)
+                completed_stages.add(stage)
+
+        source_summary, total_tokens = replay_source_shard(
+            shard,
+            accepted=accepted,
+            additions=additions,
+            token_counts=token_counts,
+            exact_hashes=exact_hashes,
+            exact_report=exact_report,
+            review_universe=review_universe,
+            reviewed_records=reviewed_records,
+            reviewed_exclusions=reviewed_exclusions,
+            review_samples=review_samples,
+            medium_queue=medium_queue,
+            low_queue=low_queue,
+            rejections=rejections,
+            chapter_audit=chapter_audit,
+            source_title_audit=source_title_audit,
+            counters=counters,
+            target_tokens=target,
+            on_accept=audit_reached_stages,
+        )
         source_summaries.append(source_summary)
+        accepted_story_ids = [record["id"] for record in additions[accepted_before:]]
+        ledger[source_id] = {
+            "source_id": source_id,
+            "url": text_url,
+            "retrieval_status": "retrieved",
+            "raw_sha256": artifact.sha256,
+            "etag": artifact.etag,
+            "last_modified": artifact.last_modified,
+            "processing_status": "completed",
+            "accepted_story_ids": accepted_story_ids,
+            "outcome": {
+                "status": source_summary["status"],
+                "rejection_counts": source_summary["rejection_counts"],
+            },
+            "processed_at": utc_timestamp(),
+            "processing_fingerprint": fingerprint,
+            "shard_sha256": sha256_file(shard_path),
+            "artifact": asdict(artifact),
+        }
+        save_source_ledger(ledger_path, ledger)
         if processed % 25 == 0:
             print(f"collections={processed} stories={len(accepted)} exact_tokens={total_tokens:,}")
-        delay = float(source_config["request_delay_seconds"])
-        if delay:
-            time.sleep(delay)
+        if loaded is None:
+            delay = float(source_config["request_delay_seconds"])
+            if delay:
+                time.sleep(delay)
 
     missing_reviewed_ids = reviewed_exclusions - reviewed_records.keys()
     if missing_reviewed_ids:
@@ -960,20 +1524,9 @@ def build_corpus_v2(config_path: Path) -> dict[str, Any]:
             f"{sorted(missing_reviewed_ids)[:10]}"
         )
     validate_canonical_records(accepted, expected_base_ids=expected_base_ids)
-    near_edges, near_clusters = near_duplicate_graph(
-        review_universe, max_hamming=int(dedup["simhash_max_hamming"]),
-        minimum_jaccard=float(dedup["minimum_jaccard"]),
-        minimum_length_ratio=float(dedup["minimum_length_ratio"]),
+    near_edges, near_clusters, unresolved_edges, near_audit = near_duplicate_audit(
+        review_universe, accepted, dedup, reviewed_exclusions
     )
-    accepted_ids = {record["id"] for record in accepted}
-    unresolved_clusters = [
-        cluster for cluster in near_clusters
-        if sum(record_id in accepted_ids for record_id in cluster["record_ids"]) > 1
-    ]
-    unresolved_cluster_ids = {cluster["cluster_id"] for cluster in unresolved_clusters}
-    unresolved_edges = [
-        edge for edge in near_edges if edge["cluster_id"] in unresolved_cluster_ids
-    ]
     resolution_report = [
         {
             "excluded_id": record_id,
@@ -999,30 +1552,38 @@ def build_corpus_v2(config_path: Path) -> dict[str, Any]:
         record["id"] for record in excluded_base
     ]
     audits["exact_deduplication"]["rejected_candidates"] = len(exact_report)
-    audits["near_duplicate_review"] = {
-        "passed": not unresolved_clusters,
-        "status": "clear" if not unresolved_clusters else "human_review_required_before_freeze",
-        "candidate_edges": len(near_edges),
-        "candidate_clusters": len(near_clusters),
-        "reviewed_exclusions_applied": len(reviewed_exclusions),
-        "unresolved_edges": len(unresolved_edges),
-        "unresolved_clusters": len(unresolved_clusters),
-    }
+    near_audit["reviewed_exclusions_applied"] = len(reviewed_exclusions)
+    audits["near_duplicate_review"] = near_audit
     audits["token_target"] = {
         "passed": minimum_allowed <= total_tokens <= maximum_allowed,
         "target": target, "allowed_range": [minimum_allowed, maximum_allowed],
         "actual": total_tokens,
     }
-    audits["freeze_ready"] = all(
-        audit.get("passed", True) for audit in audits.values() if isinstance(audit, dict)
-    )
+    missing_stages = sorted(set(stages) - completed_stages)
+    audits["stage_completion"] = {
+        "passed": not missing_stages,
+        "required_thresholds": stages,
+        "missing_thresholds": missing_stages,
+    }
+    required_failures = failed_required_audits(audits)
+    audits["freeze_ready"] = {
+        "passed": not required_failures
+        and audits["token_target"]["passed"]
+        and audits["base_id_preservation"]["passed"]
+        and audits["stage_completion"]["passed"],
+        "failed_required_audits": required_failures,
+        "unresolved_near_duplicate_clusters": near_audit["unresolved_clusters"],
+    }
     stats.update({
         "locked_base_stories": len(base_all), "retained_base_stories": len(base),
         "documented_base_correctness_exclusions": len(excluded_base),
         "new_stories": len(additions),
-        "collections_processed": processed, "review_edges": len(near_edges),
+        "collections_processed": processed,
+        "sources_replayed_from_ledger": sources_replayed,
+        "sources_processed_from_raw": sources_processed,
+        "review_edges": len(near_edges),
         "review_clusters": len(near_clusters),
-        "unresolved_review_clusters": len(unresolved_clusters),
+        "unresolved_review_clusters": near_audit["unresolved_clusters"],
         "reviewed_near_duplicate_exclusions": len(reviewed_exclusions),
         "rejection_counts": dict(sorted(counters.items())),
         "stop_reason": "target_reached" if total_tokens >= target else "sources_exhausted",
@@ -1046,21 +1607,30 @@ def build_corpus_v2(config_path: Path) -> dict[str, Any]:
     }
     for name, payload in outputs.items():
         write_jsonl(output_dir / name, payload)
+    corpus_hash = sha256_file(output_dir / "corpus.jsonl")
+    expected_corpus_hash = audits["canonical_content"]["sha256"]
+    audits["canonical_content"]["file_sha256"] = corpus_hash
+    audits["canonical_content"]["passed"] = corpus_hash == expected_corpus_hash
+    if not audits["canonical_content"]["passed"]:
+        audits["freeze_ready"]["passed"] = False
+        audits["freeze_ready"]["failed_required_audits"] = sorted(
+            set(audits["freeze_ready"]["failed_required_audits"]) | {"canonical_content"}
+        )
     write_json_atomic(output_dir / "audits.json", audits)
     write_json_atomic(output_dir / "stats.json", stats)
-    corpus_hash = sha256_file(output_dir / "corpus.jsonl")
     manifest = {
         "corpus_version": 2, "preprocessing_version": PREPROCESSING_VERSION,
         "created_at": utc_timestamp(), "config_path": str(config_path),
         "config_sha256": sha256_file(config_path), "git_commit": _git_commit(),
         "git_worktree_dirty": _git_worktree_dirty(),
-        "builder_sha256": sha256_file(Path(__file__)),
+        "builder_sha256": builder_sha,
         "base_corpus_path": str(base_path), "base_corpus_sha256": sha256_file(base_path),
         "existing_splits_path": str(splits_path), "existing_splits_sha256": sha256_file(splits_path),
         "tokenizer_path": str(tokenizer_path), "tokenizer_sha256": sha256_file(tokenizer_path),
         "near_duplicate_review_path": str(review_path),
         "near_duplicate_review_sha256": sha256_file(review_path),
         "source_manifest_sha256": sha256_file(output_dir / "source-manifest.jsonl"),
+        "source_ledger_path": str(ledger_path),
         "settings": config, "corpus_sha256": corpus_hash,
         "determinism_note": "Content and ordering are deterministic; timestamps and live retrieval metadata are not.",
     }
