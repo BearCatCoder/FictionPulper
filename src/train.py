@@ -43,6 +43,13 @@ GENRE_PROMPTS = {
     "western_adventure": "By sundown, the stranger had crossed the desert and reached the abandoned mining camp.",
     "fantasy_weird": "Beyond the crooked forest stood a tower that cast no shadow.",
 }
+GENERATION_SETTINGS = {
+    "greedy_max_new_tokens": 128,
+    "sampled_max_new_tokens": 256,
+    "temperature": 0.8,
+    "top_k": 50,
+    "top_p": 0.95,
+}
 
 
 def set_seed(seed: int) -> None:
@@ -234,7 +241,7 @@ def generation_snapshot(
                     model,
                     tokenizer,
                     prompt,
-                    max_new_tokens=128,
+                    max_new_tokens=GENERATION_SETTINGS["greedy_max_new_tokens"],
                     device=device,
                     use_bf16=use_bf16,
                 ),
@@ -242,20 +249,22 @@ def generation_snapshot(
                     model,
                     tokenizer,
                     prompt,
-                    max_new_tokens=256,
+                    max_new_tokens=GENERATION_SETTINGS["sampled_max_new_tokens"],
                     device=device,
                     use_bf16=use_bf16,
-                    temperature=0.8,
-                    top_p=0.95,
-                    top_k=50,
+                    temperature=GENERATION_SETTINGS["temperature"],
+                    top_p=GENERATION_SETTINGS["top_p"],
+                    top_k=GENERATION_SETTINGS["top_k"],
                     seed=seed + prompt_index,
                 ),
+                "sample_seed": seed + prompt_index,
             }
         )
     snapshot = {
         "epoch": epoch,
         "optimizer_step": step,
         "sample_seed": seed,
+        "generation_settings": GENERATION_SETTINGS,
         "entries": entries,
     }
     write_json_atomic(output_path, snapshot)
@@ -321,6 +330,82 @@ def git_worktree_dirty() -> bool | None:
         ["git", "status", "--porcelain"], capture_output=True, text=True, check=False
     )
     return bool(result.stdout.strip()) if result.returncode == 0 else None
+
+
+def validate_packed_artifacts(
+    config: dict[str, Any], packed_metadata: dict[str, Any]
+) -> dict[str, dict[str, str]]:
+    verified: dict[str, dict[str, str]] = {}
+    for split in ("train", "validation", "test"):
+        metadata = packed_metadata["splits"][split]
+        bin_path = Path(config["data"][f"{split}_path"])
+        index_path = bin_path.with_suffix(".index.json")
+        if str(bin_path) != metadata["bin_path"] or str(index_path) != metadata["index_path"]:
+            raise RuntimeError(f"Configured {split} packed paths differ from metadata")
+        bin_hash = sha256_file(bin_path)
+        index_hash = sha256_file(index_path)
+        if bin_hash != metadata["bin_sha256"]:
+            raise RuntimeError(f"Locked {split} packed binary hash changed")
+        if index_hash != metadata["index_sha256"]:
+            raise RuntimeError(f"Locked {split} index hash changed")
+        verified[split] = {
+            "bin_path": str(bin_path),
+            "bin_sha256": bin_hash,
+            "index_path": str(index_path),
+            "index_sha256": index_hash,
+        }
+    return verified
+
+
+def selected_packed_schedule(
+    packed_metadata: dict[str, Any], epochs: int
+) -> dict[str, Any]:
+    candidates = packed_metadata.get("schedule_candidates", {})
+    if str(epochs) in candidates:
+        return candidates[str(epochs)]
+    schedule = packed_metadata["schedule"]
+    if int(schedule["document_chunk_epochs"]) != epochs:
+        raise RuntimeError(f"Packed metadata has no locked schedule for {epochs} epochs")
+    return schedule
+
+
+def load_evaluation_protocol(config: dict[str, Any]) -> dict[str, Any] | None:
+    evaluation_config = config.get("evaluation")
+    if not evaluation_config:
+        return None
+    protocol_path = Path(evaluation_config["protocol_path"])
+    expected_hash = evaluation_config["expected_protocol_sha256"]
+    if sha256_file(protocol_path) != expected_hash:
+        raise RuntimeError("Locked evaluation protocol hash changed")
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    split_path = Path(protocol["data30m_split_path"])
+    if sha256_file(split_path) != protocol["data30m_split_sha256"]:
+        raise RuntimeError("Evaluation protocol Data30M split hash changed")
+    for benchmark in protocol["benchmarks"]:
+        if sha256_file(Path(benchmark["packed_path"])) != benchmark["packed_sha256"]:
+            raise RuntimeError(f"Packed hash changed for {benchmark['name']}")
+        if sha256_file(Path(benchmark["index_path"])) != benchmark["index_sha256"]:
+            raise RuntimeError(f"Index hash changed for {benchmark['name']}")
+    protocol["path"] = str(protocol_path)
+    protocol["sha256"] = expected_hash
+    return protocol
+
+
+def benchmark_excluded_ids(
+    benchmark: dict[str, Any], data30m_assignments: dict[str, str]
+) -> set[str]:
+    excluded = set(benchmark.get("exclude_ids", []))
+    if benchmark.get("exclude_data30m_train_ids"):
+        index_payload = json.loads(Path(benchmark["index_path"]).read_text(encoding="utf-8"))
+        excluded.update(
+            document["id"]
+            for document in index_payload["documents"]
+            if data30m_assignments.get(document["id"]) == "train"
+        )
+    expected_count = benchmark.get("expected_excluded_documents")
+    if expected_count is not None and len(excluded) != int(expected_count):
+        raise RuntimeError(f"Derived exclusion count changed for {benchmark['name']}")
+    return excluded
 
 
 def write_comparison_artifacts(
@@ -494,6 +579,8 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     training = config["training"]
     seed = int(config["seed"])
+    if training.get("require_clean_worktree") and git_worktree_dirty() is not False:
+        raise RuntimeError("Locked training requires a clean Git worktree")
     set_seed(seed)
     if not torch.cuda.is_available():
         raise RuntimeError("The locked smoke run requires CUDA")
@@ -521,8 +608,6 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
     if tokenizer.get_vocab_size() != model_config.vocab_size:
         raise RuntimeError("Tokenizer and model vocabulary sizes disagree")
     pad_token_id = tokenizer.token_to_id("<|pad|>")
-    train_dataset = make_dataset(config, "train", pad_token_id)
-    validation_dataset = make_dataset(config, "validation", pad_token_id)
     packed_metadata = json.loads(
         Path(config["data"]["packed_metadata_path"]).read_text(encoding="utf-8")
     )
@@ -542,9 +627,49 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             raise RuntimeError(f"Locked {label} artifact changed")
     if packed_metadata["tokenizer_hash"] != tokenizer_hash:
         raise RuntimeError("Packed data tokenizer hash does not match the configured tokenizer")
-    expected_steps_per_epoch = packed_metadata["schedule"]["optimizer_steps_per_epoch"]
+    verified_packed_artifacts = validate_packed_artifacts(config, packed_metadata)
+    evaluation_protocol = load_evaluation_protocol(config)
+    epochs = int(training["epochs"])
+    packed_schedule = selected_packed_schedule(packed_metadata, epochs)
+    expected_steps_per_epoch = int(packed_schedule["optimizer_steps_per_epoch"])
     if int(training["epochs"]) * expected_steps_per_epoch != int(training["max_steps"]):
         raise RuntimeError("Configured epochs and max_steps disagree with packed schedule")
+    if int(training["warmup_steps"]) != int(packed_schedule["recommended_warmup_steps"]):
+        raise RuntimeError("Configured warmup steps disagree with packed schedule")
+    checkpoint_epochs = {int(epoch) for epoch in training["checkpoint_epochs"]}
+    if checkpoint_epochs != set(range(1, epochs + 1)):
+        raise RuntimeError("Locked checkpoint epochs must include every configured epoch")
+    train_dataset = make_dataset(config, "train", pad_token_id)
+    validation_dataset = make_dataset(config, "validation", pad_token_id)
+
+    exposure = {
+        "train_chunks": packed_metadata["splits"]["train"]["sequence_count"],
+        "train_valid_targets_per_epoch": packed_schedule["real_target_tokens_per_epoch"],
+        "train_allocated_slots_per_epoch": packed_schedule["allocated_chunk_slots_per_epoch"],
+        "train_padding_slots_per_epoch": packed_schedule["padding_slots_per_epoch"],
+        "validation_valid_targets": packed_metadata["splits"]["validation"][
+            "valid_target_token_count"
+        ],
+        "test_valid_targets": packed_metadata["splits"]["test"][
+            "valid_target_token_count"
+        ],
+        "epochs": epochs,
+        "optimizer_steps_per_epoch": expected_steps_per_epoch,
+        "total_optimizer_steps": int(training["max_steps"]),
+        "warmup_steps": int(training["warmup_steps"]),
+        "valid_target_presentations": packed_schedule["real_target_tokens_per_epoch"]
+        * epochs,
+        "allocated_slot_presentations": packed_schedule["allocated_chunk_slots_per_epoch"]
+        * epochs,
+        "data10m_best_valid_target_presentations": config["comparison"][
+            "baseline_best_valid_target_presentations"
+        ],
+    }
+    exposure["data30m_to_data10m_best_exposure_ratio"] = (
+        exposure["valid_target_presentations"]
+        / exposure["data10m_best_valid_target_presentations"]
+    )
+    print("locked_data_and_exposure=" + json.dumps(exposure, sort_keys=True))
 
     configured_checkpoint_dir = training.get("checkpoint_dir")
     checkpoint_dir = Path(configured_checkpoint_dir or "checkpoints")
@@ -579,6 +704,17 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
         "corpus_sha256": packed_metadata["corpus_sha256"],
         "split_manifest_sha256": packed_metadata["split_sha256"],
         "checkpoint_dir": str(checkpoint_dir),
+        "packed_artifacts": verified_packed_artifacts,
+        "packed_schedule": packed_schedule,
+        "exposure": exposure,
+        "evaluation_protocol": (
+            {
+                "path": evaluation_protocol["path"],
+                "sha256": evaluation_protocol["sha256"],
+            }
+            if evaluation_protocol
+            else None
+        ),
     }
     write_json_atomic(run_dir / "manifest.json", manifest)
 
@@ -630,6 +766,9 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             "training_loss": None,
             "validation_loss": initial_validation["loss"],
             "validation_perplexity": initial_validation["perplexity"],
+            "validation_next_token_accuracy": initial_validation["next_token_accuracy"],
+            "validation_valid_tokens": initial_validation["valid_tokens"],
+            "validation_allocated_slots": initial_validation["allocated_slots"],
             "learning_rate": 0.0,
             "valid_tokens_per_second": None,
             "allocated_slots_per_second": None,
@@ -638,6 +777,7 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             "elapsed_seconds": time.monotonic() - wall_start,
         }
         metrics.append(initial_metric)
+        write_json_atomic(run_dir / "metrics.json", {"epochs": metrics})
         generation_snapshot(
             model,
             tokenizer,
@@ -650,6 +790,19 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             seed=sample_seed,
         )
         best_validation_loss = float(initial_validation["loss"])
+        save_checkpoint(
+            checkpoint_dir / "epoch-00.pt",
+            model=model,
+            optimizer=optimizer,
+            model_config=model_config,
+            config=config,
+            epoch=0,
+            step=0,
+            validation_loss=best_validation_loss,
+            best_validation_loss=best_validation_loss,
+            tokenizer_hash=tokenizer_hash,
+            metrics=metrics,
+        )
         save_checkpoint(
             checkpoint_dir / "best-validation.pt",
             model=model,
@@ -757,6 +910,8 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 "validation_loss": validation["loss"],
                 "validation_perplexity": validation["perplexity"],
                 "validation_next_token_accuracy": validation["next_token_accuracy"],
+                "validation_valid_tokens": validation["valid_tokens"],
+                "validation_allocated_slots": validation["allocated_slots"],
                 "learning_rate": optimizer.param_groups[0]["lr"],
                 "valid_tokens": epoch_valid_tokens,
                 "allocated_slots": epoch_allocated_slots,
@@ -811,7 +966,7 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             save_checkpoint(checkpoint_dir / "latest.pt", **checkpoint_arguments)
             if improved:
                 save_checkpoint(checkpoint_dir / "best-validation.pt", **checkpoint_arguments)
-            if epoch in {1, 5, 10, 15, int(training["epochs"])}:
+            if epoch in checkpoint_epochs:
                 save_checkpoint(
                     checkpoint_dir / f"epoch-{epoch:02d}.pt", **checkpoint_arguments
                 )
@@ -840,69 +995,77 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             device=device,
             use_bf16=use_bf16,
         )
-        legacy_validation_metrics = None
-        legacy_validation_clean_metrics = None
-        legacy_test_metrics = None
-        excluded_validation_ids: set[str] = set()
-        if "legacy_validation_path" in config["data"] and "legacy_test_path" in config["data"]:
-            legacy_validation_dataset = make_dataset_from_path(
-                config["data"]["legacy_validation_path"],
-                sequence_length=model_config.max_seq_len,
-                pad_token_id=pad_token_id,
+        selected_checkpoint_hash = sha256_file(checkpoint_dir / "best-validation.pt")
+        historical_evaluations: dict[str, Any] = {}
+        if evaluation_protocol is not None:
+            split_payload = json.loads(
+                Path(evaluation_protocol["data30m_split_path"]).read_text(encoding="utf-8")
             )
-            legacy_validation_metrics = evaluate(
-                model,
-                legacy_validation_dataset,
-                batch_size=batch_size,
-                device=device,
-                use_bf16=use_bf16,
-            )
-            excluded_validation_ids = set(
-                config["data"].get("legacy_validation_excluded_ids", [])
-            )
-            if excluded_validation_ids:
-                legacy_validation_clean_dataset = make_dataset_from_path(
-                    config["data"]["legacy_validation_path"],
+            data30m_assignments = split_payload["assignments"]
+            for benchmark in evaluation_protocol["benchmarks"]:
+                excluded_ids = benchmark_excluded_ids(benchmark, data30m_assignments)
+                benchmark_dataset = PackedStoryDataset(
+                    benchmark["packed_path"],
+                    benchmark["index_path"],
                     sequence_length=model_config.max_seq_len,
                     pad_token_id=pad_token_id,
-                    exclude_document_ids=excluded_validation_ids,
+                    exclude_document_ids=excluded_ids,
                 )
-                legacy_validation_clean_metrics = evaluate(
+                document_count = len(benchmark_dataset.documents) - len(excluded_ids)
+                if document_count != int(benchmark["expected_documents"]):
+                    raise RuntimeError(f"Document count changed for {benchmark['name']}")
+                benchmark_metrics = evaluate(
                     model,
-                    legacy_validation_clean_dataset,
+                    benchmark_dataset,
                     batch_size=batch_size,
                     device=device,
                     use_bf16=use_bf16,
                 )
-            legacy_test_dataset = make_dataset_from_path(
-                config["data"]["legacy_test_path"],
-                sequence_length=model_config.max_seq_len,
-                pad_token_id=pad_token_id,
-            )
-            legacy_test_metrics = evaluate(
-                model,
-                legacy_test_dataset,
-                batch_size=batch_size,
-                device=device,
-                use_bf16=use_bf16,
-            )
-            sealed_evaluations = {
-                "checkpoint_selection_complete": True,
-                "selection_metric": "Corpus-v1 validation loss only",
-                "corpus_v1_test_evaluation_count": 1,
-                "legacy_seed_validation_evaluation_count": 1,
-                "legacy_seed_test_evaluation_count": 1,
-                "corpus_v1_test": test_metrics,
-                "legacy_seed_validation": legacy_validation_metrics,
-                "legacy_seed_test": legacy_test_metrics,
-            }
-            if legacy_validation_clean_metrics is not None:
-                sealed_evaluations["legacy_seed_validation_leakage_clean_evaluation_count"] = 1
-                sealed_evaluations["legacy_seed_validation_leakage_clean"] = {
-                    **legacy_validation_clean_metrics,
-                    "excluded_ids": sorted(excluded_validation_ids),
+                if benchmark_metrics["valid_tokens"] != int(
+                    benchmark["expected_valid_targets"]
+                ):
+                    raise RuntimeError(f"Valid targets changed for {benchmark['name']}")
+                if benchmark_metrics["allocated_slots"] != int(
+                    benchmark["expected_allocated_slots"]
+                ):
+                    raise RuntimeError(f"Allocated slots changed for {benchmark['name']}")
+                historical_evaluations[benchmark["name"]] = {
+                    "evaluation_count": 1,
+                    "classification": benchmark["classification"],
+                    "packed_path": benchmark["packed_path"],
+                    "packed_sha256": benchmark["packed_sha256"],
+                    "index_path": benchmark["index_path"],
+                    "index_sha256": benchmark["index_sha256"],
+                    "document_count": document_count,
+                    "excluded_ids": sorted(excluded_ids),
+                    "metrics": benchmark_metrics,
                 }
-            write_json_atomic(run_dir / "sealed-evaluations.json", sealed_evaluations)
+        sealed_evaluations = {
+            "checkpoint_selection_complete_before_test_access": True,
+            "selection_metric": "Data30M validation loss only",
+            "selected_checkpoint": str(checkpoint_dir / "best-validation.pt"),
+            "selected_checkpoint_sha256": selected_checkpoint_hash,
+            "selected_checkpoint_epoch": int(best_checkpoint["epoch"]),
+            "selected_checkpoint_step": int(best_checkpoint["step"]),
+            "primary_data30m_test": {
+                "evaluation_count": 1,
+                "used_for_checkpoint_selection": False,
+                **verified_packed_artifacts["test"],
+                "metrics": test_metrics,
+            },
+            "historical_post_selection_evaluations": historical_evaluations,
+            "corpus_v2_correctness_exclusions": (
+                evaluation_protocol["corpus_v2_correctness_exclusions"]
+                if evaluation_protocol
+                else []
+            ),
+            "correctness_exclusion_effect": (
+                evaluation_protocol["correctness_exclusion_effect"]
+                if evaluation_protocol
+                else None
+            ),
+        }
+        write_json_atomic(run_dir / "sealed-evaluations.json", sealed_evaluations)
         final_generation_prompts = FIXED_PROMPTS + list(GENRE_PROMPTS.values())
         final_generations = generation_snapshot(
             model,
@@ -944,17 +1107,14 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             "final_checkpoint_sha256": sha256_file(checkpoint_dir / "latest.pt"),
             "metrics": metrics,
             "test_metrics": test_metrics,
+            "pre_training_validation": initial_validation,
+            "selected_checkpoint_validation": next(
+                metric for metric in metrics if metric["epoch"] == best_epoch
+            ),
+            "historical_post_selection_evaluations": historical_evaluations,
+            "exposure": exposure,
             "final_generations": final_generations,
         }
-        if legacy_validation_metrics is not None and legacy_test_metrics is not None:
-            summary["corpus_v1_test"] = test_metrics
-            summary["legacy_seed_validation"] = legacy_validation_metrics
-            if legacy_validation_clean_metrics is not None:
-                summary["legacy_seed_validation_leakage_clean"] = {
-                    **legacy_validation_clean_metrics,
-                    "excluded_ids": sorted(excluded_validation_ids),
-                }
-            summary["legacy_seed_test"] = legacy_test_metrics
         if config.get("comparison", {}).get("write_training_comparison_artifacts", True):
             write_comparison_artifacts(
                 run_dir=run_dir,

@@ -26,15 +26,16 @@ training:
   optimizer: adamw
   batch_size: 16
   gradient_accumulation_steps: 4
-  epochs: 7
-  schedule_epoch_candidates: [3, 5, 7, 10]
-  max_steps: 3108
+  epochs: 3
+  max_steps: 1332
   learning_rate: 1.0e-3
   min_learning_rate: 1.0e-4
-  warmup_steps: 155
+  warmup_steps: 67
   weight_decay: 0.1
   grad_clip: 1.0
   precision: bf16
+  checkpoint_epochs: [1, 2, 3]
+  require_clean_worktree: true
   checkpoint_dir: checkpoints/fictionpulper-15m-data30m-v1
 
 data:
@@ -52,8 +53,15 @@ data:
 comparison:
   write_training_comparison_artifacts: false
   baseline_experiment: fictionpulper-15m-data10m-v1
+  baseline_best_checkpoint_epoch: 7
+  baseline_valid_targets_per_epoch: 8779154
+  baseline_best_valid_target_presentations: 61454078
   baseline_seal_path: experiments/fictionpulper-15m-data10m-v1/seal.json
   corpus_v2_seal_path: experiments/fictionpulper-corpus-v2-30m/seal.json
+
+evaluation:
+  protocol_path: experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json
+  expected_protocol_sha256: 16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a
 
 logging:
   tensorboard_dir: runs/fictionpulper-15m-data30m-v1/tensorboard

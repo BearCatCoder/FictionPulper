@@ -112,7 +112,7 @@ Pack the split with the unchanged tokenizer-v1 and 1,024-token context:
 python -m src.tokenize_corpus --config configs/data30m-15m-v1.yaml
 ```
 
-Outputs are isolated under `data/packed/corpus-v2-data30m/`; existing Data10M files are not overwritten. The train split contains 27,180,978 packed tokens, 27,177,271 valid next-token targets, and 28,412 document chunks. At batch size 16 with four-step gradient accumulation, one full chunk epoch is 444 optimizer steps. The preparation record reports 3/5/7/10 epoch candidates at 1,332/2,220/3,108/4,440 optimizer steps. Seven epochs is configured for the future controlled run because the sealed 15M/Data10M validation minimum occurred at epoch 7. No Data30M training has been started.
+Outputs are isolated under `data/packed/corpus-v2-data30m/`; existing Data10M files are not overwritten. The train split contains 27,180,978 packed tokens, 27,177,271 valid next-token targets, and 28,412 document chunks. At batch size 16 with four-step gradient accumulation, one full chunk epoch is 444 optimizer steps. The primary controlled experiment is locked to three epochs, 1,332 optimizer steps, and 67 warmup steps. This presents 81,531,813 valid targets, 1.3267 times the 61,454,078 target presentations seen by the selected epoch-7 Data10M baseline. No Data30M training has been started.
 
 The three Corpus-v2 seed exclusions were all historical train duplicates. Enforcing the stricter collection boundary also changes 108 of 1,841 retained historical assignments, so Data30M validation/test are a new benchmark and must not be presented as the unchanged Data10M evaluation sets. Sealed historical artifacts and metrics remain untouched.
 

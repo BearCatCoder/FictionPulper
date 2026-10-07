@@ -1,7 +1,19 @@
 import math
+import json
+import tempfile
 import unittest
+from pathlib import Path
 
-from src.train import learning_rate_for_step
+import yaml
+
+from src.train import (
+    GENERATION_SETTINGS,
+    benchmark_excluded_ids,
+    learning_rate_for_step,
+    selected_packed_schedule,
+    validate_packed_artifacts,
+)
+from src.train_tokenizer import sha256_file
 
 
 class TrainingScheduleTests(unittest.TestCase):
@@ -31,6 +43,73 @@ class TrainingScheduleTests(unittest.TestCase):
                 learning_rate=1e-3,
                 min_learning_rate=1e-4,
             )
+
+    def test_data30m_primary_schedule_is_locked_to_three_epochs(self):
+        config = yaml.safe_load(Path("configs/data30m-15m-v1.yaml").read_text())
+        metadata = json.loads(
+            Path("data/packed/corpus-v2-data30m/metadata.json").read_text()
+        )
+        schedule = selected_packed_schedule(metadata, config["training"]["epochs"])
+        self.assertEqual(config["training"]["epochs"], 3)
+        self.assertEqual(config["training"]["max_steps"], 1332)
+        self.assertEqual(config["training"]["warmup_steps"], 67)
+        self.assertEqual(config["training"]["checkpoint_epochs"], [1, 2, 3])
+        self.assertEqual(schedule["optimizer_steps_per_epoch"], 444)
+        self.assertEqual(schedule["recommended_max_steps"], 1332)
+        self.assertEqual(schedule["recommended_warmup_steps"], 67)
+
+    def test_packed_artifact_validation_rejects_changed_binary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            splits = {}
+            data = {}
+            for split in ("train", "validation", "test"):
+                bin_path = root / f"{split}.bin"
+                index_path = root / f"{split}.index.json"
+                bin_path.write_bytes(b"locked")
+                index_path.write_text('{"documents": []}', encoding="utf-8")
+                data[f"{split}_path"] = str(bin_path)
+                splits[split] = {
+                    "bin_path": str(bin_path),
+                    "bin_sha256": sha256_file(bin_path),
+                    "index_path": str(index_path),
+                    "index_sha256": sha256_file(index_path),
+                }
+            validate_packed_artifacts({"data": data}, {"splits": splits})
+            (root / "test.bin").write_bytes(b"changed")
+            with self.assertRaisesRegex(RuntimeError, "test packed binary hash changed"):
+                validate_packed_artifacts({"data": data}, {"splits": splits})
+
+    def test_benchmark_exclusions_are_derived_from_data30m_train(self):
+        with tempfile.TemporaryDirectory() as directory:
+            index_path = Path(directory) / "test.index.json"
+            index_path.write_text(
+                json.dumps({"documents": [{"id": "a"}, {"id": "b"}, {"id": "c"}]}),
+                encoding="utf-8",
+            )
+            excluded = benchmark_excluded_ids(
+                {
+                    "name": "common",
+                    "index_path": str(index_path),
+                    "exclude_ids": ["c"],
+                    "exclude_data30m_train_ids": True,
+                    "expected_excluded_documents": 2,
+                },
+                {"a": "train", "b": "test", "c": "validation"},
+            )
+            self.assertEqual(excluded, {"a", "c"})
+
+    def test_generation_protocol_matches_sealed_baseline(self):
+        self.assertEqual(
+            GENERATION_SETTINGS,
+            {
+                "greedy_max_new_tokens": 128,
+                "sampled_max_new_tokens": 256,
+                "temperature": 0.8,
+                "top_k": 50,
+                "top_p": 0.95,
+            },
+        )
 
 
 if __name__ == "__main__":

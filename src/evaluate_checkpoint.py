@@ -22,6 +22,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--packed", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--name", required=True)
+    parser.add_argument("--classification", default="post_hoc")
+    parser.add_argument("--expected-packed-sha256")
+    parser.add_argument("--expected-index-sha256")
     parser.add_argument("--exclude-id", action="append", default=[])
     parser.add_argument("--batch-size", type=int, default=16)
     return parser.parse_args()
@@ -36,12 +39,19 @@ def main() -> None:
     if checkpoint["tokenizer_hash"] != tokenizer_hash:
         raise RuntimeError("Checkpoint and tokenizer hashes do not match")
     tokenizer = Tokenizer.from_file(str(args.tokenizer))
+    index_path = args.packed.with_suffix(".index.json")
+    packed_hash = sha256_file(args.packed)
+    index_hash = sha256_file(index_path)
+    if args.expected_packed_sha256 and packed_hash != args.expected_packed_sha256:
+        raise RuntimeError("Packed binary hash does not match the locked hash")
+    if args.expected_index_sha256 and index_hash != args.expected_index_sha256:
+        raise RuntimeError("Packed index hash does not match the locked hash")
     model_config = ModelConfig(**checkpoint["model_config"])
     model = FictionPulperLM(model_config).to("cuda")
     model.load_state_dict(checkpoint["model"])
     dataset = PackedStoryDataset(
         args.packed,
-        args.packed.with_suffix(".index.json"),
+        index_path,
         sequence_length=model_config.max_seq_len,
         pad_token_id=tokenizer.token_to_id("<|pad|>"),
         exclude_document_ids=set(args.exclude_id),
@@ -55,6 +65,7 @@ def main() -> None:
     )
     payload = {
         "name": args.name,
+        "classification": args.classification,
         "post_hoc": True,
         "checkpoint_path": str(args.checkpoint),
         "checkpoint_sha256": sha256_file(args.checkpoint),
@@ -63,7 +74,10 @@ def main() -> None:
         "tokenizer_path": str(args.tokenizer),
         "tokenizer_sha256": tokenizer_hash,
         "packed_path": str(args.packed),
-        "packed_sha256": sha256_file(args.packed),
+        "packed_sha256": packed_hash,
+        "index_path": str(index_path),
+        "index_sha256": index_hash,
+        "document_count": len(dataset.documents) - len(args.exclude_id),
         "excluded_ids": sorted(args.exclude_id),
         "metrics": metrics,
     }

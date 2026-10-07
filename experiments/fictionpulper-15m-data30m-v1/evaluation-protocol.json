@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "selection_metric": "Data30M validation loss only",
+  "primary_test": "Data30M test, evaluated once after checkpoint selection",
+  "data30m_split_path": "data/corpus_v2/data30m-v1/splits.json",
+  "data30m_split_sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026",
+  "corpus_v2_correctness_exclusions": [
+    "eae8e59a2c54",
+    "pg-2591-df462bdf8e57",
+    "pg-2781-20a029267805"
+  ],
+  "correctness_exclusion_effect": "All three are historical Data10M train records. None occurs in a requested historical validation or test index, so no historical evaluation definition excludes them.",
+  "benchmarks": [
+    {
+      "name": "data10m_validation_full",
+      "classification": "historical_continuity_diagnostic_48_records_seen_in_data30m_train",
+      "packed_path": "data/packed/corpus-v1/validation.bin",
+      "packed_sha256": "91d9fca59181a8f3298bc1b76243044a28bb8acf53c431e2a35d999b04cba911",
+      "index_path": "data/packed/corpus-v1/validation.index.json",
+      "index_sha256": "4b3df7be23f121aeb8732244ae0de79034885991e8abfc01550ff099f5a83421",
+      "exclude_ids": [],
+      "expected_documents": 139,
+      "expected_valid_targets": 567360,
+      "expected_allocated_slots": 632832
+    },
+    {
+      "name": "data10m_validation_data30m_train_disjoint",
+      "classification": "derived_common_held_out_subset",
+      "packed_path": "data/packed/corpus-v1/validation.bin",
+      "packed_sha256": "91d9fca59181a8f3298bc1b76243044a28bb8acf53c431e2a35d999b04cba911",
+      "index_path": "data/packed/corpus-v1/validation.index.json",
+      "index_sha256": "4b3df7be23f121aeb8732244ae0de79034885991e8abfc01550ff099f5a83421",
+      "exclude_data30m_train_ids": true,
+      "expected_excluded_documents": 48,
+      "expected_documents": 91,
+      "expected_valid_targets": 462473,
+      "expected_allocated_slots": 506880
+    },
+    {
+      "name": "data10m_test_full",
+      "classification": "identical_historical_benchmark_45_records_seen_in_data30m_train",
+      "packed_path": "data/packed/corpus-v1/test.bin",
+      "packed_sha256": "1f78f3a1b4c5310cbe07f5dd0dd96cbada40d802d477b9fc97ab4bd5fdf83e58",
+      "index_path": "data/packed/corpus-v1/test.index.json",
+      "index_sha256": "efcf8bc5fe60a052ccb9a3049d187b86db97f1a8102d522027ae547621eb40a5",
+      "exclude_ids": [],
+      "expected_documents": 140,
+      "expected_valid_targets": 558091,
+      "expected_allocated_slots": 625664
+    },
+    {
+      "name": "data10m_test_data30m_train_disjoint",
+      "classification": "derived_common_held_out_subset",
+      "packed_path": "data/packed/corpus-v1/test.bin",
+      "packed_sha256": "1f78f3a1b4c5310cbe07f5dd0dd96cbada40d802d477b9fc97ab4bd5fdf83e58",
+      "index_path": "data/packed/corpus-v1/test.index.json",
+      "index_sha256": "efcf8bc5fe60a052ccb9a3049d187b86db97f1a8102d522027ae547621eb40a5",
+      "exclude_data30m_train_ids": true,
+      "expected_excluded_documents": 45,
+      "expected_documents": 95,
+      "expected_valid_targets": 445606,
+      "expected_allocated_slots": 491520
+    },
+    {
+      "name": "legacy_seed_validation",
+      "classification": "historical_continuity_diagnostic_48_records_seen_in_data30m_train",
+      "packed_path": "data/packed/validation.bin",
+      "packed_sha256": "0fc2b7393ceb64c5ee080569206b10aa390a1686f2e00e7a376ca0152b6896f1",
+      "index_path": "data/packed/validation.index.json",
+      "index_sha256": "7d885768a2177c6db76f6419bd5434319ffe6558fbfdf7ad1f95f9ab20e36bcb",
+      "exclude_ids": [],
+      "expected_documents": 53,
+      "expected_valid_targets": 118296,
+      "expected_allocated_slots": 141312
+    },
+    {
+      "name": "legacy_seed_validation_leakage_clean",
+      "classification": "historical_definition_excluding_preexisting_duplicate_but_48_records_seen_in_data30m_train",
+      "packed_path": "data/packed/validation.bin",
+      "packed_sha256": "0fc2b7393ceb64c5ee080569206b10aa390a1686f2e00e7a376ca0152b6896f1",
+      "index_path": "data/packed/validation.index.json",
+      "index_sha256": "7d885768a2177c6db76f6419bd5434319ffe6558fbfdf7ad1f95f9ab20e36bcb",
+      "exclude_ids": ["162495d6f1c1"],
+      "expected_documents": 52,
+      "expected_valid_targets": 114725,
+      "expected_allocated_slots": 137216
+    },
+    {
+      "name": "legacy_seed_test",
+      "classification": "historical_continuity_diagnostic_45_records_seen_in_data30m_train",
+      "packed_path": "data/packed/test.bin",
+      "packed_sha256": "ceb03968d9824c4bbb6f8967df7a661abbb51d41d1885d6a0704e0d703a8b273",
+      "index_path": "data/packed/test.index.json",
+      "index_sha256": "b3f457f099da8a99a3f26e3dc60ac3dd7aa96f806689616b7e4946c6294edef5",
+      "exclude_ids": [],
+      "expected_documents": 53,
+      "expected_valid_targets": 136679,
+      "expected_allocated_slots": 162816
+    }
+  ]
+}
