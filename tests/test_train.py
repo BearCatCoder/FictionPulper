@@ -58,6 +58,38 @@ class TrainingScheduleTests(unittest.TestCase):
         self.assertEqual(schedule["recommended_max_steps"], 1332)
         self.assertEqual(schedule["recommended_warmup_steps"], 67)
 
+    def test_data30m_compute5_changes_only_locked_duration_fields(self):
+        baseline = yaml.safe_load(Path("configs/data30m-15m-v1.yaml").read_text())
+        compute5 = yaml.safe_load(
+            Path("configs/data30m-15m-compute5.yaml").read_text()
+        )
+        metadata = json.loads(
+            Path("data/packed/corpus-v2-data30m/metadata.json").read_text()
+        )
+        self.assertEqual(compute5["model"], baseline["model"])
+        self.assertEqual(compute5["tokenizer"], baseline["tokenizer"])
+        self.assertEqual(compute5["data"], baseline["data"])
+        for key in (
+            "optimizer",
+            "batch_size",
+            "gradient_accumulation_steps",
+            "learning_rate",
+            "min_learning_rate",
+            "weight_decay",
+            "grad_clip",
+            "precision",
+            "require_clean_worktree",
+        ):
+            self.assertEqual(compute5["training"][key], baseline["training"][key])
+        schedule = selected_packed_schedule(metadata, compute5["training"]["epochs"])
+        self.assertEqual(compute5["training"]["epochs"], 5)
+        self.assertEqual(compute5["training"]["max_steps"], 2220)
+        self.assertEqual(compute5["training"]["warmup_steps"], 111)
+        self.assertEqual(compute5["training"]["checkpoint_epochs"], [1, 2, 3, 4, 5])
+        self.assertEqual(schedule["optimizer_steps_per_epoch"], 444)
+        self.assertEqual(schedule["recommended_max_steps"], 2220)
+        self.assertEqual(schedule["recommended_warmup_steps"], 111)
+
     def test_packed_artifact_validation_rejects_changed_binary(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
