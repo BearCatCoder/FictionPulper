@@ -11,3 +11,11 @@ Tokenizer v2 was learned only from the 1,565 Data10M training documents. Validat
 - Derived schedule: 143 steps/epoch, 1,430 total steps, 72 warmup steps
 
 See `tokenizer-comparison.md` for split-level efficiency and representative passage comparisons. `preflight.json` records the locked inputs and packed artifact hashes.
+
+## Results
+
+The run completed 1,430 optimizer steps from fresh random weights and selected epoch 10. Tokenizer v2 reduced Data10M train tokenization from 8,780,719 to 8,543,829 tokens and training runtime from 127.45 to 123.26 seconds.
+
+Raw token-level Corpus-v1 test loss increased from 3.565010 to 3.615572, but losses across tokenizers are not directly comparable. Normalized by identical source bytes, Corpus-v1 test cross-entropy improved slightly from 1.571909 to 1.567540 bits/byte (0.28%). Legacy test improved from 1.460914 to 1.460135 bits/byte, while leakage-clean legacy validation worsened from 1.413019 to 1.415718 bits/byte.
+
+The generation comparison shows no consistent qualitative gain. Tokenizer v2 remains weak on prompt adherence, semantic continuity, repetition, entity consistency, scene persistence, and narrative progression. The experiment therefore finds a modest efficiency improvement and at most a marginal modeling improvement, not a decisive quality improvement.
