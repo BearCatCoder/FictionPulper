@@ -1,0 +1,12 @@
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  min_frequency: 2
+  path: data/tokenizer/data10m-v2/tokenizer.json
+  update_corpus_statistics: false
+
+data:
+  corpus_path: data/corpus_v1/data10m-v1/corpus.jsonl
+  split_path: data/corpus_v1/data10m-v1/splits.json
+  expected_corpus_sha256: 7cd6323095a33336e4a002d96554aebd9deb26b5a6971f3d2044e67dfb035f5b
+  expected_split_sha256: 01e708c7454a044539921bc179ff1b9b3f31aba616d90a1b22b6ea3e628a1229

@@ -1,0 +1,22 @@
+seed: 1337
+
+model:
+  vocab_size: 4096
+  max_seq_len: 1024
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  path: data/tokenizer/data10m-v2/tokenizer.json
+
+training:
+  batch_size: 16
+  gradient_accumulation_steps: 4
+  epochs: 10
+
+data:
+  corpus_path: data/corpus/stories.jsonl
+  split_path: data/corpus/stories.splits.json
+  expected_corpus_sha256: 44d509e0bb69969ec883b92ff07645f3e5b55589f9c37fbbdf29fdca5b0a985b
+  expected_split_sha256: eae13e3dd0edec97e395a973434799f990e7ced3f024f2faa1cb555b71453311
+  packed_metadata_path: data/packed/legacy-tokenizer-v2/metadata.json

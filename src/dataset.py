@@ -20,6 +20,7 @@ class PackedStoryDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         sequence_length: int,
         pad_token_id: int,
         limit_sequences: int | None = None,
+        exclude_document_ids: set[str] | None = None,
     ) -> None:
         self.tokens = np.memmap(bin_path, dtype=np.uint16, mode="r")
         payload = json.loads(Path(index_path).read_text(encoding="utf-8"))
@@ -27,11 +28,21 @@ class PackedStoryDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         self.sequence_length = sequence_length
         self.pad_token_id = pad_token_id
         self.samples: list[tuple[int, int]] = []
+        excluded = exclude_document_ids or set()
+        found_excluded_ids: set[str] = set()
         for document_index, document in enumerate(self.documents):
             if document["offset"] + document["length"] > len(self.tokens):
                 raise ValueError(f"Document {document['id']} exceeds packed token file")
+            if document["id"] in excluded:
+                found_excluded_ids.add(document["id"])
+                continue
             for start in range(0, document["length"] - 1, sequence_length):
                 self.samples.append((document_index, start))
+        missing_excluded_ids = excluded - found_excluded_ids
+        if missing_excluded_ids:
+            raise ValueError(
+                f"Excluded document IDs are absent from the index: {sorted(missing_excluded_ids)}"
+            )
         if limit_sequences is not None:
             self.samples = self.samples[:limit_sequences]
 

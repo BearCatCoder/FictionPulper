@@ -68,6 +68,44 @@ class PackedDatasetTests(unittest.TestCase):
         self.assertEqual(schedule["recommended_max_steps"], 10)
         self.assertEqual(schedule["recommended_warmup_steps"], 1)
 
+    def test_document_exclusion_removes_only_requested_samples(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bin_path = root / "validation.bin"
+            np.asarray([1, 2, 3, 4, 5, 6], dtype=np.uint16).tofile(bin_path)
+            index_path = root / "validation.index.json"
+            index_path.write_text(
+                json.dumps(
+                    {
+                        "documents": [
+                            {"id": "keep", "offset": 0, "length": 3},
+                            {"id": "exclude", "offset": 3, "length": 3},
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            dataset = PackedStoryDataset(
+                bin_path,
+                index_path,
+                sequence_length=2,
+                pad_token_id=0,
+                exclude_document_ids={"exclude"},
+            )
+            self.assertEqual(len(dataset), 1)
+            inputs, labels = dataset[0]
+            self.assertEqual(inputs.tolist(), [1, 2])
+            self.assertEqual(labels.tolist(), [2, 3])
+
+            with self.assertRaisesRegex(ValueError, "absent from the index"):
+                PackedStoryDataset(
+                    bin_path,
+                    index_path,
+                    sequence_length=2,
+                    pad_token_id=0,
+                    exclude_document_ids={"missing"},
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

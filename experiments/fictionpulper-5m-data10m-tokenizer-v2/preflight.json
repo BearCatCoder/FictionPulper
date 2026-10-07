@@ -1,0 +1,50 @@
+{
+  "run_id": "fictionpulper-5m-data10m-tokenizer-v2",
+  "predecessor_tag": "fictionpulper-5m-data10m-v1",
+  "experimental_variable": "tokenizer",
+  "fresh_random_initialization_required": true,
+  "seed": 1337,
+  "model_parameter_count": 5426432,
+  "corpus_sha256": "7cd6323095a33336e4a002d96554aebd9deb26b5a6971f3d2044e67dfb035f5b",
+  "split_manifest_sha256": "01e708c7454a044539921bc179ff1b9b3f31aba616d90a1b22b6ea3e628a1229",
+  "tokenizer_v2_sha256": "108677dabadfb2888d4f8247b9377f5c074559414421b0245bd5896a9527b3c9",
+  "tokenizer_v2_metadata_sha256": "e91ab6c2b8c56f7c9e5468b2f1c57c6cc9bd8609ca33feb8fad5db709f6ee5c1",
+  "tokenizer_comparison_sha256": "7e87347df72d89a774cca74a79403f87df68b1ad4ed719dea34e922f8869aeda",
+  "packed_metadata_sha256": "6a05a72006affe519ffaad12390908ca341567c63d653b51cd48806885cf1bc2",
+  "legacy_packed_metadata_sha256": "59e85a93065f406b7a6090448760382225ed07f1fb1a674f991b23b7a3019ba0",
+  "packed_train": {
+    "valid_targets": 8542264,
+    "allocated_slots": 9364480,
+    "padding_percentage": 8.78015650628759,
+    "chunks": 9145,
+    "bin_sha256": "4412f17e6b40bdb5e471b0f64c5517b53aae4ded7248bb556c6c8f42a34deabd",
+    "index_sha256": "7effb33333170bb6211ec182401a99723b2eddb726e310a8e583bdae0e09dce1"
+  },
+  "packed_validation": {
+    "valid_targets": 565522,
+    "allocated_slots": 638976,
+    "padding_percentage": 11.495580428685898,
+    "chunks": 624,
+    "bin_sha256": "7a0e87d59183bf601fe2b7d2e4708d21836e2f999f04cf8ae4438f88cf2fbc8f",
+    "index_sha256": "1a9a80664d859f5fdcfd458764bae043ebfd89e4f8eda2d64c109bacc9256a55"
+  },
+  "packed_test": {
+    "valid_targets": 548757,
+    "allocated_slots": 617472,
+    "padding_percentage": 11.128439832089553,
+    "chunks": 603,
+    "bin_sha256": "f0c22d83e2c0b7d2b67324a3f5d0362a25eb098de79f81ca93441f60cce0651a",
+    "index_sha256": "01a59be62f5a1a25cd6a1821464755a8cf5a8abc97c7bc53e0d50297fce7a5ce"
+  },
+  "schedule": {
+    "document_chunk_epochs": 10,
+    "optimizer_steps_per_epoch": 143,
+    "max_steps": 1430,
+    "warmup_steps": 72,
+    "peak_learning_rate": 0.001,
+    "minimum_learning_rate": 0.0001,
+    "weight_decay": 0.1,
+    "gradient_clip": 1.0,
+    "precision": "bf16"
+  }
+}

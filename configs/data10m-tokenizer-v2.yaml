@@ -1,0 +1,65 @@
+seed: 1337
+
+model:
+  vocab_size: 4096
+  hidden_size: 256
+  num_layers: 6
+  num_attention_heads: 8
+  num_key_value_heads: 2
+  intermediate_size: 736
+  max_seq_len: 1024
+  activation: swiglu
+  normalization: rmsnorm
+  positional_encoding: rope
+  tie_word_embeddings: true
+  attention_bias: false
+  mlp_bias: false
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  path: data/tokenizer/data10m-v2/tokenizer.json
+  expected_sha256: 108677dabadfb2888d4f8247b9377f5c074559414421b0245bd5896a9527b3c9
+
+training:
+  optimizer: adamw
+  batch_size: 16
+  gradient_accumulation_steps: 4
+  epochs: 10
+  max_steps: 1430
+  learning_rate: 1.0e-3
+  min_learning_rate: 1.0e-4
+  warmup_steps: 72
+  weight_decay: 0.1
+  grad_clip: 1.0
+  precision: bf16
+  checkpoint_dir: checkpoints/fictionpulper-5m-data10m-tokenizer-v2
+
+data:
+  corpus_path: data/corpus_v1/data10m-v1/corpus.jsonl
+  corpus_stats_path: data/corpus_v1/data10m-v1/preparation-summary.json
+  split_path: data/corpus_v1/data10m-v1/splits.json
+  expected_corpus_sha256: 7cd6323095a33336e4a002d96554aebd9deb26b5a6971f3d2044e67dfb035f5b
+  expected_split_sha256: 01e708c7454a044539921bc179ff1b9b3f31aba616d90a1b22b6ea3e628a1229
+  packed_metadata_path: data/packed/corpus-v1-tokenizer-v2/metadata.json
+  train_path: data/packed/corpus-v1-tokenizer-v2/train.bin
+  validation_path: data/packed/corpus-v1-tokenizer-v2/validation.bin
+  test_path: data/packed/corpus-v1-tokenizer-v2/test.bin
+  legacy_validation_path: data/packed/legacy-tokenizer-v2/validation.bin
+  legacy_validation_excluded_ids:
+    - 162495d6f1c1
+  legacy_test_path: data/packed/legacy-tokenizer-v2/test.bin
+
+comparison:
+  write_training_comparison_artifacts: false
+  tokenizer_comparison_path: experiments/fictionpulper-5m-data10m-tokenizer-v2/tokenizer-comparison.json
+  smoke_run_summary_path: runs/smoke-5m-20261007-v1/summary.json
+  smoke_run_manifest_path: runs/smoke-5m-20261007-v1/manifest.json
+  smoke_generations_path: runs/smoke-5m-20261007-v1/generations/best-validation-final.json
+  data10m_v1_summary_path: runs/fictionpulper-5m-data10m-v1/summary.json
+  data10m_v1_generations_path: runs/fictionpulper-5m-data10m-v1/generations/best-validation-final.json
+  data10m_v1_packed_metadata_path: data/packed/corpus-v1/metadata.json
+  near_duplicate_resolution_path: data/corpus_v1/data10m-v1/near-duplicate-resolution.json
+
+logging:
+  tensorboard_dir: runs/fictionpulper-5m-data10m-tokenizer-v2/tensorboard

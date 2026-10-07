@@ -160,6 +160,14 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
     metadata_path = Path(data_config["packed_metadata_path"])
     output_dir = metadata_path.parent
 
+    for label, path in (("corpus", corpus_path), ("split", split_path)):
+        expected_hash = data_config.get(f"expected_{label}_sha256")
+        actual_hash = sha256_file(path)
+        if expected_hash and actual_hash != expected_hash:
+            raise RuntimeError(
+                f"Locked {label} hash changed: {actual_hash}, expected {expected_hash}"
+            )
+
     records = load_corpus(corpus_path)
     assignments = load_split_assignments(split_path, records)
     tokenizer_path = Path(config["tokenizer"]["path"])

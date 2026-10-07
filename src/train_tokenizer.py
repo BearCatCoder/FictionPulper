@@ -270,6 +270,13 @@ def train_from_config(config_path: Path, *, show_progress: bool = True) -> dict[
     corpus_path = Path(config["data"]["corpus_path"])
     split_path = Path(config["data"]["split_path"])
     output_path = Path(tokenizer_config["path"])
+    for label, path in (("corpus", corpus_path), ("split", split_path)):
+        expected_hash = config["data"].get(f"expected_{label}_sha256")
+        actual_hash = sha256_file(path)
+        if expected_hash and actual_hash != expected_hash:
+            raise RuntimeError(
+                f"Locked {label} hash changed: {actual_hash}, expected {expected_hash}"
+            )
     records = load_corpus(corpus_path)
     assignments = load_split_assignments(split_path, records)
     training_records = [record for record in records if assignments[record["id"]] == "train"]
@@ -289,8 +296,16 @@ def train_from_config(config_path: Path, *, show_progress: bool = True) -> dict[
         output_path=output_path,
         tokenizer_hash=tokenizer_hash,
     )
+    stats["normalizer"] = None
+    stats["training_split"] = "train"
+    stats["training_document_ids_sha256"] = hashlib.sha256(
+        "\n".join(sorted(record["id"] for record in training_records)).encode("utf-8")
+    ).hexdigest()
+    stats["split_manifest_path"] = str(split_path)
+    stats["split_manifest_sha256"] = sha256_file(split_path)
     write_json_atomic(output_path.with_suffix(".meta.json"), stats)
-    update_corpus_statistics(corpus_path, stats)
+    if tokenizer_config.get("update_corpus_statistics", True):
+        update_corpus_statistics(corpus_path, stats)
     return stats
 
 

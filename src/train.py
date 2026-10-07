@@ -89,6 +89,7 @@ def make_dataset_from_path(
     *,
     sequence_length: int,
     pad_token_id: int,
+    exclude_document_ids: set[str] | None = None,
 ) -> PackedStoryDataset:
     path = Path(bin_path)
     return PackedStoryDataset(
@@ -96,6 +97,7 @@ def make_dataset_from_path(
         path.with_suffix(".index.json"),
         sequence_length=sequence_length,
         pad_token_id=pad_token_id,
+        exclude_document_ids=exclude_document_ids,
     )
 
 
@@ -809,7 +811,9 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             use_bf16=use_bf16,
         )
         legacy_validation_metrics = None
+        legacy_validation_clean_metrics = None
         legacy_test_metrics = None
+        excluded_validation_ids: set[str] = set()
         if "legacy_validation_path" in config["data"] and "legacy_test_path" in config["data"]:
             legacy_validation_dataset = make_dataset_from_path(
                 config["data"]["legacy_validation_path"],
@@ -823,6 +827,23 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 device=device,
                 use_bf16=use_bf16,
             )
+            excluded_validation_ids = set(
+                config["data"].get("legacy_validation_excluded_ids", [])
+            )
+            if excluded_validation_ids:
+                legacy_validation_clean_dataset = make_dataset_from_path(
+                    config["data"]["legacy_validation_path"],
+                    sequence_length=model_config.max_seq_len,
+                    pad_token_id=pad_token_id,
+                    exclude_document_ids=excluded_validation_ids,
+                )
+                legacy_validation_clean_metrics = evaluate(
+                    model,
+                    legacy_validation_clean_dataset,
+                    batch_size=batch_size,
+                    device=device,
+                    use_bf16=use_bf16,
+                )
             legacy_test_dataset = make_dataset_from_path(
                 config["data"]["legacy_test_path"],
                 sequence_length=model_config.max_seq_len,
@@ -845,6 +866,12 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 "legacy_seed_validation": legacy_validation_metrics,
                 "legacy_seed_test": legacy_test_metrics,
             }
+            if legacy_validation_clean_metrics is not None:
+                sealed_evaluations["legacy_seed_validation_leakage_clean_evaluation_count"] = 1
+                sealed_evaluations["legacy_seed_validation_leakage_clean"] = {
+                    **legacy_validation_clean_metrics,
+                    "excluded_ids": sorted(excluded_validation_ids),
+                }
             write_json_atomic(run_dir / "sealed-evaluations.json", sealed_evaluations)
         final_generation_prompts = FIXED_PROMPTS + list(GENRE_PROMPTS.values())
         final_generations = generation_snapshot(
@@ -892,8 +919,13 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
         if legacy_validation_metrics is not None and legacy_test_metrics is not None:
             summary["corpus_v1_test"] = test_metrics
             summary["legacy_seed_validation"] = legacy_validation_metrics
+            if legacy_validation_clean_metrics is not None:
+                summary["legacy_seed_validation_leakage_clean"] = {
+                    **legacy_validation_clean_metrics,
+                    "excluded_ids": sorted(excluded_validation_ids),
+                }
             summary["legacy_seed_test"] = legacy_test_metrics
-        if config.get("comparison"):
+        if config.get("comparison", {}).get("write_training_comparison_artifacts", True):
             write_comparison_artifacts(
                 run_dir=run_dir,
                 config=config,
