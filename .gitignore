@@ -7,6 +7,7 @@ data/raw/
 data/corpus/
 data/packed/
 data/corpus_v1/
+data/corpus_v2/
 
 checkpoints/
 runs/

@@ -80,6 +80,18 @@ review-samples.jsonl     Boundary evidence around representative stories
 
 The verified build contains 1,875 unique stories and 10,041,019 tokens estimated with the frozen smoke tokenizer. It rejected 95 exact duplicates, reported 31 near-duplicate candidates for human review, and did not admit medium- or low-confidence extraction results. Original publication years remain `null` because the Gutenberg catalog's `Issued` field is the ebook release date, not trustworthy original-publication metadata.
 
+## Build Corpus v2
+
+Corpus-v2 starts from the immutable, near-duplicate-resolved 1,844-story Data10M corpus and expands it to 30 million exact tokenizer-v1 document tokens. It preserves every base ID and its existing assignment as metadata, but deliberately creates no new train/validation/test assignments and does not pack data.
+
+```bash
+python -m src.corpus_v2 --config configs/corpus-v2.yaml
+```
+
+The builder verifies the locked base and tokenizer hashes before acquisition. It may read the old Gutenberg cache, writes new raw downloads only under `data/raw/gutenberg-v2/`, and writes all Corpus-v2 data, manifests, review queues, duplicate clusters, staged 15/20/25/30M checkpoints, statistics, and audits under ignored `data/corpus_v2/`. Only high-confidence ordered TOC/body matches are admitted automatically; medium- and low-confidence evidence remains queued for review. A build that misses the token range, exceeds concentration limits, or finds unresolved near-duplicate clusters exits nonzero after preserving its diagnostic artifacts and is not freeze-ready.
+
+The verified Corpus-v2 build is freeze-ready with 4,362 stories and 30,004,706 exact tokenizer-v1 document tokens. Its corpus SHA-256 is `0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087`. Review resolved 155 near-duplicate clusters by excluding 162 duplicate editions or formatting variants; this includes three newly documented correctness exclusions from the locked base while preserving the preferred historical ID in each cluster. All accepted additions are high-confidence, all automatic schema/rights/quality/chapter/concentration gates pass, and zero near-duplicate clusters remain unresolved. Original publication era remains unknown rather than being inferred from Gutenberg ebook release dates. No Corpus-v2 train/validation/test split or packed dataset has been created.
+
 ## Data10M Experiment
 
 Prepare the controlled experiment corpus by resolving reviewed near duplicates and preserving retained seed assignments:
@@ -169,6 +181,10 @@ It completed all 420 optimizer steps from fresh initialization. Validation loss 
 ```bash
 python -m unittest discover -s tests
 ```
+
+## License
+
+FictionPulper is licensed under the Apache License 2.0. See `LICENSE` and `NOTICE`.
 
 ## Layout
 

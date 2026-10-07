@@ -1,0 +1,47 @@
+version: 2
+seed: 1337
+
+base:
+  corpus_path: data/corpus_v1/data10m-v1/corpus.jsonl
+  expected_sha256: 7cd6323095a33336e4a002d96554aebd9deb26b5a6971f3d2044e67dfb035f5b
+  expected_records: 1844
+  existing_splits_path: data/corpus_v1/data10m-v1/splits.json
+  existing_splits_expected_sha256: 01e708c7454a044539921bc179ff1b9b3f31aba616d90a1b22b6ea3e628a1229
+
+tokenizer:
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+source:
+  catalog_url: https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv
+  text_url: https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt
+  rights_basis: Project Gutenberg public-domain-in-the-United-States distribution
+  readable_cache_dirs:
+    - data/raw/gutenberg-v2
+    - data/raw/gutenberg
+  raw_write_dir: data/raw/gutenberg-v2
+  max_collections: 5000
+  request_delay_seconds: 0.05
+  request_timeout_seconds: 120
+
+output_dir: data/corpus_v2
+
+selection:
+  minimum_story_words: 500
+  maximum_story_words: 20000
+  target_tokens: 30000000
+  allowed_token_range: [28000000, 32000000]
+  stage_tokens: [15000000, 20000000, 25000000, 30000000]
+  minimum_toc_matches: 3
+  high_confidence_match_ratio: 0.8
+  concentration_limits:
+    maximum_source_collection_story_share: 0.05
+    maximum_source_collection_token_share: 0.08
+    maximum_author_story_share: 0.12
+    maximum_author_token_share: 0.15
+
+deduplication:
+  simhash_max_hamming: 10
+  minimum_jaccard: 0.72
+  minimum_length_ratio: 0.75
+  reviewed_exclusions_path: configs/corpus-v2-near-duplicate-review.yaml
