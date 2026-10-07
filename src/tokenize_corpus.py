@@ -202,6 +202,20 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
         gradient_accumulation_steps=int(training_config["gradient_accumulation_steps"]),
         target_epochs=int(training_config["epochs"]),
     )
+    schedule_candidates = {
+        str(epochs): derive_schedule(
+            split_metadata["train"],
+            batch_size=int(training_config["batch_size"]),
+            sequence_length=int(model_config["max_seq_len"]),
+            gradient_accumulation_steps=int(
+                training_config["gradient_accumulation_steps"]
+            ),
+            target_epochs=int(epochs),
+        )
+        for epochs in training_config.get(
+            "schedule_epoch_candidates", [training_config["epochs"]]
+        )
+    }
     all_story_token_counts = []
     total_words = 0
     for record in records:
@@ -252,6 +266,7 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
         "document_format": "<|story|> [genre] <|bos|> title blank-line text <|eos|>",
         "splits": split_metadata,
         "schedule": schedule,
+        "schedule_candidates": schedule_candidates,
         "tokenization_statistics": tokenization_statistics,
     }
     legacy_stats_path = corpus_path.with_suffix(".stats.json")

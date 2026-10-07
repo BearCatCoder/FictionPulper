@@ -94,7 +94,27 @@ Live acquisition is resumable. After each source, the builder atomically updates
 
 Every 15M, 20M, 25M, and 30M stage is a hard gate rather than a progress marker. Its JSON report includes accepted totals and prior-stage deltas, author/source-collection cardinality and token concentration (including the actual top-20 author share), rejection/review counts, a canonical content hash/index, and explicit schema, rights, exact/near-duplicate, boundary/chapter, OCR/prose, genre, length, concentration, and canonical-content audits. Stage-specific near-duplicate edge, cluster, and unresolved evidence is retained beside the report. A missing audit, a failed audit, or any unresolved accepted near-duplicate cluster terminates the build nonzero immediately. The final build is freeze-ready only when all required stages and final audits pass, the token count remains in the locked 28-32M range, and unresolved near-duplicate clusters are zero.
 
-The verified Corpus-v2 build is freeze-ready with 4,362 stories and 30,004,706 exact tokenizer-v1 document tokens. Its corpus SHA-256 is `0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087`. Review resolved 155 near-duplicate clusters by excluding 162 duplicate editions or formatting variants; this includes three newly documented correctness exclusions from the locked base while preserving the preferred historical ID in each cluster. All accepted additions are high-confidence, all automatic schema/rights/quality/chapter/concentration gates pass, and zero near-duplicate clusters remain unresolved. Original publication era remains unknown rather than being inferred from Gutenberg ebook release dates. No Corpus-v2 train/validation/test split or packed dataset has been created.
+The verified Corpus-v2 build is freeze-ready with 4,362 stories and 30,004,706 exact tokenizer-v1 document tokens. Its corpus SHA-256 is `0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087`. Review resolved 155 near-duplicate clusters by excluding 162 duplicate editions or formatting variants; this includes three newly documented correctness exclusions from the locked base while preserving the preferred historical ID in each cluster. All accepted additions are high-confidence, all automatic schema/rights/quality/chapter/concentration gates pass, and zero near-duplicate clusters remain unresolved. Original publication era remains unknown rather than being inferred from Gutenberg ebook release dates. The acquisition-only artifact is sealed by annotated tag `fictionpulper-corpus-v2-30m`; its compact tracked record is under `experiments/fictionpulper-corpus-v2-30m/`.
+
+## Prepare The Data30M Experiment
+
+Create deterministic 85%/7.5%/7.5% document splits from the sealed corpus:
+
+```bash
+python -m src.prepare_data30m
+```
+
+The split treats each source collection and each transitive reviewed near-duplicate cluster as indivisible. Historical Data10M assignments are preserved unless they conflict inside one of these groups; majority assignment maximizes the number retained and every changed ID is recorded. The resulting split has 3,707 train, 327 validation, and 328 test stories. All 4,362 documents, 434 constraint groups, 4,362 unique exact-text hashes, and 168 reviewed near-duplicate edges pass the leakage audit with zero cross-split violations.
+
+Pack the split with the unchanged tokenizer-v1 and 1,024-token context:
+
+```bash
+python -m src.tokenize_corpus --config configs/data30m-15m-v1.yaml
+```
+
+Outputs are isolated under `data/packed/corpus-v2-data30m/`; existing Data10M files are not overwritten. The train split contains 27,180,978 packed tokens, 27,177,271 valid next-token targets, and 28,412 document chunks. At batch size 16 with four-step gradient accumulation, one full chunk epoch is 444 optimizer steps. The preparation record reports 3/5/7/10 epoch candidates at 1,332/2,220/3,108/4,440 optimizer steps. Seven epochs is configured for the future controlled run because the sealed 15M/Data10M validation minimum occurred at epoch 7. No Data30M training has been started.
+
+The three Corpus-v2 seed exclusions were all historical train duplicates. Enforcing the stricter collection boundary also changes 108 of 1,841 retained historical assignments, so Data30M validation/test are a new benchmark and must not be presented as the unchanged Data10M evaluation sets. Sealed historical artifacts and metrics remain untouched.
 
 ## Data10M Experiment
 

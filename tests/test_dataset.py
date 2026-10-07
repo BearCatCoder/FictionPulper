@@ -68,6 +68,22 @@ class PackedDatasetTests(unittest.TestCase):
         self.assertEqual(schedule["recommended_max_steps"], 10)
         self.assertEqual(schedule["recommended_warmup_steps"], 1)
 
+    def test_schedule_candidate_step_counts_scale_by_epoch(self):
+        candidates = {
+            epochs: derive_schedule(
+                {"token_count": 100, "valid_target_token_count": 90, "sequence_count": 125},
+                batch_size=16,
+                sequence_length=1024,
+                gradient_accumulation_steps=4,
+                target_epochs=epochs,
+            )
+            for epochs in (3, 5, 7, 10)
+        }
+        self.assertEqual(
+            [candidates[epochs]["recommended_max_steps"] for epochs in (3, 5, 7, 10)],
+            [6, 10, 14, 20],
+        )
+
     def test_document_exclusion_removes_only_requested_samples(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
