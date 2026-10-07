@@ -1,0 +1,63 @@
+{
+  "run_id": "fictionpulper-15m-data10m-v1",
+  "experimental_variable": "model_parameter_count",
+  "baseline_tag": "fictionpulper-5m-data10m-v1",
+  "baseline_commit": "53f7ee2c124c805d22a39aaf95045e4dd6418b95",
+  "tokenizer_v2_tag_verified_but_not_used": "f853c767fa8d88ad54366b208088c912349f38c9",
+  "corpus_sha256": "7cd6323095a33336e4a002d96554aebd9deb26b5a6971f3d2044e67dfb035f5b",
+  "split_manifest_sha256": "01e708c7454a044539921bc179ff1b9b3f31aba616d90a1b22b6ea3e628a1229",
+  "packed_metadata_sha256": "c8a62cdbb5241fd2139fba0f9e8e4998b28a65d4f55129753a9fd0b247aabb0e",
+  "tokenizer_v1_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "configuration_sha256": "0d629f24e62dfa0c197ccf069d5b89c54a10a44bdde05433eb6db4d8e8f1b2ed",
+  "model": {
+    "trainable_parameter_count": 15047040,
+    "hidden_size": 384,
+    "num_layers": 8,
+    "num_attention_heads": 6,
+    "num_key_value_heads": 2,
+    "intermediate_size": 1120,
+    "max_seq_len": 1024,
+    "activation": "swiglu",
+    "normalization": "rmsnorm",
+    "positional_encoding": "rope",
+    "tie_word_embeddings": true,
+    "attention_bias": false,
+    "mlp_bias": false
+  },
+  "training_data": {
+    "stories": 1565,
+    "chunks": 9381,
+    "valid_targets": 8779154,
+    "allocated_slots": 9606144,
+    "padding_slots": 826990,
+    "padding_percentage": 8.608969426233877,
+    "optimizer_steps_per_epoch": 147,
+    "final_step_unused_capacity": 27648
+  },
+  "schedule": {
+    "epochs": 10,
+    "max_steps": 1470,
+    "warmup_steps": 74,
+    "peak_learning_rate": 0.001,
+    "minimum_learning_rate": 0.0001,
+    "weight_decay": 0.1,
+    "gradient_clip": 1.0,
+    "precision": "bf16",
+    "seed": 1337
+  },
+  "sanity_overfit": {
+    "status": "passed",
+    "fixed_sequences": 100,
+    "completed_steps": 40,
+    "initial_loss": 8.380160295032557,
+    "ln_vocab_size": 8.317766166719343,
+    "final_loss": 5.9924277386927844,
+    "missing_gradient_parameters": [],
+    "checkpoint_reload_identical": true,
+    "peak_gpu_memory_gb": 2.527255058288574,
+    "report_sha256": "8c2f25b058335a19b10052ab6cb5f731fdd017a1433eb0178b0fe0da09383d7d",
+    "checkpoint_sha256": "eddc9319dbd1e617a8de2558ff4ece5bc62f6d2f8c07838df22b6a7327013125"
+  },
+  "full_test_count": 46,
+  "full_test_status": "passed"
+}

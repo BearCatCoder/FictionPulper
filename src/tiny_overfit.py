@@ -168,6 +168,11 @@ def run_tiny_overfit(
     eval_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
     model = FictionPulperLM(model_config).to(device)
     parameter_count = model.trainable_parameter_count()
+    expected_parameter_count = config["model"].get("expected_parameter_count")
+    if expected_parameter_count and parameter_count != int(expected_parameter_count):
+        raise RuntimeError(
+            f"Parameter count changed: {parameter_count}, expected {expected_parameter_count}"
+        )
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=learning_rate, weight_decay=0.0, fused=True
     )
@@ -259,7 +264,8 @@ def run_tiny_overfit(
         )
         for index in generation_indices
     ]
-    checkpoint_path = Path("checkpoints/tiny-overfit.pt")
+    tiny_config = config.get("tiny_overfit", {})
+    checkpoint_path = Path(tiny_config.get("checkpoint_path", "checkpoints/tiny-overfit.pt"))
     save_checkpoint_atomic(
         checkpoint_path,
         {
@@ -330,7 +336,7 @@ def run_tiny_overfit(
         "checkpoint_path": str(checkpoint_path),
         "checkpoint_reload_identical": checkpoint_reload_identical,
     }
-    report_path = Path("runs/tiny-overfit/report.json")
+    report_path = Path(tiny_config.get("report_path", "runs/tiny-overfit/report.json"))
     write_json_atomic(report_path, report)
     if report["status"] != "passed":
         raise RuntimeError(

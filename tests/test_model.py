@@ -109,6 +109,20 @@ class ModelTests(unittest.TestCase):
         self.assertLessEqual(model.trainable_parameter_count(), 5_500_000)
         self.assertGreaterEqual(model.trainable_parameter_count(), 4_500_000)
 
+    def test_15m_model_parameter_count(self):
+        config = ModelConfig(
+            vocab_size=4096,
+            hidden_size=384,
+            num_layers=8,
+            num_attention_heads=6,
+            num_key_value_heads=2,
+            intermediate_size=1120,
+            max_seq_len=1024,
+        )
+        model = FictionPulperLM(config)
+        self.assertEqual(model.trainable_parameter_count(), 15_047_040)
+        self.assertEqual(model.embed_tokens.weight.data_ptr(), model.lm_head.weight.data_ptr())
+
 
 if __name__ == "__main__":
     unittest.main()

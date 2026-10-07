@@ -526,6 +526,20 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
     packed_metadata = json.loads(
         Path(config["data"]["packed_metadata_path"]).read_text(encoding="utf-8")
     )
+    expected_packed_hash = config["data"].get("expected_packed_metadata_sha256")
+    if expected_packed_hash and sha256_file(
+        Path(config["data"]["packed_metadata_path"])
+    ) != expected_packed_hash:
+        raise RuntimeError("Locked packed metadata hash changed")
+    for label, metadata_key, path_key in (
+        ("corpus", "corpus_sha256", "corpus_path"),
+        ("split", "split_sha256", "split_path"),
+    ):
+        expected_hash = config["data"].get(f"expected_{label}_sha256")
+        if expected_hash and packed_metadata[metadata_key] != expected_hash:
+            raise RuntimeError(f"Packed data {label} hash does not match the locked hash")
+        if expected_hash and sha256_file(Path(config["data"][path_key])) != expected_hash:
+            raise RuntimeError(f"Locked {label} artifact changed")
     if packed_metadata["tokenizer_hash"] != tokenizer_hash:
         raise RuntimeError("Packed data tokenizer hash does not match the configured tokenizer")
     expected_steps_per_epoch = packed_metadata["schedule"]["optimizer_steps_per_epoch"]
@@ -570,8 +584,12 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
 
     model = FictionPulperLM(model_config).to(device)
     parameter_count = model.trainable_parameter_count()
-    if parameter_count != 5_426_432:
-        raise RuntimeError(f"Locked parameter count changed: {parameter_count}")
+    expected_parameter_count = int(config["model"].get("expected_parameter_count", 5_426_432))
+    if parameter_count != expected_parameter_count:
+        raise RuntimeError(
+            f"Locked parameter count changed: {parameter_count}, "
+            f"expected {expected_parameter_count}"
+        )
     manifest["model_parameter_count"] = parameter_count
     write_json_atomic(run_dir / "manifest.json", manifest)
     optimizer = torch.optim.AdamW(
@@ -665,6 +683,9 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             epoch_loss_sum = 0.0
             epoch_valid_tokens = 0
             epoch_allocated_slots = 0
+            epoch_gradient_norm_sum = 0.0
+            epoch_gradient_norm_max = 0.0
+            epoch_gradient_norm_count = 0
             accumulation_count = 0
             epoch_start = time.monotonic()
             for batch_index, (input_ids, labels) in enumerate(loader, start=1):
@@ -704,6 +725,10 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 )
                 if not torch.isfinite(gradient_norm):
                     raise FloatingPointError("Gradient norm is NaN or Inf")
+                gradient_norm_value = float(gradient_norm.item())
+                epoch_gradient_norm_sum += gradient_norm_value
+                epoch_gradient_norm_max = max(epoch_gradient_norm_max, gradient_norm_value)
+                epoch_gradient_norm_count += 1
                 optimizer.step()
                 optimizer.zero_grad(set_to_none=True)
                 accumulation_count = 0
@@ -737,6 +762,8 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 "allocated_slots": epoch_allocated_slots,
                 "valid_tokens_per_second": epoch_valid_tokens / epoch_training_seconds,
                 "allocated_slots_per_second": epoch_allocated_slots / epoch_training_seconds,
+                "gradient_norm_mean": epoch_gradient_norm_sum / epoch_gradient_norm_count,
+                "gradient_norm_max": epoch_gradient_norm_max,
                 "gpu_memory_current_gb": torch.cuda.memory_allocated(device) / 1024**3,
                 "gpu_memory_peak_gb": torch.cuda.max_memory_allocated(device) / 1024**3,
                 "epoch_training_seconds": epoch_training_seconds,
@@ -750,6 +777,8 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             writer.add_scalar("train/tokens_per_second", metric["valid_tokens_per_second"], global_step)
             writer.add_scalar("train/allocated_slots_per_second", metric["allocated_slots_per_second"], global_step)
             writer.add_scalar("train/gpu_memory_gb", metric["gpu_memory_current_gb"], global_step)
+            writer.add_scalar("train/gradient_norm_mean", metric["gradient_norm_mean"], global_step)
+            writer.add_scalar("train/gradient_norm_max", metric["gradient_norm_max"], global_step)
             write_json_atomic(run_dir / "metrics.json", {"epochs": metrics})
             generation_snapshot(
                 model,
@@ -790,6 +819,7 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 f"epoch={epoch} step={global_step} train_loss={epoch_training_loss:.4f} "
                 f"val_loss={validation['loss']:.4f} val_ppl={validation['perplexity']:.2f} "
                 f"lr={optimizer.param_groups[0]['lr']:.6g} "
+                f"grad_norm={metric['gradient_norm_mean']:.3f}/{metric['gradient_norm_max']:.3f} "
                 f"valid_tok/s={metric['valid_tokens_per_second']:.0f} "
                 f"slots/s={metric['allocated_slots_per_second']:.0f}"
             )
