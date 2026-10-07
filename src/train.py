@@ -1,4 +1,4 @@
-"""Train and evaluate the locked FictionPulper-5M smoke configuration."""
+"""Train and evaluate a locked FictionPulper-5M experiment configuration."""
 
 from __future__ import annotations
 
@@ -80,6 +80,21 @@ def make_dataset(
         bin_path,
         bin_path.with_suffix(".index.json"),
         sequence_length=int(config["model"]["max_seq_len"]),
+        pad_token_id=pad_token_id,
+    )
+
+
+def make_dataset_from_path(
+    bin_path: str | Path,
+    *,
+    sequence_length: int,
+    pad_token_id: int,
+) -> PackedStoryDataset:
+    path = Path(bin_path)
+    return PackedStoryDataset(
+        path,
+        path.with_suffix(".index.json"),
+        sequence_length=sequence_length,
         pad_token_id=pad_token_id,
     )
 
@@ -299,6 +314,180 @@ def git_commit() -> str | None:
     return result.stdout.strip() if result.returncode == 0 else None
 
 
+def git_worktree_dirty() -> bool | None:
+    result = subprocess.run(
+        ["git", "status", "--porcelain"], capture_output=True, text=True, check=False
+    )
+    return bool(result.stdout.strip()) if result.returncode == 0 else None
+
+
+def write_comparison_artifacts(
+    *,
+    run_dir: Path,
+    config: dict[str, Any],
+    summary: dict[str, Any],
+    final_generations: dict[str, Any],
+    packed_metadata: dict[str, Any],
+) -> dict[str, Any]:
+    comparison_config = config.get("comparison", {})
+    smoke_summary = json.loads(
+        Path(comparison_config["smoke_run_summary_path"]).read_text(encoding="utf-8")
+    )
+    smoke_generations = json.loads(
+        Path(comparison_config["smoke_generations_path"]).read_text(encoding="utf-8")
+    )
+    smoke_by_prompt = {entry["prompt"]: entry for entry in smoke_generations["entries"]}
+    generation_entries = []
+    for entry in final_generations["entries"]:
+        original = smoke_by_prompt[entry["prompt"]]
+        generation_entries.append(
+            {
+                "prompt": entry["prompt"],
+                "original_1_48m_model": {
+                    "greedy": original["greedy"],
+                    "sampled": original["sampled"],
+                },
+                "corpus_v1_10m_model": {
+                    "greedy": entry["greedy"],
+                    "sampled": entry["sampled"],
+                },
+            }
+        )
+    generation_comparison = {
+        "prompts_unchanged": True,
+        "greedy_max_new_tokens": 128,
+        "sampled_max_new_tokens": 256,
+        "sampling_temperature": 0.8,
+        "sampling_top_k": 50,
+        "sampling_top_p": 0.95,
+        "sampling_seed": final_generations["sample_seed"],
+        "entries": generation_entries,
+    }
+    write_json_atomic(run_dir / "generation-comparison.json", generation_comparison)
+    generation_lines = ["# Generation Comparison", ""]
+    for entry in generation_entries:
+        generation_lines.extend(
+            [
+                f"## {entry['prompt']}",
+                "",
+                "### Original 1.48M-token model (greedy)",
+                "",
+                entry["original_1_48m_model"]["greedy"],
+                "",
+                "### Corpus-v1 ~10M-token model (greedy)",
+                "",
+                entry["corpus_v1_10m_model"]["greedy"],
+                "",
+                "### Original 1.48M-token model (sampled)",
+                "",
+                entry["original_1_48m_model"]["sampled"],
+                "",
+                "### Corpus-v1 ~10M-token model (sampled)",
+                "",
+                entry["corpus_v1_10m_model"]["sampled"],
+                "",
+            ]
+        )
+    (run_dir / "generation-comparison.md").write_text(
+        "\n".join(generation_lines), encoding="utf-8"
+    )
+
+    smoke_best_metric = next(
+        metric
+        for metric in smoke_summary["metrics"]
+        if metric["epoch"] == smoke_summary["best_validation_epoch"]
+    )
+    quantitative = {
+        "parameters": {
+            "smoke_v1": smoke_summary["model_parameter_count"],
+            "data10m_v1": summary["model_parameter_count"],
+        },
+        "tokenizer_sha256": {
+            "smoke_v1": packed_metadata["tokenizer_hash"],
+            "data10m_v1": packed_metadata["tokenizer_hash"],
+        },
+        "unique_train_tokens": {
+            "smoke_v1": json.loads(
+                Path(comparison_config["smoke_run_manifest_path"]).read_text(encoding="utf-8")
+            )["packed_metadata"]["splits"]["train"]["token_count"],
+            "data10m_v1": packed_metadata["splits"]["train"]["token_count"],
+        },
+        "train_corpus_stories": {
+            "smoke_v1": 604,
+            "data10m_v1": packed_metadata["splits"]["train"]["document_count"],
+        },
+        "best_validation_loss": {
+            "smoke_v1": smoke_summary["best_validation_loss"],
+            "data10m_v1": summary["best_validation_loss"],
+        },
+        "validation_perplexity": {
+            "smoke_v1": smoke_summary["best_validation_perplexity"],
+            "data10m_v1": summary["best_validation_perplexity"],
+        },
+        "legacy_validation_loss": {
+            "smoke_v1": smoke_summary["best_validation_loss"],
+            "data10m_v1": summary["legacy_seed_validation"]["loss"],
+        },
+        "legacy_test_loss": {
+            "smoke_v1": smoke_summary["test_loss"],
+            "data10m_v1": summary["legacy_seed_test"]["loss"],
+        },
+        "legacy_test_perplexity": {
+            "smoke_v1": smoke_summary["test_perplexity"],
+            "data10m_v1": summary["legacy_seed_test"]["perplexity"],
+        },
+        "legacy_test_accuracy": {
+            "smoke_v1": smoke_summary["test_next_token_accuracy"],
+            "data10m_v1": summary["legacy_seed_test"]["next_token_accuracy"],
+        },
+        "peak_vram_gb": {
+            "smoke_v1": smoke_summary["peak_gpu_memory_gb"],
+            "data10m_v1": summary["peak_gpu_memory_gb"],
+        },
+        "valid_tokens_per_second": {
+            "smoke_v1": smoke_summary["average_valid_tokens_per_second"],
+            "data10m_v1": summary["average_valid_tokens_per_second"],
+        },
+        "training_runtime_seconds": {
+            "smoke_v1": smoke_summary["training_seconds"],
+            "data10m_v1": summary["training_seconds"],
+        },
+        "smoke_best_validation_accuracy": smoke_best_metric[
+            "validation_next_token_accuracy"
+        ],
+    }
+    write_json_atomic(run_dir / "quantitative-comparison.json", quantitative)
+    rows = [
+        ("Parameters", "parameters"),
+        ("Tokenizer SHA-256", "tokenizer_sha256"),
+        ("Unique train tokens", "unique_train_tokens"),
+        ("Train corpus stories", "train_corpus_stories"),
+        ("Best validation loss", "best_validation_loss"),
+        ("Validation perplexity", "validation_perplexity"),
+        ("Legacy validation loss", "legacy_validation_loss"),
+        ("Legacy test loss", "legacy_test_loss"),
+        ("Legacy test perplexity", "legacy_test_perplexity"),
+        ("Legacy test accuracy", "legacy_test_accuracy"),
+        ("Peak VRAM GiB", "peak_vram_gb"),
+        ("Valid tokens/sec", "valid_tokens_per_second"),
+        ("Training runtime sec", "training_runtime_seconds"),
+    ]
+    table_lines = [
+        "# Quantitative Comparison",
+        "",
+        "| Metric | Smoke v1 | Data10M v1 |",
+        "|---|---:|---:|",
+    ]
+    for label, key in rows:
+        table_lines.append(
+            f"| {label} | {quantitative[key]['smoke_v1']} | {quantitative[key]['data10m_v1']} |"
+        )
+    (run_dir / "quantitative-comparison.md").write_text(
+        "\n".join(table_lines) + "\n", encoding="utf-8"
+    )
+    return {"generation": generation_comparison, "quantitative": quantitative}
+
+
 def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]:
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     training = config["training"]
@@ -320,6 +509,11 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
 
     tokenizer_path = Path(config["tokenizer"]["path"])
     tokenizer_hash = sha256_file(tokenizer_path)
+    expected_tokenizer_hash = config["tokenizer"].get("expected_sha256")
+    if expected_tokenizer_hash and tokenizer_hash != expected_tokenizer_hash:
+        raise RuntimeError(
+            f"Tokenizer hash changed: {tokenizer_hash}, expected {expected_tokenizer_hash}"
+        )
     tokenizer = Tokenizer.from_file(str(tokenizer_path))
     model_config = model_config_from_dict(config["model"])
     if tokenizer.get_vocab_size() != model_config.vocab_size:
@@ -330,14 +524,34 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
     packed_metadata = json.loads(
         Path(config["data"]["packed_metadata_path"]).read_text(encoding="utf-8")
     )
+    if packed_metadata["tokenizer_hash"] != tokenizer_hash:
+        raise RuntimeError("Packed data tokenizer hash does not match the configured tokenizer")
     expected_steps_per_epoch = packed_metadata["schedule"]["optimizer_steps_per_epoch"]
     if int(training["epochs"]) * expected_steps_per_epoch != int(training["max_steps"]):
         raise RuntimeError("Configured epochs and max_steps disagree with packed schedule")
+
+    configured_checkpoint_dir = training.get("checkpoint_dir")
+    checkpoint_dir = Path(configured_checkpoint_dir or "checkpoints")
+    if configured_checkpoint_dir and checkpoint_dir.exists():
+        raise FileExistsError(f"Checkpoint directory already exists: {checkpoint_dir}")
+    artifact_dir = run_dir / "artifacts"
+    artifact_dir.mkdir()
+    for artifact_key in (
+        "corpus_stats_path",
+        "split_path",
+    ):
+        artifact_path = config["data"].get(artifact_key)
+        if artifact_path:
+            shutil.copy2(artifact_path, artifact_dir / Path(artifact_path).name)
+    resolution_path = config.get("comparison", {}).get("near_duplicate_resolution_path")
+    if resolution_path:
+        shutil.copy2(resolution_path, artifact_dir / Path(resolution_path).name)
 
     manifest = {
         "run_id": run_id,
         "started_at": datetime.now().isoformat(),
         "git_commit": git_commit(),
+        "git_worktree_dirty": git_worktree_dirty(),
         "seed": seed,
         "fresh_random_initialization": True,
         "tiny_overfit_checkpoint_used": False,
@@ -345,6 +559,10 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
         "tokenizer_hash": tokenizer_hash,
         "packed_metadata": packed_metadata,
         "config_path": str(config_path),
+        "config_sha256": sha256_file(config_path),
+        "corpus_sha256": packed_metadata["corpus_sha256"],
+        "split_manifest_sha256": packed_metadata["split_sha256"],
+        "checkpoint_dir": str(checkpoint_dir),
     }
     write_json_atomic(run_dir / "manifest.json", manifest)
 
@@ -413,7 +631,7 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
         )
         best_validation_loss = float(initial_validation["loss"])
         save_checkpoint(
-            Path("checkpoints/best-validation.pt"),
+            checkpoint_dir / "best-validation.pt",
             model=model,
             optimizer=optimizer,
             model_config=model_config,
@@ -559,12 +777,12 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 "tokenizer_hash": tokenizer_hash,
                 "metrics": metrics,
             }
-            save_checkpoint(Path("checkpoints/latest.pt"), **checkpoint_arguments)
+            save_checkpoint(checkpoint_dir / "latest.pt", **checkpoint_arguments)
             if improved:
-                save_checkpoint(Path("checkpoints/best-validation.pt"), **checkpoint_arguments)
-            if epoch in {1, 5, 10, 15}:
+                save_checkpoint(checkpoint_dir / "best-validation.pt", **checkpoint_arguments)
+            if epoch in {1, 5, 10, 15, int(training["epochs"])}:
                 save_checkpoint(
-                    Path("checkpoints") / f"epoch-{epoch:02d}.pt", **checkpoint_arguments
+                    checkpoint_dir / f"epoch-{epoch:02d}.pt", **checkpoint_arguments
                 )
             print(
                 f"epoch={epoch} step={global_step} train_loss={epoch_training_loss:.4f} "
@@ -579,7 +797,7 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
 
         # The sealed test split is opened only after all epochs and best-checkpoint selection.
         best_checkpoint = torch.load(
-            "checkpoints/best-validation.pt", map_location=device, weights_only=False
+            checkpoint_dir / "best-validation.pt", map_location=device, weights_only=False
         )
         model.load_state_dict(best_checkpoint["model"])
         test_dataset = make_dataset(config, "test", pad_token_id)
@@ -590,6 +808,44 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             device=device,
             use_bf16=use_bf16,
         )
+        legacy_validation_metrics = None
+        legacy_test_metrics = None
+        if "legacy_validation_path" in config["data"] and "legacy_test_path" in config["data"]:
+            legacy_validation_dataset = make_dataset_from_path(
+                config["data"]["legacy_validation_path"],
+                sequence_length=model_config.max_seq_len,
+                pad_token_id=pad_token_id,
+            )
+            legacy_validation_metrics = evaluate(
+                model,
+                legacy_validation_dataset,
+                batch_size=batch_size,
+                device=device,
+                use_bf16=use_bf16,
+            )
+            legacy_test_dataset = make_dataset_from_path(
+                config["data"]["legacy_test_path"],
+                sequence_length=model_config.max_seq_len,
+                pad_token_id=pad_token_id,
+            )
+            legacy_test_metrics = evaluate(
+                model,
+                legacy_test_dataset,
+                batch_size=batch_size,
+                device=device,
+                use_bf16=use_bf16,
+            )
+            sealed_evaluations = {
+                "checkpoint_selection_complete": True,
+                "selection_metric": "Corpus-v1 validation loss only",
+                "corpus_v1_test_evaluation_count": 1,
+                "legacy_seed_validation_evaluation_count": 1,
+                "legacy_seed_test_evaluation_count": 1,
+                "corpus_v1_test": test_metrics,
+                "legacy_seed_validation": legacy_validation_metrics,
+                "legacy_seed_test": legacy_test_metrics,
+            }
+            write_json_atomic(run_dir / "sealed-evaluations.json", sealed_evaluations)
         final_generation_prompts = FIXED_PROMPTS + list(GENRE_PROMPTS.values())
         final_generations = generation_snapshot(
             model,
@@ -624,13 +880,31 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
             "peak_gpu_memory_bytes": torch.cuda.max_memory_allocated(device),
             "peak_gpu_memory_gb": torch.cuda.max_memory_allocated(device) / 1024**3,
             "model_parameter_count": parameter_count,
-            "best_checkpoint": "checkpoints/best-validation.pt",
+            "best_checkpoint": str(checkpoint_dir / "best-validation.pt"),
             "best_checkpoint_epoch": int(best_checkpoint["epoch"]),
-            "final_checkpoint": "checkpoints/latest.pt",
+            "best_checkpoint_sha256": sha256_file(checkpoint_dir / "best-validation.pt"),
+            "final_checkpoint": str(checkpoint_dir / "latest.pt"),
+            "final_checkpoint_sha256": sha256_file(checkpoint_dir / "latest.pt"),
             "metrics": metrics,
             "test_metrics": test_metrics,
             "final_generations": final_generations,
         }
+        if legacy_validation_metrics is not None and legacy_test_metrics is not None:
+            summary["corpus_v1_test"] = test_metrics
+            summary["legacy_seed_validation"] = legacy_validation_metrics
+            summary["legacy_seed_test"] = legacy_test_metrics
+        if config.get("comparison"):
+            write_comparison_artifacts(
+                run_dir=run_dir,
+                config=config,
+                summary=summary,
+                final_generations=final_generations,
+                packed_metadata=packed_metadata,
+            )
+            summary["comparison_artifacts"] = {
+                "generation": str(run_dir / "generation-comparison.json"),
+                "quantitative": str(run_dir / "quantitative-comparison.json"),
+            }
         write_json_atomic(run_dir / "summary.json", summary)
         manifest["completed_at"] = datetime.now().isoformat()
         manifest["best_checkpoint_epoch"] = int(best_checkpoint["epoch"])

@@ -6,6 +6,7 @@ __pycache__/
 data/raw/
 data/corpus/
 data/packed/
+data/corpus_v1/
 
 checkpoints/
 runs/

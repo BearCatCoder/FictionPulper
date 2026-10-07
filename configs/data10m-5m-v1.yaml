@@ -1,0 +1,57 @@
+seed: 1337
+
+model:
+  vocab_size: 4096
+  hidden_size: 256
+  num_layers: 6
+  num_attention_heads: 8
+  num_key_value_heads: 2
+  intermediate_size: 736
+  max_seq_len: 1024
+  activation: swiglu
+  normalization: rmsnorm
+  positional_encoding: rope
+  tie_word_embeddings: true
+  attention_bias: false
+  mlp_bias: false
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+training:
+  optimizer: adamw
+  batch_size: 16
+  gradient_accumulation_steps: 4
+  epochs: 10
+  max_steps: 1470
+  learning_rate: 1.0e-3
+  min_learning_rate: 1.0e-4
+  warmup_steps: 74
+  weight_decay: 0.1
+  grad_clip: 1.0
+  precision: bf16
+  checkpoint_dir: checkpoints/fictionpulper-5m-data10m-v1
+
+data:
+  corpus_path: data/corpus_v1/data10m-v1/corpus.jsonl
+  corpus_stats_path: data/corpus_v1/data10m-v1/preparation-summary.json
+  split_path: data/corpus_v1/data10m-v1/splits.json
+  packed_metadata_path: data/packed/corpus-v1/metadata.json
+  train_path: data/packed/corpus-v1/train.bin
+  validation_path: data/packed/corpus-v1/validation.bin
+  test_path: data/packed/corpus-v1/test.bin
+  legacy_validation_path: data/packed/validation.bin
+  legacy_test_path: data/packed/test.bin
+  comparison_smoke_packed_metadata_path: data/packed/metadata.json
+
+comparison:
+  smoke_run_summary_path: runs/smoke-5m-20261007-v1/summary.json
+  smoke_run_manifest_path: runs/smoke-5m-20261007-v1/manifest.json
+  smoke_generations_path: runs/smoke-5m-20261007-v1/generations/best-validation-final.json
+  near_duplicate_resolution_path: data/corpus_v1/data10m-v1/near-duplicate-resolution.json
+
+logging:
+  tensorboard_dir: runs/fictionpulper-5m-data10m-v1/tensorboard

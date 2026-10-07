@@ -17,7 +17,7 @@ from tokenizers import Tokenizer
 from src.train_tokenizer import load_corpus, load_split_assignments, sha256_file, write_json_atomic
 
 
-PREPROCESSING_VERSION = 5
+PREPROCESSING_VERSION = 6
 CONTROL_GENRES = {
     "crime": ("crime", "criminal", "murder"),
     "noir": ("noir",),
@@ -89,12 +89,18 @@ def write_split(
     temporary_bin_path.replace(bin_path)
     write_json_atomic(index_path, {"split": split, "documents": index})
 
+    valid_targets = sum(document["length"] - 1 for document in index)
+    sequence_count = sum(document["sequence_count"] for document in index)
+    allocated_slots = sequence_count * sequence_length
     return {
         "document_count": len(records),
         "word_count": sum(record["words"] for record in records),
         "token_count": offset,
-        "valid_target_token_count": sum(document["length"] - 1 for document in index),
-        "sequence_count": sum(document["sequence_count"] for document in index),
+        "valid_target_token_count": valid_targets,
+        "sequence_count": sequence_count,
+        "allocated_chunk_slots": allocated_slots,
+        "padding_slots": allocated_slots - valid_targets,
+        "padding_percentage": 100.0 * (allocated_slots - valid_targets) / allocated_slots,
         "bin_path": str(bin_path),
         "bin_sha256": sha256_file(bin_path),
         "index_path": str(index_path),
@@ -159,7 +165,6 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
     tokenizer_path = Path(config["tokenizer"]["path"])
     tokenizer = Tokenizer.from_file(str(tokenizer_path))
     tokenizer_hash = sha256_file(tokenizer_path)
-    corpus_stats = json.loads(corpus_path.with_suffix(".stats.json").read_text(encoding="utf-8"))
     split_payload = json.loads(split_path.read_text(encoding="utf-8"))
 
     split_ids = {
@@ -187,21 +192,85 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
         batch_size=int(training_config["batch_size"]),
         sequence_length=int(model_config["max_seq_len"]),
         gradient_accumulation_steps=int(training_config["gradient_accumulation_steps"]),
+        target_epochs=int(training_config["epochs"]),
     )
+    all_story_token_counts = []
+    total_words = 0
+    for record in records:
+        token_ids, _ = encode_document(tokenizer, record)
+        all_story_token_counts.append(len(token_ids))
+        total_words += record["words"]
+    sorted_token_counts = sorted(all_story_token_counts)
+
+    def percentile_95(values: list[int]) -> int:
+        return values[max(0, math.ceil(0.95 * len(values)) - 1)]
+
+    total_tokens = sum(item["token_count"] for item in split_metadata.values())
+    tokenization_statistics = {
+        "definition": "full packed documents including story/control/BOS/EOS tokens",
+        "total_corpus_tokens": total_tokens,
+        "split_tokens": {
+            split: split_metadata[split]["token_count"]
+            for split in ("train", "validation", "test")
+        },
+        "tokens_per_word": total_tokens / total_words,
+        "story_tokens": {
+            "minimum": min(all_story_token_counts),
+            "median": float(np.median(all_story_token_counts)),
+            "mean": float(np.mean(all_story_token_counts)),
+            "percentile_95": percentile_95(sorted_token_counts),
+            "maximum": max(all_story_token_counts),
+            "thresholds": {
+                str(threshold): {
+                    "count": sum(value <= threshold for value in all_story_token_counts),
+                    "percentage": 100.0
+                    * sum(value <= threshold for value in all_story_token_counts)
+                    / len(all_story_token_counts),
+                }
+                for threshold in (1024, 2048, 4096)
+            },
+        },
+    }
     metadata = {
         "preprocessing_version": PREPROCESSING_VERSION,
-        "dataset": corpus_stats["dataset"],
-        "dataset_source_revision": corpus_stats["dataset_revision"],
         "split_seed": split_payload["seed"],
         "corpus_path": str(corpus_path),
         "corpus_sha256": sha256_file(corpus_path),
+        "split_path": str(split_path),
+        "split_sha256": sha256_file(split_path),
         "tokenizer_path": str(tokenizer_path),
         "tokenizer_hash": tokenizer_hash,
         "dtype": "uint16",
         "document_format": "<|story|> [genre] <|bos|> title blank-line text <|eos|>",
         "splits": split_metadata,
         "schedule": schedule,
+        "tokenization_statistics": tokenization_statistics,
     }
+    legacy_stats_path = corpus_path.with_suffix(".stats.json")
+    if legacy_stats_path.exists():
+        legacy_stats = json.loads(legacy_stats_path.read_text(encoding="utf-8"))
+        metadata["dataset"] = legacy_stats.get("dataset")
+        metadata["dataset_source_revision"] = legacy_stats.get("dataset_revision")
+    corpus_stats_path = data_config.get("corpus_stats_path")
+    if corpus_stats_path:
+        stats_path = Path(corpus_stats_path)
+        metadata["corpus_stats_path"] = str(stats_path)
+        metadata["corpus_stats_sha256"] = sha256_file(stats_path)
+    smoke_metadata_path = data_config.get("comparison_smoke_packed_metadata_path")
+    if smoke_metadata_path:
+        smoke_path = Path(smoke_metadata_path)
+        smoke = json.loads(smoke_path.read_text(encoding="utf-8"))
+        smoke_tokens = sum(item["token_count"] for item in smoke["splits"].values())
+        smoke_words = sum(item["word_count"] for item in smoke["splits"].values())
+        metadata["smoke_tokenizer_efficiency_comparison"] = {
+            "smoke_packed_metadata_path": str(smoke_path),
+            "smoke_packed_metadata_sha256": sha256_file(smoke_path),
+            "smoke_total_tokens": smoke_tokens,
+            "smoke_tokens_per_word": smoke_tokens / smoke_words,
+            "data10m_tokens_per_word": tokenization_statistics["tokens_per_word"],
+            "relative_tokens_per_word_change_percentage": 100.0
+            * (tokenization_statistics["tokens_per_word"] / (smoke_tokens / smoke_words) - 1.0),
+        }
     write_json_atomic(metadata_path, metadata)
     return metadata
 

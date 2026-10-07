@@ -56,6 +56,18 @@ class PackedDatasetTests(unittest.TestCase):
         self.assertEqual(schedule["recommended_max_steps"], 30)
         self.assertEqual(schedule["actual_corpus_passes"], 15)
 
+    def test_schedule_uses_requested_epoch_count(self):
+        schedule = derive_schedule(
+            {"token_count": 100, "valid_target_token_count": 90, "sequence_count": 3},
+            batch_size=2,
+            sequence_length=16,
+            gradient_accumulation_steps=2,
+            target_epochs=10,
+        )
+        self.assertEqual(schedule["document_chunk_epochs"], 10)
+        self.assertEqual(schedule["recommended_max_steps"], 10)
+        self.assertEqual(schedule["recommended_warmup_steps"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

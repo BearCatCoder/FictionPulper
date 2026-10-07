@@ -1,8 +1,8 @@
 # FictionPulper
 
-FictionPulper is a from-scratch decoder-only language model project for short-form pulp fiction. The current target is a roughly 5M-parameter smoke model used to validate the complete data, tokenizer, training, checkpoint, and generation pipeline.
+FictionPulper is a from-scratch decoder-only language model project for short-form pulp fiction. The 5M-parameter smoke pipeline is complete; the current controlled experiment measures the effect of expanding unique fiction data while holding the model and tokenizer fixed.
 
-The current implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, and the mandatory tiny-overfit gate. No pretrained tokenizer or model weights are used. Full smoke-corpus training has not started.
+The implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, training, evaluation, checkpointing, and generation. No pretrained tokenizer or model weights are used.
 
 ## Environment
 
@@ -49,6 +49,60 @@ python -m src.prepare_corpus \
 ```
 
 `zkeown/gutenberg-corpus` was inaccessible during initial local exploration. It should be revisited later rather than treated as confirmed unavailable.
+
+## Build Corpus v1
+
+Corpus v1 preserves all 710 seed-story IDs and adds complete stories from Project Gutenberg's public catalog and plain-text editions. It uses the existing smoke tokenizer only to estimate size; it does not retrain or modify the tokenizer.
+
+```bash
+python -m src.corpus_v1 \
+  --seed-corpus data/corpus/stories.jsonl \
+  --tokenizer data/tokenizer/tokenizer.json \
+  --target-tokens 10000000 \
+  --max-collections 1000
+```
+
+Automatic admission is deliberately conservative. A collection must be English short fiction by an author with safely closed public-domain dates, must not carry essay or poetry subjects, and must provide a table of contents whose entries match ordered body headings. Collections with weak heading coverage or multiple non-story TOC indicators go to review; capitalization alone never creates a boundary. New stories must contain 500-10,000 words and pass prose/OCR checks.
+
+Generated outputs under ignored `data/corpus_v1/` are:
+
+```text
+corpus.jsonl             Seed plus accepted stories
+additions.jsonl          Accepted Gutenberg stories only
+stats.json               Counts, hashes, distributions, and stop reason
+medium-review.jsonl      Review-required extraction snippets
+low-confidence.jsonl     Rejected collection diagnostics
+rejections.jsonl         Per-story rejection reasons
+exact-duplicates.jsonl   Automatically rejected normalized duplicates
+near-duplicates.jsonl    Similarity candidates; never auto-deleted
+review-samples.jsonl     Boundary evidence around representative stories
+```
+
+The verified build contains 1,875 unique stories and 10,041,019 tokens estimated with the frozen smoke tokenizer. It rejected 95 exact duplicates, reported 31 near-duplicate candidates for human review, and did not admit medium- or low-confidence extraction results. Original publication years remain `null` because the Gutenberg catalog's `Issued` field is the ebook release date, not trustworthy original-publication metadata.
+
+## Data10M Experiment
+
+Prepare the controlled experiment corpus by resolving reviewed near duplicates and preserving retained seed assignments:
+
+```bash
+python -m src.prepare_data10m
+```
+
+Pack it separately with the frozen smoke tokenizer:
+
+```bash
+python -m src.tokenize_corpus --config configs/data10m-5m-v1.yaml
+```
+
+The packed schedule is 147 optimizer steps per epoch, 1,470 total steps over 10 complete chunk epochs, and 74 warmup steps. Run from fresh random weights with:
+
+```bash
+python -m src.train \
+  --config configs/data10m-5m-v1.yaml \
+  --run-id fictionpulper-5m-data10m-v1
+```
+
+The completed run selected epoch 10 at Corpus-v1 validation loss 3.4945. Corpus-v1 test loss was 3.5650; the anchored legacy test improved from loss 4.1957 / perplexity 66.40 / accuracy 23.81% to loss 3.6235 / perplexity 37.47 / accuracy 30.07%. Full artifacts are under `runs/fictionpulper-5m-data10m-v1/`, and checkpoints are isolated under `checkpoints/fictionpulper-5m-data10m-v1/`.
 
 ## Train The Tokenizer
 

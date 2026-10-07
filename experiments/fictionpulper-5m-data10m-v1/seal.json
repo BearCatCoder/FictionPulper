@@ -1,0 +1,36 @@
+{
+  "run_id": "fictionpulper-5m-data10m-v1",
+  "status": "sealed",
+  "corpus_sha256": "7cd6323095a33336e4a002d96554aebd9deb26b5a6971f3d2044e67dfb035f5b",
+  "split_manifest_sha256": "01e708c7454a044539921bc179ff1b9b3f31aba616d90a1b22b6ea3e628a1229",
+  "near_duplicate_resolution_sha256": "d736191172a6291f33b9ff42e35ec8a16ffdcbd49bb085739ea197fd756584bb",
+  "preparation_summary_sha256": "f25672e4be45bc3e77198461facc6672f062c7f6bbd75408cc14d20f083eceea",
+  "packed_metadata_sha256": "c8a62cdbb5241fd2139fba0f9e8e4998b28a65d4f55129753a9fd0b247aabb0e",
+  "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "best_checkpoint_sha256": "6065c99aa7843f8884bfc152705915a92d35020ae34535666d4e2b54569ebe77",
+  "data10m_duplicate_clusters_crossing_splits": 0,
+  "legacy_seed_validation": {
+    "known_near_duplicate_contamination": true,
+    "affected_ids": [
+      "162495d6f1c1"
+    ],
+    "historical_loss": 3.567081496045936,
+    "historical_metric_preserved": true
+  },
+  "legacy_seed_validation_leakage_clean": {
+    "loss": 3.5660816286227934,
+    "perplexity": 35.37769824822596,
+    "next_token_accuracy": 0.3084506428415777,
+    "excluded_ids": [
+      "162495d6f1c1"
+    ]
+  },
+  "run_artifact_hashes": {
+    "config.yaml": "6dc724490c025bebc137822c285d138a5759baf38a6ab6af0a36fbee303f151a",
+    "manifest.json": "97a414d603270ab6c3e9ea14ba12fd955b838a4604f4eb252ee752bf602cba6c",
+    "metrics.json": "5247127c04b43ef07a73388d0711eb6c9da30495aa626ec5f4e6772f8248e078",
+    "sealed-evaluations.json": "8d169ae0fccac0073e82c3efb90ca3357c7c7310b46c2299134a966f2b1eb88a",
+    "legacy-seed-validation-leakage-clean.json": "c6ffe5c1759b7672a49adfa8d49cfbc35bac42f036c439e8ee6b891c7b585a15",
+    "reproducibility-audit.json": "ff499d95491d75dfb6a8b08cadd453a78df239c34598c5823a172d58c36878a6"
+  }
+}
