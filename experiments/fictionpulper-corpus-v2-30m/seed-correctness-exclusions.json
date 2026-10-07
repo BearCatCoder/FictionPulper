@@ -1,0 +1,68 @@
+{
+  "corpus_id": "fictionpulper-corpus-v2-30m",
+  "historical_corpus": "data10m-v1",
+  "historical_corpus_records": 1844,
+  "retained_historical_records": 1841,
+  "policy": "Exclude newly confirmed duplicate editions while retaining the preferred historical record; do not substitute text or alter sealed historical experiments.",
+  "historical_experiments_unchanged": true,
+  "exclusions": [
+    {
+      "canonical_id": "eae8e59a2c54",
+      "title": "THE MONEY BOX",
+      "author": "Andersen, H. C. (Hans Christian)",
+      "historical_split": "train",
+      "reason_for_exclusion": "Newly confirmed duplicate edition of the retained historical story.",
+      "evidence": {
+        "near_duplicate_cluster_id": "near-0040",
+        "retained_canonical_id": "96e8f7d7da19",
+        "retained_title": "The Money-box",
+        "normalized_title_match": true,
+        "normalized_opening_match": true,
+        "simhash_hamming_distance": 11,
+        "word_5gram_jaccard": 0.7160385626643295,
+        "length_ratio": 0.9979317476732161
+      },
+      "original_text_hash": "ae7a769cfb156956307f6a3935d2374a5dc502ac9c8883a98b694e801180dd42",
+      "corpus_v2_disposition": "excluded_as_reviewed_duplicate; retained counterpart 96e8f7d7da19"
+    },
+    {
+      "canonical_id": "pg-2591-df462bdf8e57",
+      "title": "RAPUNZEL",
+      "author": "Grimm, Jacob, 1785-1863; Grimm, Wilhelm, 1786-1859",
+      "historical_split": "train",
+      "reason_for_exclusion": "Newly confirmed duplicate edition of the retained historical story.",
+      "evidence": {
+        "near_duplicate_cluster_id": "near-0035",
+        "retained_canonical_id": "7af64322d491",
+        "retained_title": "RAPUNZEL",
+        "normalized_title_match": true,
+        "normalized_opening_match": false,
+        "simhash_hamming_distance": 5,
+        "word_5gram_jaccard": 0.7799619530754597,
+        "length_ratio": 0.9859254046446164
+      },
+      "original_text_hash": "6c774e634f7a21cda995737e12c47daa3c0ccc5002ba5eb85c4e888fd054bc62",
+      "corpus_v2_disposition": "excluded_as_reviewed_duplicate; retained counterpart 7af64322d491"
+    },
+    {
+      "canonical_id": "pg-2781-20a029267805",
+      "title": "HOW THE WHALE GOT HIS THROAT",
+      "author": "Kipling, Rudyard, 1865-1936",
+      "historical_split": "train",
+      "reason_for_exclusion": "Newly confirmed duplicate edition of the retained historical story.",
+      "evidence": {
+        "near_duplicate_cluster_id": "near-0047",
+        "retained_canonical_id": "aafcfcd8acb1",
+        "retained_title": "How the Whale Got His Throat",
+        "normalized_title_match": true,
+        "normalized_opening_match": true,
+        "simhash_hamming_distance": 8,
+        "word_5gram_jaccard": 0.884180790960452,
+        "length_ratio": 0.9276061776061776
+      },
+      "original_text_hash": "10342214981fb0065d9a3cf30011a41e478e2bb3d31dc44380349002cdda00ae",
+      "corpus_v2_disposition": "excluded_as_reviewed_duplicate; retained counterpart aafcfcd8acb1"
+    }
+  ],
+  "benchmark_consequence": "All three excluded records and their retained counterparts were historical train records. Historical validation and test identities are unaffected. The sealed Data10M experiments remain unchanged; Data30M training will omit these three duplicate training variants without substituting different text."
+}

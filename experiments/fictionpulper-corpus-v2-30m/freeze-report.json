@@ -1,0 +1,105 @@
+{
+  "corpus_id": "fictionpulper-corpus-v2-30m",
+  "status": "freeze_ready",
+  "build_git_commit": "54153002897e57aa1a4e0f9e95697356b3fc8860",
+  "build_worktree_dirty": false,
+  "counts": {
+    "stories": 4362,
+    "words": 17471134,
+    "tokenizer_v1_tokens": 30004706,
+    "seed_stories_retained": 1841,
+    "seed_correctness_exclusions": 3,
+    "new_accepted_stories": 2521,
+    "unique_authors": 247,
+    "unique_collections": 434
+  },
+  "story_length_distribution": {
+    "minimum": 334,
+    "median": 2979.0,
+    "mean": 4005.3035304906007,
+    "p95": 10524,
+    "maximum": 19991
+  },
+  "token_length_distribution": {
+    "minimum": 439,
+    "median": 5100.5,
+    "mean": 6878.657955066483,
+    "p95": 18638,
+    "maximum": 39137
+  },
+  "genre_distribution": {
+    "story_counts": {
+      "adventure": 434,
+      "crime": 205,
+      "fantasy": 1162,
+      "horror": 265,
+      "mystery": 260,
+      "science_fiction": 97,
+      "unclassified": 2337,
+      "western": 235
+    },
+    "token_counts": {
+      "adventure": 2989157,
+      "crime": 1846381,
+      "fantasy": 5973784,
+      "horror": 2027139,
+      "mystery": 2487256,
+      "science_fiction": 645493,
+      "unclassified": 16816702,
+      "western": 2214439
+    },
+    "metadata_limitation": "Genre metadata is incomplete. Approximately 16.8M tokenizer-v1 tokens remain broadly unclassified; no new genre-classification project is part of this freeze."
+  },
+  "deduplication": {
+    "exact_duplicates_rejected": 1281,
+    "near_duplicate_candidate_edges": 168,
+    "near_duplicate_review_clusters": 155,
+    "reviewed_near_duplicate_exclusions": 162,
+    "unresolved_near_duplicate_clusters": 0
+  },
+  "rejections": {
+    "rights": 0,
+    "ocr_quality": 365,
+    "chapter_novel_contamination": 202,
+    "medium_confidence": 244,
+    "low_confidence": 558
+  },
+  "author_token_concentration": {
+    "largest_share": 0.04865820048361747,
+    "top_10_share": 0.22591276181809614,
+    "top_20_share": 0.3303830072522624
+  },
+  "collection_token_concentration": {
+    "largest_share": 0.018928497416371953,
+    "top_10_share": 0.08145702210846525,
+    "top_20_share": 0.1372316395968019
+  },
+  "hashes": {
+    "corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+    "additions_sha256": "769d41da6e83021f3aee06d6b12c36aa1797e1b6f9c869d9b2fe5d346accf38b",
+    "manifest_sha256": "e017072dee048866ed021d12ff15d8140c32577eaee95e00e468205b9e0c344d",
+    "tokenizer_v1_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+    "audits_sha256": "bdddf766e099cdd7f465be8344c3dea967feeff186492880c7cc615b957e67e2",
+    "stats_sha256": "e1d85aa105a558f7a8dfa231cbd43a20583376eb5bcb87ccc5981d6bf1cbf399"
+  },
+  "resume_ledger_replay_proof": {
+    "uninterrupted_sources_processed_from_raw": 1149,
+    "replay_sources_replayed_from_ledger": 1149,
+    "replay_sources_processed_from_raw": 0,
+    "uninterrupted_story_count": 4362,
+    "replay_story_count": 4362,
+    "uninterrupted_token_count": 30004706,
+    "replay_token_count": 30004706,
+    "uninterrupted_corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+    "replay_corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+    "uninterrupted_additions_sha256": "769d41da6e83021f3aee06d6b12c36aa1797e1b6f9c869d9b2fe5d346accf38b",
+    "replay_additions_sha256": "769d41da6e83021f3aee06d6b12c36aa1797e1b6f9c869d9b2fe5d346accf38b",
+    "uninterrupted_audits_sha256": "bdddf766e099cdd7f465be8344c3dea967feeff186492880c7cc615b957e67e2",
+    "replay_audits_sha256": "bdddf766e099cdd7f465be8344c3dea967feeff186492880c7cc615b957e67e2",
+    "identical": true
+  },
+  "historical_experiments_unchanged": true,
+  "splits_created": false,
+  "packed_dataset_created": false,
+  "model_training_started": false
+}
