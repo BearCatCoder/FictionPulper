@@ -1,0 +1,43 @@
+seed: 314159
+output_path: data/counterfactual_narrative_v1
+source_narrative_config: configs/continuity-curriculum-v1.yaml
+source_narrative_config_sha256: 454971b4311e76139ca93ab2115ba30f83ff1b3a9f2dce9f24baf08402dcca11
+maximum_world_tokens: 1024
+
+target:
+  main_positive_tokens: 4500000
+  allowed_main_positive_token_range: [4400000, 4600000]
+  generalization_positive_tokens: 100000
+
+splits:
+  main: {train: 0.90, validation: 0.05, test: 0.05}
+  generalization_holdout: additional
+
+tokenizer:
+  name: tokenizer-v1
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+state_families:
+  - object_ownership
+  - object_location
+  - character_location
+  - goal_intention
+  - knowledge_secret_holder
+  - relationship
+  - persistent_physical_state
+  - object_door_state
+  - cause_effect
+  - latest_state_update
+
+# These are deliberately split-exclusive subsets of Narrative-v1 families.
+pair_templates:
+  train: [interrupted_errand, witness_exchange, night_watch, delayed_departure, quiet_investigation, storm_shelter, border_crossing, missing_courier]
+  validation: [sealed_room, rescue_route, false_trail, dangerous_bargain]
+  test: [return_journey, public_ceremony, failed_signal, unexpected_guest]
+  generalization_holdout: [hidden_passage, last_transport, remote_outpost, double_message]
+
+audit:
+  classifier_acceptance_accuracy: 0.55
+  classifier_epochs: 20
+  classifier_learning_rate: 0.2

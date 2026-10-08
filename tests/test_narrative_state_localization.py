@@ -255,7 +255,9 @@ class NarrativeStateLocalizationTests(unittest.TestCase):
         self.assertFalse(candidate["seal_json_created"])
         for name, expected in candidate["report_artifacts"].items():
             self.assertEqual(sha256_file(experiment / name), expected)
-        self.assertFalse((experiment / "seal.json").exists())
+        seal = json.loads((experiment / "seal.json").read_text())
+        self.assertEqual(seal["status"], "sealed")
+        self.assertEqual(seal["final_classification"], {"category": "D", "label": "SYNTHETIC_SHORTCUT"})
 
 
 if __name__ == "__main__":

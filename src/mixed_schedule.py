@@ -250,6 +250,23 @@ def verify_schedule(schedule: Mapping[str, Any]) -> str:
             raise RuntimeError(f"Mixed-source target count is inconsistent for {name}")
         if observed_chunks[name] != int(details["chunks"]):
             raise RuntimeError(f"Mixed-source chunk count is inconsistent for {name}")
+    if "pair_attachment" in payload:
+        seen_presentations = 0
+        seen_pairs: set[str] = set()
+        for batch_start in range(0, len(payload["entries"]), int(payload["batch_size"])):
+            microbatch_ids: list[str] = []
+            for entry in payload["entries"][batch_start:batch_start + int(payload["batch_size"])]:
+                for attachment in entry.get("pair_presentations", []):
+                    microbatch_ids.append(str(attachment["pair_id"]))
+                    seen_pairs.add(str(attachment["pair_id"]))
+            if len(microbatch_ids) != len(set(microbatch_ids)):
+                raise RuntimeError("Pair attachment is duplicated within a microbatch")
+            seen_presentations += len(microbatch_ids)
+        attachment = payload["pair_attachment"]
+        if seen_presentations != int(attachment["pair_presentations"]):
+            raise RuntimeError("Pair presentation exposure is inconsistent")
+        if len(seen_pairs) != int(attachment["unique_pairs"]):
+            raise RuntimeError("Unique attached-pair exposure is inconsistent")
     return actual_hash
 
 
@@ -334,6 +351,25 @@ def build_schedule_from_config(config_path: Path) -> dict[str, Any]:
         seed=int(config["seed"]),
         source_artifacts=artifacts,
     )
+    attachment_sources = [
+        (name, details)
+        for name, details in source_config.items()
+        if details.get("pair_attachment_index")
+    ]
+    if attachment_sources:
+        if len(attachment_sources) != 1:
+            raise ValueError("Exactly one mixed source may provide pair attachments")
+        from src.pack_counterfactual_v1 import attach_pair_presentations
+
+        name, details = attachment_sources[0]
+        index_path = Path(details["pair_attachment_index"])
+        if index_path != Path(details["path"]).with_suffix(".index.json"):
+            raise RuntimeError("Pair attachment index must be the scheduled packed index")
+        packed_index = json.loads(index_path.read_text(encoding="utf-8"))
+        attach_pair_presentations(schedule, source_name=name, packed_index=packed_index)
+        schedule["schedule_sha256"] = _canonical_hash(
+            {key: value for key, value in schedule.items() if key != "schedule_sha256"}
+        )
     output_path = Path(schedule_config["path"])
     return persist_schedule(output_path, schedule)
 

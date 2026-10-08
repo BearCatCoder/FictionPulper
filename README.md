@@ -202,6 +202,82 @@ python -m src.train \
 
 It completed all 420 optimizer steps from fresh initialization. Validation loss improved from 8.3569 to 4.0923, and the selected epoch-15 checkpoint measured test loss 4.1957. Complete metrics, generations, hashes, runtime statistics, and checkpoint identification are under `runs/smoke-5m-20261007-v1/`. The generated text is recognizably fiction-like but still repetitive and weakly conditioned, as expected from this small smoke model and corpus.
 
+## Counterfactual Narrative v1 audit gate
+
+Build a deterministic development artifact without opening a full 4.5M-token
+construction run:
+
+```bash
+python -m src.counterfactual_narrative \
+  --config configs/counterfactual-narrative-v1.yaml \
+  --max-pairs 80
+```
+
+The isolated output is `data/counterfactual_narrative_v1`. A development build
+always records `status: STOP` and `safe_to_train: false`, even when its structural
+and shortcut audits pass. A full build (omit `--max-pairs`) may report
+`safe_to_train: true` only after every invariant, split-isolation, balance,
+duplicate, control, token-total, and continuation-only classifier gate passes.
+The source Narrative-v1 config and tokenizer-v1 are hash-checked and never
+modified. Remove a prior disposable development output before rebuilding; the
+builder refuses to overwrite any existing artifact.
+
+Run its focused tests with:
+
+```bash
+python -m unittest tests.test_counterfactual_narrative
+```
+
+Before any training on the full artifact, run the mandatory frozen-baseline
+model shortcut audit:
+
+```bash
+python -m src.counterfactual_narrative.evaluator \
+  --config configs/counterfactual-pretraining-audit-v1.yaml
+```
+
+This hash-verifies the tokenizer, dataset manifest and every manifested file,
+plus the sealed Compute5, Narrative-v1, and Contrastive-v1 checkpoints. It
+evaluates only held-out validation, test, and generalization pairs and writes
+`results.json` under the ignored
+`runs/fictionpulper-15m-data30m-counterfactual-v1/pretraining-audit/` directory.
+The gate stops when either candidate has a context-free win rate above 55% for
+any model/split. Fact-removed and irrelevant-substituted controls have one
+shared context per pair, so their paired reversal success is intentionally
+undefined; the audit reports chance-balanced directional behavior and the
+single context's preference magnitude instead.
+
+After the full dataset and mandatory pretraining audit both report `PASS`, pack
+only the positive train/validation worlds. The packer never opens test or
+generalization records:
+
+```bash
+python -m src.pack_counterfactual_v1 \
+  --config configs/data30m-15m-counterfactual-v1.yaml
+```
+
+Build the fresh deterministic 85/15 Data30M/counterfactual schedule inside the
+same isolated data directory:
+
+```bash
+python -m src.mixed_schedule \
+  --config configs/data30m-15m-counterfactual-v1.yaml
+```
+
+The locked run starts only from random initialization, uses symmetric paired
+world ranking with `lambda=0.25`, and selects checkpoints solely by Data30M
+validation loss:
+
+```bash
+python -m src.train_counterfactual \
+  --config configs/data30m-15m-counterfactual-v1.yaml
+```
+
+Packing and schedule generation must be completed and their generated hashes
+and exact pair-presentation exposure locked in the config before training. Do
+not pass a resume checkpoint; Counterfactual-v1 explicitly forbids resume and
+prior model initialization.
+
 ## Tests
 
 ```bash
