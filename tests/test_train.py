@@ -125,6 +125,41 @@ class TrainingScheduleTests(unittest.TestCase):
         self.assertEqual(schedule["recommended_warmup_steps"], 118)
         self.assertEqual(context2k["evaluation"]["historical_sequence_length"], 1024)
 
+    def test_50m_changes_only_locked_model_capacity_fields(self):
+        baseline = yaml.safe_load(
+            Path("configs/data30m-15m-compute5.yaml").read_text()
+        )
+        capacity = yaml.safe_load(Path("configs/data30m-50m-v1.yaml").read_text())
+        self.assertEqual(
+            capacity["model"],
+            {
+                **baseline["model"],
+                "hidden_size": 512,
+                "num_layers": 16,
+                "num_attention_heads": 8,
+                "intermediate_size": 1536,
+                "expected_parameter_count": 50_348_544,
+            },
+        )
+        self.assertEqual(capacity["tokenizer"], baseline["tokenizer"])
+        self.assertEqual(capacity["data"], baseline["data"])
+        for key in (
+            "optimizer",
+            "batch_size",
+            "gradient_accumulation_steps",
+            "epochs",
+            "max_steps",
+            "learning_rate",
+            "min_learning_rate",
+            "warmup_steps",
+            "weight_decay",
+            "grad_clip",
+            "precision",
+            "checkpoint_epochs",
+            "require_clean_worktree",
+        ):
+            self.assertEqual(capacity["training"][key], baseline["training"][key])
+
     def test_packed_artifact_validation_rejects_changed_binary(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

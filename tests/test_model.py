@@ -33,6 +33,18 @@ def context2k_tiny_config() -> ModelConfig:
     )
 
 
+def model_50m_config() -> ModelConfig:
+    return ModelConfig(
+        vocab_size=4096,
+        hidden_size=512,
+        num_layers=16,
+        num_attention_heads=8,
+        num_key_value_heads=2,
+        intermediate_size=1536,
+        max_seq_len=1024,
+    )
+
+
 class ModelTests(unittest.TestCase):
     def test_forward_loss_gradients_and_shape(self):
         model = FictionPulperLM(tiny_config())
@@ -227,6 +239,83 @@ class ModelTests(unittest.TestCase):
             max_seq_len=2048,
         )
         self.assertEqual(FictionPulperLM(config).trainable_parameter_count(), 15_047_040)
+
+    def test_50m_cpu_forward_masks_gradients_tying_and_checkpoint(self):
+        torch.manual_seed(29)
+        config = model_50m_config()
+        model = FictionPulperLM(config)
+        self.assertEqual(model.trainable_parameter_count(), 50_348_544)
+        self.assertEqual(model.embed_tokens.weight.data_ptr(), model.lm_head.weight.data_ptr())
+        self.assertEqual(model.layers[0].attention.rope.cos.shape[0], 1024)
+
+        input_ids = torch.randint(0, config.vocab_size, (1, 12))
+        labels = torch.randint(0, config.vocab_size, (1, 12))
+        logits, loss = model(input_ids, labels)
+        self.assertEqual(logits.shape, (1, 12, config.vocab_size))
+        self.assertIsNotNone(loss)
+        self.assertTrue(torch.isfinite(loss))
+        loss.backward()
+        self.assertTrue(
+            all(
+                parameter.grad is not None and torch.isfinite(parameter.grad).all()
+                for parameter in model.parameters()
+                if parameter.requires_grad
+            )
+        )
+
+        model.eval()
+        first = torch.randint(0, config.vocab_size, (1, 16))
+        second = first.clone()
+        second[:, 8:] = torch.randint(0, config.vocab_size, (1, 8))
+        with torch.no_grad():
+            first_logits, _ = model(first)
+            second_logits, _ = model(second)
+        torch.testing.assert_close(
+            first_logits[:, :8], second_logits[:, :8], rtol=0, atol=1e-6
+        )
+
+        labels_b = labels.clone()
+        labels_b[:, 8:] = torch.randint(0, config.vocab_size, (1, 4))
+        loss_mask = torch.arange(12).unsqueeze(0) < 8
+        _, loss_a = model(input_ids, labels, loss_mask)
+        _, loss_b = model(input_ids, labels_b, loss_mask)
+        torch.testing.assert_close(loss_a, loss_b, rtol=0, atol=0)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "model-50m.pt"
+            optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+            save_checkpoint(
+                path,
+                model=model,
+                optimizer=optimizer,
+                model_config=config,
+                config={"model": config.__dict__},
+                epoch=0,
+                step=0,
+                validation_loss=8.3,
+                best_validation_loss=8.3,
+                tokenizer_hash="test",
+                metrics=[],
+            )
+            payload = torch.load(path, map_location="cpu", weights_only=False)
+            restored = FictionPulperLM(ModelConfig(**payload["model_config"])).eval()
+            restored.load_state_dict(payload["model"])
+            with torch.no_grad():
+                restored_logits, _ = restored(first)
+        torch.testing.assert_close(restored_logits, first_logits, rtol=0, atol=0)
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA is required for 50M test")
+    def test_50m_cuda_forward_and_rope_device(self):
+        config = model_50m_config()
+        model = FictionPulperLM(config).to("cuda").eval()
+        input_ids = torch.randint(0, config.vocab_size, (1, 64), device="cuda")
+        with torch.no_grad():
+            logits, _ = model(input_ids)
+        self.assertEqual(logits.shape, (1, 64, config.vocab_size))
+        self.assertEqual(logits.device.type, "cuda")
+        for layer in model.layers:
+            self.assertEqual(layer.attention.rope.cos.device.type, "cuda")
+            self.assertEqual(layer.attention.rope.sin.device.type, "cuda")
 
 
 if __name__ == "__main__":

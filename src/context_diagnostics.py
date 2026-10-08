@@ -130,6 +130,38 @@ def build_context_retention_protocol(tokenizer: Tokenizer) -> dict[str, Any]:
     }
 
 
+def build_narrative_state_protocol(tokenizer: Tokenizer) -> dict[str, Any]:
+    entries = []
+    for scenario in SCENARIOS:
+        prompt = "\n\n".join(
+            [scenario["opening"], *INTERVENING_PARAGRAPHS[:6], scenario["continuation"]]
+        )
+        prompt_tokens = tokenizer.encode(prompt).ids
+        opening_tokens = tokenizer.encode(scenario["opening"]).ids
+        if len(prompt_tokens) + 2 > 1024:
+            raise RuntimeError(
+                f"Narrative-state prompt {scenario['id']} has {len(prompt_tokens)} tokens"
+            )
+        entries.append(
+            {
+                "id": scenario["id"],
+                "facts": scenario["facts"],
+                "prompt": prompt,
+                "prompt_token_count": len(prompt_tokens),
+                "fact_prefix_token_count": len(opening_tokens),
+                "tokens_after_fact_prefix": len(prompt_tokens) - len(opening_tokens),
+                "fact_prefix_visible_at_1024": True,
+            }
+        )
+    return {
+        "name": "fictionpulper-narrative-state-1024-v1",
+        "purpose": "Capacity diagnostic for narrative facts visible within 1024 tokens",
+        "maximum_context": 1024,
+        "source_suite": "fictionpulper-context-retention-v1",
+        "entries": entries,
+    }
+
+
 def longest_repeated_token_span(token_ids: list[int]) -> int:
     for width in range(len(token_ids) // 2, 0, -1):
         positions: dict[tuple[int, ...], int] = {}
@@ -178,13 +210,22 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tokenizer", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--suite",
+        choices=("context-retention", "narrative-state"),
+        default="context-retention",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     tokenizer = Tokenizer.from_file(str(args.tokenizer))
-    protocol = build_context_retention_protocol(tokenizer)
+    protocol = (
+        build_context_retention_protocol(tokenizer)
+        if args.suite == "context-retention"
+        else build_narrative_state_protocol(tokenizer)
+    )
     protocol["tokenizer_path"] = str(args.tokenizer)
     protocol["tokenizer_sha256"] = sha256_file(args.tokenizer)
     write_json_atomic(args.output, protocol)
