@@ -90,6 +90,41 @@ class TrainingScheduleTests(unittest.TestCase):
         self.assertEqual(schedule["recommended_max_steps"], 2220)
         self.assertEqual(schedule["recommended_warmup_steps"], 111)
 
+    def test_context2k_changes_only_locked_context_and_batching_fields(self):
+        baseline = yaml.safe_load(
+            Path("configs/data30m-15m-compute5.yaml").read_text()
+        )
+        context2k = yaml.safe_load(
+            Path("configs/data30m-15m-context2k-v1.yaml").read_text()
+        )
+        metadata = json.loads(
+            Path("data/packed/corpus-v2-data30m-context2k/metadata.json").read_text()
+        )
+        for key, value in baseline["model"].items():
+            if key != "max_seq_len":
+                self.assertEqual(context2k["model"][key], value)
+        self.assertEqual(context2k["model"]["max_seq_len"], 2048)
+        self.assertEqual(context2k["tokenizer"], baseline["tokenizer"])
+        for key in (
+            "optimizer",
+            "batch_size",
+            "learning_rate",
+            "min_learning_rate",
+            "weight_decay",
+            "grad_clip",
+            "precision",
+            "require_clean_worktree",
+        ):
+            self.assertEqual(context2k["training"][key], baseline["training"][key])
+        self.assertEqual(context2k["training"]["gradient_accumulation_steps"], 2)
+        schedule = selected_packed_schedule(metadata, context2k["training"]["epochs"])
+        self.assertEqual(schedule["allocated_token_slots_per_optimizer_step"], 65_536)
+        self.assertEqual(schedule["real_target_tokens_per_epoch"], 27_177_271)
+        self.assertEqual(schedule["optimizer_steps_per_epoch"], 473)
+        self.assertEqual(schedule["recommended_max_steps"], 2365)
+        self.assertEqual(schedule["recommended_warmup_steps"], 118)
+        self.assertEqual(context2k["evaluation"]["historical_sequence_length"], 1024)
+
     def test_packed_artifact_validation_rejects_changed_binary(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

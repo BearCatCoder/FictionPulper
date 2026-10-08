@@ -31,6 +31,41 @@ CONTROL_GENRES = {
 }
 
 
+def nearest_rank_percentile(values: list[int], percentile: float) -> int:
+    if not values:
+        raise ValueError("Cannot calculate a percentile of an empty list")
+    ordered = sorted(values)
+    return ordered[max(0, math.ceil(percentile * len(ordered)) - 1)]
+
+
+def chunk_statistics(token_counts: list[int], sequence_length: int) -> dict[str, Any]:
+    chunks = [math.ceil((count - 1) / sequence_length) for count in token_counts]
+    total_chunks = sum(chunks)
+    total_targets = sum(count - 1 for count in token_counts)
+    distribution = {
+        "1": sum(count == 1 for count in chunks),
+        "2": sum(count == 2 for count in chunks),
+        "3-4": sum(3 <= count <= 4 for count in chunks),
+        "5+": sum(count >= 5 for count in chunks),
+    }
+    return {
+        "sequence_length": sequence_length,
+        "minimum": min(chunks),
+        "median": float(np.median(chunks)),
+        "mean": float(np.mean(chunks)),
+        "percentile_95": nearest_rank_percentile(chunks, 0.95),
+        "maximum": max(chunks),
+        "distribution": {
+            label: {
+                "count": count,
+                "percentage": 100.0 * count / len(chunks),
+            }
+            for label, count in distribution.items()
+        },
+        "average_usable_targets_per_chunk": total_targets / total_chunks,
+    }
+
+
 def genre_control_token(genres: list[str]) -> str | None:
     normalized = " | ".join(genres).lower()
     for control, terms in CONTROL_GENRES.items():
@@ -101,6 +136,9 @@ def write_split(
         "allocated_chunk_slots": allocated_slots,
         "padding_slots": allocated_slots - valid_targets,
         "padding_percentage": 100.0 * (allocated_slots - valid_targets) / allocated_slots,
+        "chunks_per_story": chunk_statistics(
+            [document["length"] for document in index], sequence_length
+        ),
         "bin_path": str(bin_path),
         "bin_sha256": sha256_file(bin_path),
         "index_path": str(index_path),
@@ -224,9 +262,6 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
         total_words += record["words"]
     sorted_token_counts = sorted(all_story_token_counts)
 
-    def percentile_95(values: list[int]) -> int:
-        return values[max(0, math.ceil(0.95 * len(values)) - 1)]
-
     total_tokens = sum(item["token_count"] for item in split_metadata.values())
     tokenization_statistics = {
         "definition": "full packed documents including story/control/BOS/EOS tokens",
@@ -240,7 +275,7 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
             "minimum": min(all_story_token_counts),
             "median": float(np.median(all_story_token_counts)),
             "mean": float(np.mean(all_story_token_counts)),
-            "percentile_95": percentile_95(sorted_token_counts),
+            "percentile_95": nearest_rank_percentile(sorted_token_counts, 0.95),
             "maximum": max(all_story_token_counts),
             "thresholds": {
                 str(threshold): {
@@ -252,6 +287,9 @@ def pack_from_config(config_path: Path) -> dict[str, Any]:
                 for threshold in (1024, 2048, 4096)
             },
         },
+        "chunks_per_story": chunk_statistics(
+            all_story_token_counts, int(model_config["max_seq_len"])
+        ),
     }
     metadata = {
         "preprocessing_version": PREPROCESSING_VERSION,

@@ -1,0 +1,155 @@
+{
+  "run_id": "fictionpulper-15m-data30m-context2k-v1",
+  "status": "prepared_not_trained",
+  "experimental_variable": "maximum sequence length from 1024 to 2048",
+  "baseline_resolution": {
+    "corpus_v2_tag": "fictionpulper-corpus-v2-30m",
+    "corpus_v2_tag_commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3",
+    "data30m_v1_tag": "fictionpulper-15m-data30m-v1",
+    "data30m_v1_tag_commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4",
+    "compute5_tag": "fictionpulper-15m-data30m-compute5",
+    "compute5_tag_commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+  },
+  "baseline_seal_sha256": {
+    "corpus_v2": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916",
+    "data30m_v1": "cb20b73873aa8299da5d959ff2985ba7a68a753e655c3d558d3418280e9676ff",
+    "compute5": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c"
+  },
+  "corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+  "split_manifest_sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026",
+  "context2k_packed_metadata_sha256": "68b78668e184fb796dbc44317ba6042edf08d33c610c8a057248f49b4d12e9cf",
+  "tokenizer_v1_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "configuration_sha256": "eb2ff19b0a921c976fc3522cef48e6f8f0a41fa4c40ecb21db4c18d6b20e176c",
+  "evaluation_protocol_sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+  "context_retention_protocol_sha256": "40880af5fbff5ffec5217c0dd489da12e2def77418ba14417393e16ceafd17ec",
+  "code_sha256": {
+    "model": "e0425cf876406b4f17b45fc19418097026dbbbdb1ec99f6b8aa0c77c4cb82c12",
+    "train": "11561b417452cbd798156422500a96ba2afb28868932b952a399cbc60e47b71f",
+    "tokenize_corpus": "af6836a2037b76d823365ed353051342bf5e17d51a0719980fd225183a12582a",
+    "context_diagnostics": "055b08f78e8c95c6016aaedcbe14474a17a7aff74aa31f9f7762260ceaf0ec99"
+  },
+  "model": {
+    "trainable_parameter_count": 15047040,
+    "vocab_size": 4096,
+    "hidden_size": 384,
+    "num_layers": 8,
+    "num_attention_heads": 6,
+    "num_key_value_heads": 2,
+    "intermediate_size": 1120,
+    "max_seq_len": 2048,
+    "activation": "swiglu",
+    "normalization": "rmsnorm",
+    "positional_encoding": "rope",
+    "rope_scaling": null,
+    "rope_base_changed": false,
+    "tie_word_embeddings": true,
+    "attention_bias": false,
+    "mlp_bias": false
+  },
+  "context2k_verification": {
+    "cpu_forward": true,
+    "cuda_forward": true,
+    "rope_cache_length": 2048,
+    "rope_cache_device_transfer": true,
+    "causal_masking": true,
+    "padding_loss_masking": true,
+    "loss_calculation": true,
+    "checkpoint_save_reload": true,
+    "full_test_count": 86
+  },
+  "data": {
+    "train_documents": 3707,
+    "validation_documents": 327,
+    "test_documents": 328,
+    "raw_corpus_tokens": 30004706,
+    "train_chunks": 15118,
+    "validation_chunks": 786,
+    "test_chunks": 915,
+    "total_chunks": 16819,
+    "valid_targets_per_epoch": 27177271,
+    "allocated_slots_per_epoch": 30961664,
+    "padding_slots_per_epoch": 3784393,
+    "padding_percentage": 12.222834664183424,
+    "average_usable_targets_per_train_chunk": 1797.6763460775235,
+    "chunks_per_story": {
+      "median": 3.0,
+      "percentile_95": 10,
+      "maximum": 20,
+      "one_chunk": 588,
+      "two_chunks": 1215,
+      "three_to_four_chunks": 1255,
+      "five_or_more_chunks": 1304
+    },
+    "story_context_coverage_percentage": {
+      "1024": 1.8110958276020175,
+      "2048": 13.480055020632737,
+      "4096": 41.334250343878956
+    }
+  },
+  "packed_artifact_sha256": {
+    "train_bin": "1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9",
+    "train_index": "2b32ab000205b9e1e892b79c4d8fcdcea3ee0874aa4bc058c56705ee3565cfe4",
+    "validation_bin": "94402ee72eeed77da6779cea5e1743c0091346ebcfafe9945eb11feaad3dcaf8",
+    "validation_index": "8c16cd70465942efde272ba482b66eb4a5bdbf4c7ff171d953bb090733235ab0",
+    "test_bin": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
+    "test_index": "b76dafd64191c23d636be815697437b2672600156586a7b89902081976e5aad6"
+  },
+  "vram_preflight": {
+    "device": "NVIDIA GeForce RTX 5080",
+    "available_vram_gib": 15.47,
+    "precision": "bf16",
+    "batch_size": 16,
+    "sequence_length": 2048,
+    "forward_backward_peak_allocated_gib": 7.310458183288574,
+    "forward_backward_reserved_gib": 7.4375,
+    "safety_margin_gib": 8.159541816711426,
+    "same_microbatch_as_compute5": true
+  },
+  "effective_batch": {
+    "batch_size": 16,
+    "gradient_accumulation_steps": 2,
+    "sequence_length": 2048,
+    "allocated_slots_per_optimizer_step": 65536,
+    "compute5_allocated_slots_per_optimizer_step": 65536
+  },
+  "schedule_candidates": {
+    "3": {
+      "optimizer_steps": 1419,
+      "valid_target_presentations": 81531813,
+      "exposure_ratio_vs_compute5": 0.6
+    },
+    "4": {
+      "optimizer_steps": 1892,
+      "valid_target_presentations": 108709084,
+      "exposure_ratio_vs_compute5": 0.8
+    },
+    "5": {
+      "optimizer_steps": 2365,
+      "valid_target_presentations": 135886355,
+      "exposure_ratio_vs_compute5": 1.0
+    }
+  },
+  "locked_schedule": {
+    "epochs": 5,
+    "optimizer_steps_per_epoch": 473,
+    "total_optimizer_steps": 2365,
+    "warmup_steps": 118,
+    "total_valid_target_presentations": 135886355,
+    "total_allocated_slot_presentations": 154808320,
+    "compute5_valid_target_presentations": 135886355,
+    "exposure_ratio_vs_compute5": 1.0,
+    "chosen_before_training": true
+  },
+  "training_policy": {
+    "optimizer": "adamw",
+    "learning_rate": 0.001,
+    "minimum_learning_rate": 0.0001,
+    "weight_decay": 0.1,
+    "gradient_clip": 1.0,
+    "precision": "bf16",
+    "seed": 1337
+  },
+  "fresh_random_initialization_required": true,
+  "resume_checkpoint": null,
+  "training_started": false
+}

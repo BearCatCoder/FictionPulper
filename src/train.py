@@ -1007,7 +1007,11 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 benchmark_dataset = PackedStoryDataset(
                     benchmark["packed_path"],
                     benchmark["index_path"],
-                    sequence_length=model_config.max_seq_len,
+                    sequence_length=int(
+                        config["evaluation"].get(
+                            "historical_sequence_length", model_config.max_seq_len
+                        )
+                    ),
                     pad_token_id=pad_token_id,
                     exclude_document_ids=excluded_ids,
                 )

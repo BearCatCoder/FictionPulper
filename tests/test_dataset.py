@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 from src.dataset import PackedStoryDataset
-from src.tokenize_corpus import derive_schedule
+from src.tokenize_corpus import chunk_statistics, derive_schedule
 
 
 class PackedDatasetTests(unittest.TestCase):
@@ -121,6 +121,16 @@ class PackedDatasetTests(unittest.TestCase):
                     pad_token_id=0,
                     exclude_document_ids={"missing"},
                 )
+
+    def test_context2k_chunk_statistics(self):
+        stats = chunk_statistics([100, 2050, 4098, 10242], sequence_length=2048)
+        self.assertEqual(stats["median"], 2.5)
+        self.assertEqual(stats["percentile_95"], 6)
+        self.assertEqual(stats["maximum"], 6)
+        self.assertEqual(stats["distribution"]["1"]["count"], 1)
+        self.assertEqual(stats["distribution"]["2"]["count"], 1)
+        self.assertEqual(stats["distribution"]["3-4"]["count"], 1)
+        self.assertEqual(stats["distribution"]["5+"]["count"], 1)
 
 
 if __name__ == "__main__":

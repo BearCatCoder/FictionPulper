@@ -1,0 +1,72 @@
+seed: 1337
+
+model:
+  vocab_size: 4096
+  hidden_size: 384
+  num_layers: 8
+  num_attention_heads: 6
+  num_key_value_heads: 2
+  intermediate_size: 1120
+  max_seq_len: 2048
+  activation: swiglu
+  normalization: rmsnorm
+  positional_encoding: rope
+  tie_word_embeddings: true
+  attention_bias: false
+  mlp_bias: false
+  expected_parameter_count: 15047040
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+training:
+  optimizer: adamw
+  batch_size: 16
+  gradient_accumulation_steps: 2
+  epochs: 5
+  schedule_epoch_candidates: [3, 4, 5]
+  max_steps: 2365
+  learning_rate: 1.0e-3
+  min_learning_rate: 1.0e-4
+  warmup_steps: 118
+  weight_decay: 0.1
+  grad_clip: 1.0
+  precision: bf16
+  checkpoint_epochs: [1, 2, 3, 4, 5]
+  require_clean_worktree: true
+  checkpoint_dir: checkpoints/fictionpulper-15m-data30m-context2k-v1
+
+data:
+  corpus_path: data/corpus_v2/corpus.jsonl
+  corpus_stats_path: data/corpus_v2/data30m-v1/preparation-summary.json
+  split_path: data/corpus_v2/data30m-v1/splits.json
+  expected_corpus_sha256: 0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087
+  expected_split_sha256: 5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026
+  expected_packed_metadata_sha256: 68b78668e184fb796dbc44317ba6042edf08d33c610c8a057248f49b4d12e9cf
+  packed_metadata_path: data/packed/corpus-v2-data30m-context2k/metadata.json
+  train_path: data/packed/corpus-v2-data30m-context2k/train.bin
+  validation_path: data/packed/corpus-v2-data30m-context2k/validation.bin
+  test_path: data/packed/corpus-v2-data30m-context2k/test.bin
+
+comparison:
+  write_training_comparison_artifacts: false
+  baseline_experiment: fictionpulper-15m-data30m-compute5
+  baseline_best_checkpoint_epoch: 5
+  baseline_valid_targets_per_epoch: 27177271
+  baseline_best_valid_target_presentations: 135886355
+  data30m_v1_valid_target_presentations: 81531813
+  data30m_v1_seal_path: experiments/fictionpulper-15m-data30m-v1/seal.json
+  compute5_seal_path: experiments/fictionpulper-15m-data30m-compute5/seal.json
+  data10m_v1_seal_path: experiments/fictionpulper-15m-data10m-v1/seal.json
+  corpus_v2_seal_path: experiments/fictionpulper-corpus-v2-30m/seal.json
+
+evaluation:
+  protocol_path: experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json
+  expected_protocol_sha256: 16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a
+  historical_sequence_length: 1024
+
+logging:
+  tensorboard_dir: runs/fictionpulper-15m-data30m-context2k-v1/tensorboard
