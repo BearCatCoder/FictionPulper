@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "experiment_id": "fictionpulper-15m-data30m-counterfactual-v1",
+  "selection_metric": "Data30M validation loss only",
+  "required_training_status": "training_and_selection_complete",
+  "training_commit": "6a047c7761c6176c5e71aaff4275ded7f7da77ea",
+  "candidate": {
+    "summary_path": "runs/fictionpulper-15m-data30m-counterfactual-v1/summary.json",
+    "summary_sha256": "cf0288f0ea0462a1f42cf0183a64f164d0d342632a1a79b8dd1ad30ed573963e",
+    "manifest_path": "runs/fictionpulper-15m-data30m-counterfactual-v1/manifest.json",
+    "manifest_sha256": "10118b51dcfcf4f7b5403e8d701800f628705fae33fc3d9971e46f47ba4d7eae",
+    "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-counterfactual-v1/best-validation.pt",
+    "checkpoint_sha256": "160359e7baba280a330a66221541b12b87636355b8dad3936c3036c02b75745e",
+    "expected_step": 2220
+  },
+  "training_locks": {
+    "config_path": "configs/data30m-15m-counterfactual-v1.yaml",
+    "config_sha256": "a69936c7e9b9620d8626c2009f7f8e5f8f251c16949e0b8116ac864934dcde70",
+    "tokenizer_path": "data/tokenizer/tokenizer.json",
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+    "counterfactual_manifest_path": "data/counterfactual_narrative_v1/manifest.json",
+    "counterfactual_manifest_sha256": "41bfec4201e36a28fa5f4bea265b326ab7a0dbc67ba95c86533a1bdf191eede8",
+    "packed_metadata_path": "data/counterfactual_narrative_v1/packed/metadata.json",
+    "packed_metadata_sha256": "047cb60938b5602ef3a5094c3459b970dcaa20c48ab5b0c2aca1c28b012648de",
+    "schedule_path": "data/counterfactual_narrative_v1/packed/mixed-source-schedule.json",
+    "schedule_file_sha256": "644b5ca797f6b2a2ae4f24c76b460f798806428487568e294100a33c555382ca",
+    "schedule_content_sha256": "53688a5cd022193b8edff07e0d4c19339fd9d153f21944a3d4f0b396cf87c655"
+  },
+  "models": {
+    "compute5": {"path": "checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt", "sha256": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe"},
+    "narrative_v1": {"path": "checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt", "sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5"},
+    "contrastive_v1": {"path": "checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt", "sha256": "5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4"},
+    "counterfactual_v1": {"path": "checkpoints/fictionpulper-15m-data30m-counterfactual-v1/best-validation.pt", "sha256": "160359e7baba280a330a66221541b12b87636355b8dad3936c3036c02b75745e"},
+    "capacity50m": {"path": "checkpoints/fictionpulper-50m-data30m-v1/best-validation.pt", "sha256": "8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01"}
+  },
+  "counterfactual": {
+    "dataset_directory": "data/counterfactual_narrative_v1",
+    "splits": ["test", "generalization_holdout"],
+    "evaluator_path": "src/counterfactual_narrative/evaluator.py",
+    "evaluator_sha256": "6bf6b6adb147af6e2f26f64c54f708c8bb5f5cd7b36a4a2f28d52be31f17a7b7",
+    "batch_size": 8,
+    "tie_tolerance": 1e-12
+  },
+  "forced_choice": {
+    "protocol_path": "experiments/narrative-state-localization-v1/13fact-forced-choice-protocol.json",
+    "protocol_sha256": "85af4e7a5d694fd120f3997174fee6271b238b9655df15ab7d8fe73bb245a7f0",
+    "narrative_protocol_path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+    "narrative_protocol_sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+    "sealed_baseline_path": "runs/narrative-state-localization-v1/13fact-forced-choice.json",
+    "sealed_baseline_sha256": "18bc728d500f075c7ddf1cda1fc518f556dd40312e2ea67a6501ec82e81a3cf0"
+  },
+  "generation": {
+    "sample_seed": 11337,
+    "settings": {"greedy_max_new_tokens": 128, "sampled_max_new_tokens": 256, "temperature": 0.8, "top_k": 50, "top_p": 0.95},
+    "historical_baseline_path": "runs/fictionpulper-15m-data30m-contrastive-v1/post-selection/generation-comparison.json",
+    "historical_baseline_sha256": "51ac5586924a08e7c376770af67838c47f599f8c6654deb6e2af57d34a6fcca8",
+    "narrative_baseline_path": "runs/fictionpulper-15m-data30m-contrastive-v1/post-selection/narrative-fact-audit.json",
+    "narrative_baseline_sha256": "f1913a4ce103c341383f25f6eff9e3c501cdcb55c4e1ffea1bcacbd46b458daf"
+  },
+  "probe": {
+    "method_path": "src/frozen_state_probe.py",
+    "method_sha256": "87b2bbd8face4b79c26e50dd5f9e6ef65a9500c5ba57a40cc1973e1408324857",
+    "config_path": "experiments/fictionpulper-15m-data30m-counterfactual-v1/probe-config.yaml",
+    "config_sha256": "a05b42c410d945c7907b86d2383f962a76c0e9ee3ba94e8a08f1c10009b235a3",
+    "baseline_path": "runs/narrative-state-localization-v1/probe-layerwise.json",
+    "baseline_sha256": "5f24d4adb7f91bc20158c8405386127b572378719287644adc342b4a60091e29"
+  },
+  "real_fiction": {
+    "post_selection_protocol_path": "experiments/fictionpulper-15m-data30m-contrastive-v1/post-selection-protocol.json",
+    "post_selection_protocol_sha256": "100ab71edfc87dc075ae48370fde35cca8b95948908b071805164f99f0360cdd",
+    "evaluation_protocol_path": "experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json",
+    "evaluation_protocol_sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+    "baseline_path": "runs/fictionpulper-15m-data30m-contrastive-v1/post-selection/lm-evaluation.json",
+    "baseline_sha256": "9a2b713a4eb40e6b16f4b6d310a21d6de77e014918ae4dc407cafe03ccd21439"
+  }
+}

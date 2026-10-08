@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "scoring_rule": "A fact is retained only when the continuation semantically preserves the stated fact; record an exact evidence quote and reviewer note.",
+  "candidate_totals": {
+    "greedy": "0/13",
+    "sampled": "0/13"
+  },
+  "sealed_historical_audit": {
+    "path": "experiments/fictionpulper-15m-data30m-contrastive-v1/manual-fact-scoring.json",
+    "greedy": "0/13",
+    "sampled": "0/13",
+    "sha256": "6415ac784b15c5683c1ee4fb54d3f7404670d886fe96e3d6c2b7c7cfb836ed39"
+  },
+  "facts": [
+    {
+      "id": "name_object_location_goal.character_name",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "character_name",
+      "fact": "Martin Vale",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "The man was a man of middle age",
+        "sampled": "He was a tall, dark man, with a black beard"
+      },
+      "reviewer_note": {
+        "greedy": "The continuation never names Martin Vale or identifies the generic man as him.",
+        "sampled": "The continuation never names Martin Vale or identifies any generated man as him."
+      }
+    },
+    {
+      "id": "name_object_location_goal.object_possession",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "object_possession",
+      "fact": "a brass key in his left coat pocket",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "I have a good time in the house",
+        "sampled": "I shall not have to carry it off"
+      },
+      "reviewer_note": {
+        "greedy": "No key, coat pocket, or possession state is preserved.",
+        "sampled": "The vague object reference does not preserve the brass key, left pocket, or possession relation."
+      }
+    },
+    {
+      "id": "name_object_location_goal.location",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "location",
+      "fact": "the Blackwater Hotel",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "in the house",
+        "sampled": "go into the town"
+      },
+      "reviewer_note": {
+        "greedy": "A generic house does not identify the Blackwater Hotel.",
+        "sampled": "No output identifies the setting as the Blackwater Hotel."
+      }
+    },
+    {
+      "id": "name_object_location_goal.stated_goal",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "stated_goal",
+      "fact": "reach room 317 before midnight",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "I have a good time in the house",
+        "sampled": "In a few minutes I have to go into the town"
+      },
+      "reviewer_note": {
+        "greedy": "No room number, deadline, or goal is preserved.",
+        "sampled": "This unrelated intention does not preserve room 317 or the midnight deadline."
+      }
+    },
+    {
+      "id": "relationship_secret.character_name",
+      "prompt_id": "relationship_secret",
+      "fact_type": "character_name",
+      "fact": "Jonah Reed",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "I have been a fool",
+        "sampled": "He is, perhaps, the only person who can be discovered in the city"
+      },
+      "reviewer_note": {
+        "greedy": "The continuation never names Jonah Reed or identifies the speaker as him.",
+        "sampled": "The continuation never names Jonah Reed or identifies a generated man as him."
+      }
+    },
+    {
+      "id": "relationship_secret.relationship",
+      "prompt_id": "relationship_secret",
+      "fact_type": "relationship",
+      "fact": "Elise Ward is Jonah's sister-in-law",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "I have been a fool",
+        "sampled": "You are to be married"
+      },
+      "reviewer_note": {
+        "greedy": "Elise, Jonah, and their sister-in-law relationship are absent.",
+        "sampled": "Generic marriage language does not preserve Elise and Jonah's sister-in-law relationship."
+      }
+    },
+    {
+      "id": "relationship_secret.secret",
+      "prompt_id": "relationship_secret",
+      "fact_type": "secret",
+      "fact": "Jonah saw Elise's brother Daniel leave alive on the northbound train",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "I have been a fool",
+        "sampled": "He was about to answer"
+      },
+      "reviewer_note": {
+        "greedy": "No person, survival event, observation, or northbound train is preserved.",
+        "sampled": "Daniel, his survival, Jonah's observation, and the northbound train are absent."
+      }
+    },
+    {
+      "id": "relationship_secret.location",
+      "prompt_id": "relationship_secret",
+      "fact_type": "location",
+      "fact": "the Ashcombe station hotel",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "I have been a fool",
+        "sampled": "I am the only one who could have been in the house"
+      },
+      "reviewer_note": {
+        "greedy": "No location is stated or preserved.",
+        "sampled": "A generic house does not identify the Ashcombe station hotel."
+      }
+    },
+    {
+      "id": "possession_scene_detail_goal.character_name",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "character_name",
+      "fact": "Mara Venn",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "a man, with a face of a man",
+        "sampled": "had not seen the woman"
+      },
+      "reviewer_note": {
+        "greedy": "The continuation never names Mara Venn and instead introduces a generic man.",
+        "sampled": "The continuation never names Mara Venn or identifies the unnamed woman as her."
+      }
+    },
+    {
+      "id": "possession_scene_detail_goal.object_possession",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "object_possession",
+      "fact": "the lighthouse logbook wrapped in oilcloth",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "The door was open",
+        "sampled": "admitted to the manuscript"
+      },
+      "reviewer_note": {
+        "greedy": "No logbook, oilcloth, or possession state is preserved.",
+        "sampled": "An unrelated manuscript mention does not preserve the oilcloth-wrapped logbook or Mara's possession."
+      }
+    },
+    {
+      "id": "possession_scene_detail_goal.location",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "location",
+      "fact": "Saint Orra lighthouse",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "standing in the doorway",
+        "sampled": "the body was in the street"
+      },
+      "reviewer_note": {
+        "greedy": "No output identifies the setting as Saint Orra lighthouse.",
+        "sampled": "The generated street and house do not identify Saint Orra lighthouse."
+      }
+    },
+    {
+      "id": "possession_scene_detail_goal.scene_detail",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "scene_detail",
+      "fact": "the lower window is marked with a blue chalk circle",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "The man was standing by the window",
+        "sampled": "looking out of the window at the window"
+      },
+      "reviewer_note": {
+        "greedy": "A generic window does not preserve its lower position, blue chalk circle, or safe-entry meaning.",
+        "sampled": "Generic window repetition does not preserve the lower window's blue chalk circle or its meaning."
+      }
+    },
+    {
+      "id": "possession_scene_detail_goal.stated_goal",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "stated_goal",
+      "fact": "deliver the logbook to keeper Amos Bell",
+      "retained": {
+        "greedy": false,
+        "sampled": false
+      },
+      "evidence": {
+        "greedy": "The door was opened",
+        "sampled": "He did not know what to do"
+      },
+      "reviewer_note": {
+        "greedy": "No delivery, logbook, or Amos Bell is mentioned.",
+        "sampled": "No delivery goal, logbook, keeper, or Amos Bell is preserved."
+      }
+    }
+  ]
+}

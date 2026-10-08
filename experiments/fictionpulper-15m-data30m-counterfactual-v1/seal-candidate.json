@@ -1,0 +1,54 @@
+{
+  "run_id": "fictionpulper-15m-data30m-counterfactual-v1",
+  "status": "seal_candidate_only",
+  "classification": "COUNTERFACTUAL_SCORING_TRANSFER_WITHOUT_BROAD_NARRATIVE_TRANSFER",
+  "training_git_commit": "6a047c7761c6176c5e71aaff4275ded7f7da77ea",
+  "completion_git_commit": null,
+  "tag_created": false,
+  "seal_created": false,
+  "checkpoint_sha256": "160359e7baba280a330a66221541b12b87636355b8dad3936c3036c02b75745e",
+  "protocol_sha256": "b1ba01b7bc09d373a28433300540e2b6c9f9799c9a1a9121d0536307a9f21aab",
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "narrative_v1": {
+      "tag": "fictionpulper-15m-data30m-narrative-v1",
+      "commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+    },
+    "contrastive_v1": {
+      "tag": "fictionpulper-15m-data30m-contrastive-v1",
+      "commit": "ad0e69b1f0342de06eef1e8eb9be46728abb11e1"
+    },
+    "localization_v1": {
+      "tag": "fictionpulper-narrative-state-localization-v1",
+      "commit": "f5108d7a6b7f7070650faa694d7f74405903e395"
+    }
+  },
+  "experiment_record_sha256": {
+    "README.md": "4c9c4a350d1580b6deb73d600d0b4ccc44ecb27f3a8364a2722a67dba83cea94",
+    "summary.json": "533578ba99550ec11dfbe761e025f10866051ad67ffedceddb8b61902f642a42",
+    "controlled-summary.md": "abc9118f4269a5bb0ec6243a19ede4739c8fa2c9cfd9f6dd360d93fb40e4d52f",
+    "quantitative-comparison.md": "f489df977f26cb7299965c0d1c46cb956e246c6c4df2c41481f42c07222e3836",
+    "qualitative-assessment.md": "3f375820ff5ad1a3c6e2d234419f33aa6613546c8d0f2a76adc8e1012266d670",
+    "repetition-comparison.md": "42734edc2f0f6a4e668b220c84fac592596e9d520c91be2ff45bcfcceb6862cf",
+    "manual-fact-scoring.json": "1fcf2c3b5bbddb4b65b7f10357231e215136e47882a7dd604862ec8395d6301f",
+    "provenance.json": "46f730e9d5b8622484e236d3635c1f104b913c20dbe2402a0152b1ce20147b2c"
+  },
+  "source_hashes_validated": true,
+  "full_tests_passed": true,
+  "full_test_count": 200,
+  "counterfactual_scoring_transfer_observed": true,
+  "latest_state_transfer_observed": false,
+  "historical_forced_choice_improved": true,
+  "semantic_free_generation_improved": false,
+  "broad_internal_state_representation_improved": false,
+  "material_storytelling_improvement": false,
+  "material_real_fiction_damage": false,
+  "greedy_repetition_regressed": true
+}

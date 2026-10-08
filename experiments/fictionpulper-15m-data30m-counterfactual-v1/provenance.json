@@ -1,0 +1,113 @@
+{
+  "training": {
+    "commit": "6a047c7761c6176c5e71aaff4275ded7f7da77ea",
+    "completion_commit": null,
+    "manifest_status": "training_started",
+    "manifest_status_note": "The immutable start manifest was not finalized; the hash-locked final summary and selected checkpoint independently establish completion.",
+    "config_path": "configs/data30m-15m-counterfactual-v1.yaml",
+    "config_sha256": "a69936c7e9b9620d8626c2009f7f8e5f8f251c16949e0b8116ac864934dcde70"
+  },
+  "candidate_checkpoint": {
+    "path": "checkpoints/fictionpulper-15m-data30m-counterfactual-v1/best-validation.pt",
+    "sha256": "160359e7baba280a330a66221541b12b87636355b8dad3936c3036c02b75745e"
+  },
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "narrative_v1": {
+      "tag": "fictionpulper-15m-data30m-narrative-v1",
+      "commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+    },
+    "contrastive_v1": {
+      "tag": "fictionpulper-15m-data30m-contrastive-v1",
+      "commit": "ad0e69b1f0342de06eef1e8eb9be46728abb11e1"
+    },
+    "localization_v1": {
+      "tag": "fictionpulper-narrative-state-localization-v1",
+      "commit": "f5108d7a6b7f7070650faa694d7f74405903e395"
+    }
+  },
+  "protocol": {
+    "path": "experiments/fictionpulper-15m-data30m-counterfactual-v1/post-selection-protocol.json",
+    "sha256": "b1ba01b7bc09d373a28433300540e2b6c9f9799c9a1a9121d0536307a9f21aab"
+  },
+  "training_locks": {
+    "config_path": "configs/data30m-15m-counterfactual-v1.yaml",
+    "config_sha256": "a69936c7e9b9620d8626c2009f7f8e5f8f251c16949e0b8116ac864934dcde70",
+    "tokenizer_path": "data/tokenizer/tokenizer.json",
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+    "counterfactual_manifest_path": "data/counterfactual_narrative_v1/manifest.json",
+    "counterfactual_manifest_sha256": "41bfec4201e36a28fa5f4bea265b326ab7a0dbc67ba95c86533a1bdf191eede8",
+    "packed_metadata_path": "data/counterfactual_narrative_v1/packed/metadata.json",
+    "packed_metadata_sha256": "047cb60938b5602ef3a5094c3459b970dcaa20c48ab5b0c2aca1c28b012648de",
+    "schedule_path": "data/counterfactual_narrative_v1/packed/mixed-source-schedule.json",
+    "schedule_file_sha256": "644b5ca797f6b2a2ae4f24c76b460f798806428487568e294100a33c555382ca",
+    "schedule_content_sha256": "53688a5cd022193b8edff07e0d4c19339fd9d153f21944a3d4f0b396cf87c655"
+  },
+  "run_artifacts": {
+    "manifest.json": "10118b51dcfcf4f7b5403e8d701800f628705fae33fc3d9971e46f47ba4d7eae",
+    "metrics.json": "c7be4431a56ee5da20c04ea3ca0af8d904eac5c8708d4f572d8b0ff856839da5",
+    "summary.json": "cf0288f0ea0462a1f42cf0183a64f164d0d342632a1a79b8dd1ad30ed573963e"
+  },
+  "post_selection_manifest": {
+    "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/artifact-manifest.json",
+    "sha256": "cf4466242aaa7e9abd09d5263158c1347c72da65d6ec9aff4d58d78507686bfb"
+  },
+  "post_selection_artifacts": {
+    "13fact-forced-choice.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/13fact-forced-choice.json",
+      "sha256": "086569186174bf5345c86acbfa277131d8eb005e13380911353274a6540c9585"
+    },
+    "13fact-free-generation.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/13fact-free-generation.json",
+      "sha256": "003feafce1ce6257e528ca95c4f7fccb1c584b6c9c614eecf8a404850d694d0f"
+    },
+    "counterfactual-evaluation.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/counterfactual-evaluation.json",
+      "sha256": "0436bef5e588818d013309dd073d9bc280ed740e25ba99aff422d347eebfd7c9"
+    },
+    "generation-comparison.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/generation-comparison.json",
+      "sha256": "16b36746d1406129381ddfc23287d0446c6a270da078bbc6501ce0c34558f0c7"
+    },
+    "manual-fact-scoring.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/manual-fact-scoring.json",
+      "sha256": "c81cb14902f4659fba2fb8cc04e813209d53ac0da2196b04fce78a37b9c1f031"
+    },
+    "post-selection-summary.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/post-selection-summary.json",
+      "sha256": "4c7ce3b142bce927b44472e49ead6dd8a6f5570ccf5a9696a8f782253c5bfd4f"
+    },
+    "probe-candidate-raw.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/probe-candidate-raw.json",
+      "sha256": "64b06c33fdf05abc7280a01d3e57e3492c6e933c71d1e80d0ddd4fb1a886f219"
+    },
+    "probe-comparison.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/probe-comparison.json",
+      "sha256": "1047da94ce465930eafbe5c9eadda3eb0befd6a2ae9e816675626b96049aca02"
+    },
+    "real-fiction-evaluation.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/real-fiction-evaluation.json",
+      "sha256": "3f7cf927d4221b2f8d6ec259ae9b449c695a5659ee80da7dfa616886210e7d93"
+    },
+    "repetition-comparison.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/repetition-comparison.json",
+      "sha256": "5047f2df8d7582b6cbf4ca2bc04a8a50c98a61de1b4a150ae39a876c6b72965b"
+    },
+    "selection-gate.json": {
+      "path": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/selection-gate.json",
+      "sha256": "56e252de7cde0b694dbf909d40e019a2d8da709b9303602c21a58b9e795b81cd"
+    }
+  },
+  "manual_fact_scoring": {
+    "path": "experiments/fictionpulper-15m-data30m-counterfactual-v1/manual-fact-scoring.json",
+    "sha256": "1fcf2c3b5bbddb4b65b7f10357231e215136e47882a7dd604862ec8395d6301f"
+  },
+  "counterfactual_baseline_note": "All models were freshly evaluated because the old baseline artifact's recorded commit did not contain the evaluator source."
+}

@@ -1,0 +1,9 @@
+{
+  "status": "post_selection_evaluation_complete",
+  "selection_metric": "Data30M validation loss only",
+  "used_holdouts_for_checkpoint_selection": false,
+  "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-counterfactual-v1/best-validation.pt",
+  "checkpoint_sha256": "160359e7baba280a330a66221541b12b87636355b8dad3936c3036c02b75745e",
+  "run_artifact_manifest": "runs/fictionpulper-15m-data30m-counterfactual-v1/post-selection/artifact-manifest.json",
+  "run_artifact_manifest_sha256": "cf4466242aaa7e9abd09d5263158c1347c72da65d6ec9aff4d58d78507686bfb"
+}
