@@ -1,0 +1,121 @@
+{
+  "run_id": "fictionpulper-15m-data30m-contrastive-v1",
+  "status": "sealed",
+  "classification": "OBJECTIVE_LEARNED_WITHOUT_NARRATIVE_TRANSFER",
+  "training_git_commit": "dcf7c8e03702740ea0f839c1e3d17ecf92f0496b",
+  "completion_git_commit": "c2643ed1f513fad6732eec2fbd39aae7f76d1a35",
+  "training_worktree_dirty": false,
+  "completion_worktree_clean_before_seal": true,
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "data30m_v1": {
+      "tag": "fictionpulper-15m-data30m-v1",
+      "commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "context2k": {
+      "tag": "fictionpulper-15m-data30m-context2k-v1",
+      "commit": "86775fd3ab6c38ba9f67b21cd639b57efab89a31"
+    },
+    "capacity50m": {
+      "tag": "fictionpulper-50m-data30m-v1",
+      "commit": "40aede83bfd2f8f548376bf364d48677230a31ac"
+    },
+    "narrative_v1": {
+      "tag": "fictionpulper-15m-data30m-narrative-v1",
+      "commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+    }
+  },
+  "baseline_seal_sha256": {
+    "corpus_v2": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916",
+    "data30m_v1": "cb20b73873aa8299da5d959ff2985ba7a68a753e655c3d558d3418280e9676ff",
+    "compute5": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c",
+    "context2k": "ec775b666de0d2dfec917a215e63cc18d82ffa533615957738c2dc7b7ae06023",
+    "capacity50m": "ac9f0abf9c3c1c60f0ee02485918e86c8407e051c578e34cf1bfa7ae15451fb3",
+    "narrative_v1": "467d0f6e2761d8027970124963f0da9416964132c50aea42fbe933e132e8ac7e"
+  },
+  "controls": {
+    "fresh_random_initialization": true,
+    "prior_checkpoint_loaded": false,
+    "model_parameter_count": 15047040,
+    "context_length": 1024,
+    "seed": 1337,
+    "optimizer_steps": 2220,
+    "valid_target_presentations": 135886355,
+    "real_exposure_percent": 85.00000018397726,
+    "curriculum_exposure_percent": 14.999999816022735,
+    "contrastive_lambda": 0.25,
+    "contrastive_pairs_scored": 65036,
+    "negative_decision_span_tokens_scored": 1639692,
+    "ranking_compute_proxy_increase": 0.3955134005159945,
+    "training_extended": false
+  },
+  "input_sha256": {
+    "training_config": "ef298ce9c366aa28eb744e7e9864002e953b5684fb084a6f3f719e3e0e176104",
+    "tokenizer": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+    "schedule_content": "e76a033fa6a3170d469d0aefaa0745ffcce0a27a691d6ca612f9fa68434b6822",
+    "training_pairs": "e40de7d7b82b67fb423b43464b582b0d0160218aee4d2ba70c4c8bebb4ae5407",
+    "heldout_test_pairs": "f5878a7a7b63745f96e40b529c5cfc2f314c7ed74cc0b67d08c1dd4d23910d63",
+    "heldout_generalization_pairs": "7fb1f2a3eec87318efe2c0cff606310374b5a192938a5b4e1dab1f6e61f96e5f",
+    "evaluation_protocol": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+    "narrative_state_protocol": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+    "post_selection_protocol": "100ab71edfc87dc075ae48370fde35cca8b95948908b071805164f99f0360cdd"
+  },
+  "code_sha256": {
+    "model": "226a72fb5d60aecdb201a984688781b06b52be026d54a9d51a4c3285cedb34af",
+    "frozen_state_probe": "d52bad3c913e5cb304b6a0d3ca4a213e30694d1fd41ebfb9ef99f0f591ecf935",
+    "contrastive_pairs": "e26a1241bffd9230a7ad6c17cad5edd0d82f0150720d3e59508b2201bba5f534",
+    "train_contrastive": "ea769d4754bc1852c4e46f68507cbceb0111530be400fa09718e1b0cd829468b",
+    "contrastive_post_selection": "9e23e7373141577bb7b625e0fb0476f092ddd8665429f4bd1e8bfa37ca46ac35",
+    "report_contrastive": "69970698af26fea643dfd498394d95e07d54daa491ddb0ec7079debad2df7095"
+  },
+  "checkpoint_sha256": "5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4",
+  "run_artifact_sha256": {
+    "manifest": "48c26f3362212f28c16cd01f76bc0917ac8bb02000f2f7dbd2885f73dfed74a7",
+    "metrics": "b55a0e29baa0a0a7848463a181c06d2cd9a324302efed5659b18668e56dee54c",
+    "summary": "aebed2c32b42f985a475648b2ce30bfcea9f850b4f2308ba7842bb9753d13f16"
+  },
+  "post_selection_artifact_sha256": {
+    "pair_evaluation": "e5ac15bb5228e082e1397ca8af8d380a937556012958f5045c25c7a355f17425",
+    "lm_evaluation": "9a2b713a4eb40e6b16f4b6d310a21d6de77e014918ae4dc407cafe03ccd21439",
+    "generation_comparison": "51ac5586924a08e7c376770af67838c47f599f8c6654deb6e2af57d34a6fcca8",
+    "narrative_fact_audit": "f1913a4ce103c341383f25f6eff9e3c501cdcb55c4e1ffea1bcacbd46b458daf",
+    "repetition_comparison": "4c9ed335f76981e98ee136bec421c5a7b0dc1de5ee5cb07ab2af0eb71c6803ae",
+    "selection_record": "d306e56eb1685fa279c44252d28bfea0d3d2c7c39a4b91efc8ad32fde52ba8a6"
+  },
+  "frozen_probe_sha256": {
+    "raw_results": "7c892105c4140cec5de8312cb30e90fa91740bc3f62726939680ac5a3e5cb269",
+    "config": "51f466eea77004ee7ae43502a24d18c4a76b5fe49ffd490bb6f6154513822fe6",
+    "summary": "abcb95c9f1d31c15e98ee50396a1a1a1acf7471cf629e158515e7c320f09094c"
+  },
+  "experiment_record_sha256": {
+    "README.md": "028109c283289c96a0736649c5e4813d4b38b1d3aeaafc1bb723f99ddd9a6b38",
+    "summary.json": "8597f4292d67ffb4cd5e344c4f6b8af7dde5b38d0c979878adc5a297a16c538c",
+    "controlled-summary.md": "1bdc11670f58e1421acbe2271dc0a963117eae2c240260de4fa3d1c51fd558ed",
+    "quantitative-comparison.md": "7f3b67e473320f03ded31a6f4f961875f51222632edc3e3edc5d1f9283b8c780",
+    "qualitative-assessment.md": "732c39e06e84cacf21f5a11ab3e99f4c3c02a83629084dde2d728fa9ef918695",
+    "repetition-comparison.md": "c73d6afbc3bffd5ce3176c3bb4e894be75724db6125187a2f4a7a8d04d13dba6",
+    "manual-fact-scoring.json": "6415ac784b15c5683c1ee4fb54d3f7404670d886fe96e3d6c2b7c7cfb836ed39",
+    "provenance.json": "a84b7c325bc78bdd9b1fbe7cfd12ca5377c3eed592f4c20b36b2b428e19b7767",
+    "seal-candidate.json": "e0f862bb31524b1901fe25110c5eb9202d84cae0e09abb04267440198b4057c5"
+  },
+  "selection_metric": "Data30M validation loss only",
+  "selected_optimizer_step": 2220,
+  "primary_test_evaluation_count": 1,
+  "post_selection_gate_respected": true,
+  "source_hashes_validated": true,
+  "complete_test_suite_passed": true,
+  "test_count": 157,
+  "numerically_stable": true,
+  "contrastive_pair_objective_learned": true,
+  "semantic_narrative_state_retention_improved": false,
+  "broad_internal_state_representation_improved": false,
+  "object_location_representation_improved": true,
+  "material_storytelling_improvement": false
+}
