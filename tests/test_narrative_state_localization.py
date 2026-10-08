@@ -19,6 +19,7 @@ from src.narrative_state_localization import (
     recovery_error,
     rollout_replacement,
     score_candidate_ids,
+    select_next_token,
     stable_sampling_seed,
     validate_counterfactual_cases,
     validate_forced_choice_protocol,
@@ -163,6 +164,17 @@ class NarrativeStateLocalizationTests(unittest.TestCase):
         recovered = recovery_error([-1.0, -2.0], [-1.0, -2.0 + 1e-8])
         self.assertTrue(recovered["within_tolerance"])
         self.assertFalse(recovery_error([-1.0], [-1.1])["within_tolerance"])
+        settings = {"temperature": 0.8, "top_k": 2, "top_p": 0.95}
+        token = select_next_token(
+            torch.tensor([0.0, 1.0, 2.0]), mode="sampled", settings=settings,
+            generator=torch.Generator().manual_seed(11337),
+        )
+        self.assertIn(token, (1, 2))
+        with self.assertRaisesRegex(ValueError, "one-dimensional"):
+            select_next_token(
+                torch.zeros(1, 3), mode="sampled", settings=settings,
+                generator=torch.Generator().manual_seed(11337),
+            )
 
     def test_context_swap_aggregation_has_primary_overall_statistic(self):
         trial = {

@@ -326,6 +326,24 @@ def recovery_error(gold_scores: Sequence[float], recovered_scores: Sequence[floa
     return {"deltas": deltas, "maximum_absolute_error": maximum, "within_tolerance": maximum <= tolerance}
 
 
+def select_next_token(
+    logits: torch.Tensor, *, mode: str, settings: dict[str, Any], generator: torch.Generator
+) -> int:
+    if logits.ndim != 1:
+        raise ValueError("Next-token logits must be a one-dimensional vocabulary vector")
+    if mode == "greedy":
+        return int(logits.argmax().item())
+    if mode != "sampled":
+        raise ValueError(f"Unsupported rollout mode: {mode}")
+    return sample_next_token(
+        logits,
+        temperature=float(settings["temperature"]),
+        top_k=int(settings["top_k"]),
+        top_p=float(settings["top_p"]),
+        generator=generator,
+    )
+
+
 @torch.no_grad()
 def generate_exact_ids(
     model: torch.nn.Module, retained_ids: Sequence[int], count: int, *, device: torch.device,
@@ -338,13 +356,9 @@ def generate_exact_ids(
         tokens = torch.tensor(output, dtype=torch.long, device=device).unsqueeze(0)
         with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
             logits = model(tokens)[0][:, -1, :]
-        if mode == "greedy":
-            next_token = int(logits.argmax().item())
-        else:
-            next_token = sample_next_token(
-                logits, temperature=float(settings["temperature"]), top_k=int(settings["top_k"]),
-                top_p=float(settings["top_p"]), generator=generator,
-            )
+        next_token = select_next_token(
+            logits[0], mode=mode, settings=settings, generator=generator
+        )
         output.append(next_token)
     return output[-count:] if count else []
 
