@@ -1,0 +1,109 @@
+{
+  "run_id": "fictionpulper-15m-data30m-context2k-v1",
+  "status": "sealed",
+  "classification": "no meaningful context benefit",
+  "training_git_commit": "380f611176b34c4b28e08b0ee7b57d1201a9970a",
+  "completion_git_commit": "3ce90812c8424de7785c8a8a4ebcbb9d33ae0e56",
+  "training_worktree_dirty": false,
+  "completion_worktree_clean_before_seal": true,
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "data30m_v1": {
+      "tag": "fictionpulper-15m-data30m-v1",
+      "commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    }
+  },
+  "fresh_random_initialization": true,
+  "prior_checkpoint_loaded": false,
+  "model_parameter_count": 15047040,
+  "context_length": 2048,
+  "seed": 1337,
+  "batch_size": 16,
+  "gradient_accumulation_steps": 2,
+  "effective_allocated_token_batch": 65536,
+  "epochs": 5,
+  "optimizer_steps": 2365,
+  "warmup_steps": 118,
+  "valid_target_presentations": 135886355,
+  "training_extended": false,
+  "corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+  "split_manifest_sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026",
+  "context2k_packed_metadata_sha256": "68b78668e184fb796dbc44317ba6042edf08d33c610c8a057248f49b4d12e9cf",
+  "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "config_sha256": "eb2ff19b0a921c976fc3522cef48e6f8f0a41fa4c40ecb21db4c18d6b20e176c",
+  "evaluation_protocol_sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+  "context_retention_protocol_sha256": "40880af5fbff5ffec5217c0dd489da12e2def77418ba14417393e16ceafd17ec",
+  "baseline_seal_sha256": {
+    "corpus_v2": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916",
+    "data30m_v1": "cb20b73873aa8299da5d959ff2985ba7a68a753e655c3d558d3418280e9676ff",
+    "compute5": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c"
+  },
+  "code_sha256": {
+    "train": "11561b417452cbd798156422500a96ba2afb28868932b952a399cbc60e47b71f",
+    "model": "e0425cf876406b4f17b45fc19418097026dbbbdb1ec99f6b8aa0c77c4cb82c12",
+    "dataset": "d02302e65427586fc70a37165c4b6b8c850f26ebcc1fcae875cb08e8895b8c64",
+    "tokenize_corpus": "af6836a2037b76d823365ed353051342bf5e17d51a0719980fd225183a12582a",
+    "context_diagnostics": "055b08f78e8c95c6016aaedcbe14474a17a7aff74aa31f9f7762260ceaf0ec99",
+    "evaluate_context_retention": "7e9942b437506d26b2b997389ddc6f88586ed761070bb1da404b2e4d39dd5c7f",
+    "report_context2k": "94ffc1ccc0a1f0a84f01cecb9a23d828e72dad8065a687ec3fa3a57b3b70b24c"
+  },
+  "packed_artifact_sha256": {
+    "train_bin": "1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9",
+    "train_index": "2b32ab000205b9e1e892b79c4d8fcdcea3ee0874aa4bc058c56705ee3565cfe4",
+    "validation_bin": "94402ee72eeed77da6779cea5e1743c0091346ebcfafe9945eb11feaad3dcaf8",
+    "validation_index": "8c16cd70465942efde272ba482b66eb4a5bdbf4c7ff171d953bb090733235ab0",
+    "test_bin": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
+    "test_index": "b76dafd64191c23d636be815697437b2672600156586a7b89902081976e5aad6"
+  },
+  "checkpoint_sha256": {
+    "epoch_00": "43b16e63352d812dfa86676bbfb004ecc8162b8aa47134cf359cbf29037a97a5",
+    "epoch_01": "1b8a4ccda64dca5ed958fae2592d6f5b15aff840c180b8cf58c1fd43bbf05340",
+    "epoch_02": "2b3d2272c90e09c883e75f47480faecea11de6f5b4ea29ec1c5ade7a6470eee7",
+    "epoch_03": "456349d7dc13ae9d1433f30ce937d4b7c783cf7f951b8ab6b6607dd950345314",
+    "epoch_04": "8b7dcbb2337a2714925cc434c12abdced2089da21c2987e46c932457c81022f5",
+    "epoch_05": "72f77602199bf521ba4d2cd879d01573ce85efd29873c216b469cbe98019bcbe",
+    "best_validation": "8292a359f4820b5d75bc6953004462746aa7c7cf318eb85f6e8bc1dee3d0a966",
+    "latest": "9e9912eca37b1f9c3390d430ba241d3da951a95502ac783adfb3b733564283b6"
+  },
+  "run_artifact_sha256": {
+    "manifest": "2ac64a207c5559ecfe08d1b54d6b4e362c21a3c080a104e5ed82c2b89617941c",
+    "metrics": "0ef66fcc517d0c0c088b0e92e99296f5d5ea90e961aee4644b3b7ac28f4147c4",
+    "summary": "3261c095c6986b0484fd0c503cecb1576681a8f41b7b4bacaf7c716fea79ac4e",
+    "sealed_evaluations": "bcfc309bdd7a594f3b98ce41a9edc76d4cbbb6fa3dff4e3be896cb9485ad2375",
+    "best_generation": "b2359d4645a8c2fe12200c178cc9c3bce6730a3a61312cd0f3c2861385f6d735",
+    "quantitative_comparison": "49363b41c896073a5571b75135d98cf1c91ba8c78ef27bc76da3f4073a69c9a3",
+    "generation_comparison": "0241d0299026bc2539826ec0cb68bda9b9339cbd9371d340ca6ef5a60803d5c1",
+    "context_retention_comparison": "255a5ca92e8a80065b4e154ecaea72c463865961f2aa418471364ee73f689dc1",
+    "repetition_comparison": "0d411ca10add5f767c25e68243adb187c2d789f88fc3dbdb51ea8781da3e80ac",
+    "learning_curve_assessment": "71e5cd041e9ff8975a3eb6f444c9fb9b78c0a13e2ad8f56afbb3ddd5f18243a6"
+  },
+  "experiment_record_sha256": {
+    "readme": "4fec35975944568f3d61dc6fda665f8257043a736261f11095e2a6e18b858082",
+    "preflight": "49bdad65f3a61e273dd26e06981ae7b91e762f92dfd69b0e3e4a1313fb254bf8",
+    "summary": "d6f1ba4baef7acead891d99379143179eddb711d1941978dbcfabfddf85a81c1",
+    "packing_comparison": "6357cd17e6c280112cdb95326a9d5fa40e6ca578c7d072d82a2910f94fe72fb3",
+    "quantitative_comparison": "ad9632982966b9cbf91b1fc4e2b030aaa8b88a524526bc779f1ace5a25867234",
+    "generation_comparison": "6b053318ac33678cee2a6eccd9ff9dc50dcb12eaccc6441a687d54f18883d7a9",
+    "context_retention_comparison": "694ba2fdac5285fad134c5cc7c5ccf69689404d59d2856e2ee19aae694124aed",
+    "repetition_comparison": "937376882f5a1ab100409cb8705303aa437f85a7e9b9a75bb3cc83f5374b5cef",
+    "qualitative_assessment": "83afdc0cdf1e715bd20bf6e56f47b994c6d4bc0de8eb83a602a4aa771411316e"
+  },
+  "selection_metric": "Data30M validation loss only",
+  "selected_epoch": 5,
+  "primary_test_evaluation_count": 1,
+  "historical_evaluations_after_checkpoint_selection": true,
+  "context_retention_evaluation_after_checkpoint_selection": true,
+  "complete_test_suite_passed": true,
+  "test_count": 86,
+  "learning_curve_classification": "validation improving but flattening",
+  "numerically_stable": true,
+  "material_narrative_improvement": false,
+  "extra_compute_and_memory_justified": false
+}
