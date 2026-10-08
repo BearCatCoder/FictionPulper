@@ -1,0 +1,84 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-state-transition-v1",
+  "status": "reporting_complete_unsealed",
+  "classification": "STATIC_STATE_USE_PRESERVED_BUT_TRANSITION_FAILED",
+  "classification_definition": "Training-only state supervision preserved trivially lexical static-state decoding but did not establish dynamic state updating, broad representation improvement, LM scoring transfer, or free-generation fact retention.",
+  "completion_commit": null,
+  "tag_created": false,
+  "final_seal_created": false,
+  "selection_metric": "Data30M validation loss only",
+  "selected_checkpoint": {
+    "step": 2220,
+    "sha256": "10e9331b069b3d423a0cb97ad537258da3cc4b6a72bea7a2a33688cb079efd4f",
+    "data30m_validation_loss": 3.1343591684916863
+  },
+  "parameters": {
+    "base_lm": 15047040,
+    "training_only_auxiliary": 6930,
+    "total_training": 15053970,
+    "lm_only_export": 15047040
+  },
+  "training": {
+    "seed": 1337,
+    "optimizer_steps": 2220,
+    "runtime_seconds": 1728.5159792829945,
+    "peak_reserved_gib": 10.9609375,
+    "exposure": {
+      "real_targets": 115503402,
+      "curriculum_targets": 20382953,
+      "pair_evals": 41238,
+      "transition_annotations": 89850,
+      "carry_annotations": 235566,
+      "total_state_annotations": 325416
+    }
+  },
+  "auxiliary_head": {
+    "test_transition_accuracy": 0.6301939058171745,
+    "test_carry_accuracy": 0.6784492588369442,
+    "test_final_current_transition_accuracy": 0.6443768996960486,
+    "depth_2": {
+      "test_accuracy": 0.5,
+      "generalization_accuracy": 0.4642857142857143
+    },
+    "depth_3": "unavailable",
+    "depth_4_plus": "unavailable",
+    "static_families_at_100_percent": [
+      "object_door_state",
+      "physical_condition",
+      "relationship_state"
+    ]
+  },
+  "lm_scoring": {
+    "paired_reversal": {
+      "state_transition_v1_test": 0.42249240121580545,
+      "state_transition_v1_generalization": 0.36486486486486486,
+      "counterfactual_v1_test": 0.48024316109422494,
+      "counterfactual_v1_generalization": 0.44594594594594594
+    },
+    "latest_state_reversal_test": 0.0,
+    "latest_state_reversal_generalization": 0.0,
+    "forced_choice_state_transition_v1": "4/13",
+    "forced_choice_counterfactual_v1": "6/13"
+  },
+  "free_generation": {
+    "greedy_retained": "0/13",
+    "sampled_retained": "0/13",
+    "explicitly_preserved_expected_facts": 0
+  },
+  "real_fiction_data30m_test": {
+    "loss": 3.235880860881467,
+    "perplexity": 25.42876111738689,
+    "next_token_accuracy": 0.3638461334555707,
+    "counterfactual_v1_loss": 3.2136757822172703,
+    "compute5_loss": 3.223102356171976,
+    "classification": "MODEST_NON_MATERIAL_DEGRADATION",
+    "real_fiction_degraded": false
+  },
+  "lm_only_equivalence": {
+    "status": "PASS",
+    "sha256": "a3264c8b850e86447c3eaff8191df6a78559d8adb43be3d3a12471bf6c92d72b",
+    "state_heads_absent": true,
+    "logits_identical": true,
+    "generation_identical": true
+  }
+}

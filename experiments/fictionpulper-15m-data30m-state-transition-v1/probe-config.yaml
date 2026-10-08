@@ -1,0 +1,46 @@
+protocol_version: 3
+output_path: runs/fictionpulper-15m-data30m-state-transition-v1/post-selection/probe-candidate-raw.json
+
+data:
+  curriculum_dir: data/narrative_curriculum_v1
+  tokenizer_path: data/tokenizer/tokenizer.json
+  maximum_examples_per_split: null
+
+checkpoints:
+  - id: state_transition_v1
+    architecture: fictionpulper_decoder_v1
+    path: checkpoints/fictionpulper-15m-data30m-state-transition-v1/best-validation.pt
+    source_tag: null
+    source_commit: fcf1273eb2c719ac5c32ec7d2b09df5e0f4b4716
+    enabled: true
+
+labels:
+  requested_families:
+    - object_ownership
+    - object_location
+    - character_location
+    - knowledge_holder
+    - relationship_state
+    - injury_state
+    - temporal_order
+    - obligation_state
+    - goal_status
+    - object_retrieval_state
+    - cause_effect
+    - primary_state_type
+    - difficulty
+    - genre
+    - primary_attribute
+    - primary_entity_slot
+
+extraction:
+  device: cuda
+  batch_size: 32
+
+probe:
+  seeds: [1001, 1002, 1003]
+  epochs: 30
+  batch_size: 512
+  learning_rate: 0.01
+  weight_decay: 0.0001
+  retain_layerwise_held_out: true

@@ -1,0 +1,46 @@
+{
+  "status": "complete",
+  "model": "state_transition_v1_context1024",
+  "score_definition": "Retained only if the generated continuation explicitly preserves the expected fact; generic lexical overlap is not sufficient.",
+  "source_raw_generation": {
+    "path": "runs/fictionpulper-15m-data30m-state-transition-v1/post-selection/13fact-free-generation.json",
+    "sha256": "ce15bf177a7cdb75e6021f4b034ff352fca4ca75984f3c253d7ac804fe1dce1f"
+  },
+  "totals": {
+    "greedy": "0/13",
+    "sampled": "0/13"
+  },
+  "review_note": "All candidate outputs were reviewed in full. No output explicitly preserves any expected fact in the raw generated text.",
+  "by_mode": {
+    "greedy": [
+      {"fact_id": "name_object_location_goal:character_name", "retained": false},
+      {"fact_id": "name_object_location_goal:object_possession", "retained": false},
+      {"fact_id": "name_object_location_goal:location", "retained": false},
+      {"fact_id": "name_object_location_goal:stated_goal", "retained": false},
+      {"fact_id": "relationship_secret:character_name", "retained": false},
+      {"fact_id": "relationship_secret:relationship", "retained": false},
+      {"fact_id": "relationship_secret:secret", "retained": false},
+      {"fact_id": "relationship_secret:location", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:character_name", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:object_possession", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:location", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:scene_detail", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:stated_goal", "retained": false}
+    ],
+    "sampled": [
+      {"fact_id": "name_object_location_goal:character_name", "retained": false},
+      {"fact_id": "name_object_location_goal:object_possession", "retained": false},
+      {"fact_id": "name_object_location_goal:location", "retained": false},
+      {"fact_id": "name_object_location_goal:stated_goal", "retained": false},
+      {"fact_id": "relationship_secret:character_name", "retained": false},
+      {"fact_id": "relationship_secret:relationship", "retained": false},
+      {"fact_id": "relationship_secret:secret", "retained": false},
+      {"fact_id": "relationship_secret:location", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:character_name", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:object_possession", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:location", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:scene_detail", "retained": false},
+      {"fact_id": "possession_scene_detail_goal:stated_goal", "retained": false}
+    ]
+  }
+}
