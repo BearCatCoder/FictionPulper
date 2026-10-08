@@ -1,0 +1,125 @@
+{
+  "run_id": "fictionpulper-50m-data30m-v1",
+  "status": "sealed",
+  "classification": "meaningful likelihood improvement without material storytelling improvement",
+  "training_git_commit": "37cfc8c0c9e89e86f82c860f0268582c9641cc48",
+  "completion_git_commit": "2d567d4d8b1f2fdc064e281c7947db5705ba5cb6",
+  "training_worktree_dirty": false,
+  "completion_worktree_clean_before_seal": true,
+  "raw_training_run": {
+    "run_id": "smoke-5m-20261007-212756",
+    "path": "runs/smoke-5m-20261007-212756",
+    "reason": "The training invocation omitted --run-id. Raw artifacts retain the generated ID and were not rewritten or rerun."
+  },
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "data30m_v1": {
+      "tag": "fictionpulper-15m-data30m-v1",
+      "commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "context2k": {
+      "tag": "fictionpulper-15m-data30m-context2k-v1",
+      "commit": "86775fd3ab6c38ba9f67b21cd639b57efab89a31"
+    }
+  },
+  "fresh_random_initialization": true,
+  "prior_checkpoint_loaded": false,
+  "model_parameter_count": 50348544,
+  "baseline_parameter_count": 15047040,
+  "parameter_multiplier": 3.3460763047084345,
+  "context_length": 1024,
+  "seed": 1337,
+  "batch_size": 16,
+  "gradient_accumulation_steps": 4,
+  "effective_allocated_token_batch": 65536,
+  "epochs": 5,
+  "optimizer_steps": 2220,
+  "warmup_steps": 111,
+  "valid_target_presentations": 135886355,
+  "training_extended": false,
+  "corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+  "split_manifest_sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026",
+  "packed_metadata_sha256": "8e3faed0ca188dbdfa1138a0685ff2d8106178404bcbff85b4b12a0f9bbb1426",
+  "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "config_sha256": "f5c5264668d2a594322ac8ce0fea1396069128a96955c6e38b91140e3cc65091",
+  "evaluation_protocol_sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+  "narrative_state_protocol_sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+  "baseline_seal_sha256": {
+    "corpus_v2": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916",
+    "data30m_v1": "cb20b73873aa8299da5d959ff2985ba7a68a753e655c3d558d3418280e9676ff",
+    "compute5": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c",
+    "context2k": "ec775b666de0d2dfec917a215e63cc18d82ffa533615957738c2dc7b7ae06023"
+  },
+  "code_sha256": {
+    "train": "11561b417452cbd798156422500a96ba2afb28868932b952a399cbc60e47b71f",
+    "model": "e0425cf876406b4f17b45fc19418097026dbbbdb1ec99f6b8aa0c77c4cb82c12",
+    "dataset": "d02302e65427586fc70a37165c4b6b8c850f26ebcc1fcae875cb08e8895b8c64",
+    "context_diagnostics": "52c7a3a154837cc30e57476faba2c26ad8dc62440656e9fb6b9b60c1ac94240f",
+    "evaluate_context_retention": "18761b9fd3e5261ddd61db19c503a289ec2f261164e59d4711b0bf9b0fb36384",
+    "report_capacity50m": "0394802557571f9329a256b74bebeb42e42383fb31dc535d879dc9f43d49af72"
+  },
+  "packed_artifact_sha256": {
+    "train_bin": "1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9",
+    "train_index": "e6e4d2cb31f0e49660f05c553561f667fada6006362fe3dcbe04d8f869145799",
+    "validation_bin": "94402ee72eeed77da6779cea5e1743c0091346ebcfafe9945eb11feaad3dcaf8",
+    "validation_index": "cced04f9da8e638c95e95989a004e38a1cf5c927f6d6a1d136f02e06c9bdda6e",
+    "test_bin": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
+    "test_index": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8"
+  },
+  "checkpoint_sha256": {
+    "epoch_00": "808be9ad69cafc4424993ea6bffd885a7e410464c3c77298ae783d25717a3da5",
+    "epoch_01": "a61e88226d80b6cf5ab2a0bdb8ab11b8bff9d97e1af279f01b275273f2f77d8d",
+    "epoch_02": "56ad77550c3eea4cb8cbdbd80e50495d876fe6b079441eaf056163328b7c73b1",
+    "epoch_03": "ecc80e9b55e85507677a169d772e61919bbbd899f1164350e0153dad658aa769",
+    "epoch_04": "4bdbec3641b98b66ee01596a284dc6221904d3695e07a18327f29c726b5c0bd2",
+    "epoch_05": "a46f598ef7d929c1b7624542ea1e2303b262dd9985de296a367e0b67e68727b0",
+    "best_validation": "8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01",
+    "latest": "957af66eca221960272f9e0876913c400faa780d56095b8facfe05d1f718221d"
+  },
+  "raw_run_artifact_sha256": {
+    "manifest": "ed6b99c318195a5668b8cc8c0ee976bf063902215f37ce5f826dbe31dbb72a53",
+    "metrics": "28a568fdc9f4aed87d3f3d3e60327657f2f0338f70b619d32ad76d00ed60c469",
+    "summary": "0bdf5eeb3f7994a4e4df60c4cae87300ae4616fe6aec30006e2a7a09b28fd01a",
+    "sealed_evaluations": "c078cdc10918927f7a78a65588f833ad58c02cf52f4d7548a08cea138fc2b81a",
+    "best_generation": "ac595ede1083890f276524ed68f1ee06f292de38f6ff2d8a870d1172f96d6523"
+  },
+  "derived_run_artifact_sha256": {
+    "narrative_state_comparison": "ea8d8e5d815083fb45651682903a4fc11cad7b068393070f3be0d5cfd438852c",
+    "quantitative_comparison": "d64f9a4ce1e62504d336283cd935e4e15282d704fa10ec6a400bd414b9f3a39b",
+    "generation_comparison": "19fc1d234c17fd056dedd743f6d1720d1f9fc49c9bec0cac5f9ad788a0b5aae3",
+    "repetition_comparison": "da023bc08f4867a561d8f2723d4dcea23c2b38ab4ecfa64d19230a445a26ef84",
+    "learning_curve_assessment": "b9fc4fd8f056278254d2d7f8e74172280c514e90195a03272df70d9f400bb258"
+  },
+  "experiment_record_sha256": {
+    "readme": "c173ca674a741cd36dd54dcf26f08c1c0bb90c8d1e0b922bfbdd1798f18fd47b",
+    "preflight": "4defb897f7172a655be8a20d5cca1fdd8630e879acb377eade7e977d8dbc4f31",
+    "narrative_state_protocol": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+    "summary": "8f59d2df7c91d80d5a6cb38f599e75edf5aadaf03df74298092b78a8e645e3b8",
+    "quantitative_comparison": "4da72bccdbc9fc03d2b618a06a55747b3db71b916a1379ffe34edb0280c75a10",
+    "generation_comparison": "bbff5c185459603b635b399995b43c958e8dbb0b31c05e039896ebad2874068a",
+    "narrative_state_comparison": "2d72652b93b368bbe5c799f97a3830022c5916960888a39cb64f2bc23ce578c4",
+    "repetition_comparison": "d739dd62ec4a0f4c1b1189b212ae6d9d5157a9fb2ad07f480d8c5f6fd4ed2e54",
+    "qualitative_assessment": "b71b9fb350c7d4f178b7cf57de91664ee3d39f5db3c192f08ba00d5bc5882847"
+  },
+  "selection_metric": "Data30M validation loss only",
+  "selected_epoch": 5,
+  "selected_optimizer_step": 2220,
+  "primary_test_evaluation_count": 1,
+  "historical_evaluations_after_checkpoint_selection": true,
+  "narrative_state_evaluation_after_checkpoint_selection": true,
+  "narrative_state_facts_visible_for_full_generation": true,
+  "complete_test_suite_passed": true,
+  "test_count": 96,
+  "learning_curve_classification": "improving but effectively plateaued by epoch 5",
+  "numerically_stable": true,
+  "material_likelihood_improvement": true,
+  "material_narrative_improvement": false,
+  "extra_compute_and_memory_justified_for_storytelling": false
+}
