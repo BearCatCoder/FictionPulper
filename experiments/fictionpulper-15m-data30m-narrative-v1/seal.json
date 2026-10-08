@@ -1,0 +1,122 @@
+{
+  "run_id": "fictionpulper-15m-data30m-narrative-v1",
+  "status": "sealed",
+  "classification": "curriculum learned without narrative-continuity improvement",
+  "training_git_commit": "0ad45d34f732e44c67b7104fa92f7599f28941f6",
+  "completion_git_commit": "747b03ff4b13645d1e5172ea9637cc94414e8d71",
+  "training_worktree_dirty": false,
+  "completion_worktree_clean_before_seal": true,
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "data30m_v1": {
+      "tag": "fictionpulper-15m-data30m-v1",
+      "commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "context2k": {
+      "tag": "fictionpulper-15m-data30m-context2k-v1",
+      "commit": "86775fd3ab6c38ba9f67b21cd639b57efab89a31"
+    },
+    "capacity50m": {
+      "tag": "fictionpulper-50m-data30m-v1",
+      "commit": "40aede83bfd2f8f548376bf364d48677230a31ac"
+    }
+  },
+  "baseline_seal_sha256": {
+    "corpus_v2": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916",
+    "data30m_v1": "cb20b73873aa8299da5d959ff2985ba7a68a753e655c3d558d3418280e9676ff",
+    "compute5": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c",
+    "context2k": "ec775b666de0d2dfec917a215e63cc18d82ffa533615957738c2dc7b7ae06023",
+    "capacity50m": "ac9f0abf9c3c1c60f0ee02485918e86c8407e051c578e34cf1bfa7ae15451fb3"
+  },
+  "fresh_random_initialization": true,
+  "prior_checkpoint_loaded": false,
+  "model_parameter_count": 15047040,
+  "context_length": 1024,
+  "seed": 1337,
+  "optimizer_steps": 2220,
+  "valid_target_presentations": 135886355,
+  "real_valid_target_presentations": 115503402,
+  "curriculum_valid_target_presentations": 20382953,
+  "real_exposure_percent": 85.00000018397726,
+  "curriculum_exposure_percent": 14.999999816022735,
+  "training_extended": false,
+  "corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+  "split_manifest_sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026",
+  "packed_metadata_sha256": "8e3faed0ca188dbdfa1138a0685ff2d8106178404bcbff85b4b12a0f9bbb1426",
+  "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "curriculum_config_sha256": "454971b4311e76139ca93ab2115ba30f83ff1b3a9f2dce9f24baf08402dcca11",
+  "training_config_sha256": "3ed52f931c706fa77fa65eaae87254aae30816e1612cc6df0ee28cc7d1f5e556",
+  "curriculum_manifest_sha256": "fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14",
+  "schedule_file_sha256": "6f0872295a23ba0874cf84daef7fac9a95aa4254051b1f4c1b49ef2222575820",
+  "schedule_content_sha256": "e76a033fa6a3170d469d0aefaa0745ffcce0a27a691d6ca612f9fa68434b6822",
+  "evaluation_protocol_sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+  "narrative_state_protocol_sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+  "post_selection_protocol_sha256": "427201a1dfe1e885afb35a787d0cd91658a35ac329085046e04cae335e2224a6",
+  "code_sha256": {
+    "curriculum_init": "809c4502728c8c5de74ccca295809e35c86222904b9a3b010a6e96333d967fa1",
+    "curriculum_main": "7a890938d07f7f71e6f8cca28c7c093726e72c0789c9364e528519f9ab3f7f3c",
+    "curriculum_audits": "6e2ff34899eea665c6db19096ca35358008e326becd638c3912b2c74f54bd0bd",
+    "curriculum_common": "d1fc1b40c6272ef6e7a7a24fd998846d69a25b953b99a6d1cdd7a993d8205991",
+    "curriculum_generator": "7ca88fc563b84c08a82215c6c62ea1053d0d5f9a2c3778995701522b22eff3cf",
+    "curriculum_validation": "d0a775b808b8a286cb2e7566caf1111d39f77382780ec8997ae8d42df41e95a7",
+    "mixed_schedule": "a5cb6c69ba93d56a540247cae6d5c5e8dcdeb14054f903072f46c5c0f934bc29",
+    "pack_mixed_curriculum": "63babd77d58b447c73f2788bc17b1178da9f5160548c33f36b03db270e21c28a",
+    "train_mixed": "ac5b0d9620378cef7e21530614f4867fa68a3d230381673277f10cacb4bf2781",
+    "narrative_post_selection": "5743953c62b9b5e2cf3335c9d6988a2fa8e04179b0e777ef26e018720ba00b31",
+    "prepare_narrative_experiment": "453c2e5d03a22fb771b0d2dcf86e31af55c4d9d0543c6af2c49c3a781014ce7d",
+    "report_narrative": "8df7677f14eb40dfa0a74a6be880ee5e76b5e2362228a1c148108ee602731c65"
+  },
+  "checkpoint_sha256": {
+    "step_0444": "13c139c549f61e8630193b6d7fc59d50693121d14102931c2f20278c4bf29d4b",
+    "step_0888": "3783d60e88a205a91c29adf9739be8a3ad2fe38548c0281c1a1fc716ad609f2d",
+    "step_1332": "1e66757c08b05e60d203d00fa64d3845834d191683423a5acd78da3c00ac64e1",
+    "step_1776": "299968d9cd5ca66e95b97f0f26903801c55ed1892bbd0077bb4c5fcb1f95addb",
+    "step_2220": "96cec27b1b1b06146996e89177d1b3dfbaa146a99526d3529de2efbbb051144b",
+    "best_validation": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5",
+    "latest": "0f9df3ee194cca8c97c2631892674975aac26dfb5184ddac7e0cd39567c31378"
+  },
+  "run_artifact_sha256": {
+    "manifest": "9e6a3000c1853f1beab607c506768710c4e84358d11d88c0aed75c1708d24807",
+    "metrics": "d9e4a38cc3907bfc1564dff19059b56d4affd75550804ff4a27a3e4f67b39c0c",
+    "summary": "aed805d334c931ea601fa5de6711cbfefd72dc7058063e7c05a2fe1228af3d5f"
+  },
+  "post_selection_artifact_sha256": {
+    "evaluation_results": "96509e86e65a441f06ae1a194deaee2bcdd5ccbf0c851fa2640b4d0914d18b90",
+    "curriculum_state_recall": "44d38e05e3b604076a7ecfa12392e524c02401fd3ac855b50a0106bd6d748b2b",
+    "generation_comparison": "f6b796cc5e5c296ae83ec077075eede8af2c8578bda11e9a0b7215911555a7e6",
+    "narrative_state_comparison": "dea9edf409f1ebfe6ff794d0f64a72177d099dbcace59d26d7757f0662cf1f56",
+    "repetition_comparison": "36382508e9e76cebc4673a16d846ee8ccff8a989064b080092d35b8d9466d183"
+  },
+  "experiment_record_sha256": {
+    "readme": "af57b3aaa1d1ae26d487e77b2e9780501444f6c2ca61e529c42efc371cb866cd",
+    "preflight": "ac1126da1a783dc44caadaf3dc8c72ca4dd3575402948c27958a7b61e1ac2de4",
+    "post_selection_protocol": "427201a1dfe1e885afb35a787d0cd91658a35ac329085046e04cae335e2224a6",
+    "summary": "de83c4de198c44428796f88e71720fb2adbce31d7a51e9de478072b67db392bd",
+    "provenance": "38c6853b3df2a6fe64fa4a4601ef8160bae13aa7f943f22d4d3c4ffd8b4e4a6f",
+    "quantitative_comparison": "3e05cdf88f6bcd303f8b3eb7ac6f40bf5f5356892a5b27f7d2c39e757e4d9a6c",
+    "curriculum_metrics": "ccc359a87d75825af1c626710812b2ee4730696ac6d1cc7ab69aed4862e0735b",
+    "qualitative_assessment": "2dd9ee9c0411a44e50a151dfe71a97c0925633bc46fcb5bbcbaba1a4c602af9f",
+    "repetition_comparison": "45ef66396f1092caf335afad4b30379aa43e1902d738d0f76474ac1f1d405c5f",
+    "post_selection_record": "56651adcf70a699dde8cb9c1f043635647cdb4d3218eb2cb2a0a6072aaa274b5"
+  },
+  "selection_metric": "Data30M validation loss only",
+  "selected_optimizer_step": 2220,
+  "primary_test_evaluation_count": 1,
+  "post_selection_gate_respected": true,
+  "complete_test_suite_passed": true,
+  "test_count": 130,
+  "numerically_stable": true,
+  "curriculum_lm_structure_learned": true,
+  "exact_curriculum_state_recall_improved": false,
+  "semantic_narrative_state_retention_improved": false,
+  "material_real_fiction_lm_damage": false,
+  "material_storytelling_improvement": false,
+  "curriculum_hypothesis_supported": false
+}

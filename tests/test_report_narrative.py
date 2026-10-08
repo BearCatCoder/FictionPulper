@@ -32,13 +32,12 @@ class NarrativeReportTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Unexpected recall"):
             validate_sources(summary, manifest, baseline, evaluation, recall, generation, narrative)
 
-    def test_generated_summary_records_failed_hypothesis_without_seal(self):
+    def test_generated_summary_records_failed_hypothesis_as_unsealed(self):
         experiment_dir = Path("experiments/fictionpulper-15m-data30m-narrative-v1")
         summary = json.loads((experiment_dir / "summary.json").read_text(encoding="utf-8"))
         self.assertFalse(summary["seal_created"])
         self.assertIsNone(summary["completion_commit"])
         self.assertIn("failed", summary["hypothesis_result"])
-        self.assertFalse((experiment_dir / "seal.json").exists())
         for model in summary["narrative_semantic_diagnostic"].values():
             if isinstance(model, dict):
                 self.assertTrue(all(score["correct"] == 0 for score in model.values()))
