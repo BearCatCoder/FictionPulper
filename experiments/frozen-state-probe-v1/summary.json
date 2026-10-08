@@ -1,0 +1,139 @@
+{
+  "experiment_id": "frozen-state-probe-v1",
+  "protocol_version": 2,
+  "classification": "STATE_WEAKLY_DECODED",
+  "raw_results": {
+    "path": "runs/frozen-state-probe-v1/results.json",
+    "sha256": "94c8d615cda96df505d203816dfbbed4e70b35dfa80d49625f588b830d040ede"
+  },
+  "config": {
+    "path": "experiments/frozen-state-probe-v1/config.yaml",
+    "sha256": "e36c7f98b225e72476b6b8b65ef1692419dcc95b2f4a2a0d3a6f5862871e1051"
+  },
+  "models": {
+    "compute5": {
+      "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt",
+      "checkpoint_sha256": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe",
+      "source_tag": "fictionpulper-15m-data30m-compute5",
+      "source_commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "narrative_v1": {
+      "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt",
+      "checkpoint_sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5",
+      "source_tag": "fictionpulper-15m-data30m-narrative-v1",
+      "source_commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+    }
+  },
+  "supported_families": [
+    "object_ownership",
+    "object_location",
+    "character_location",
+    "knowledge_holder",
+    "relationship_state",
+    "injury_state",
+    "temporal_order",
+    "obligation_state"
+  ],
+  "unsupported_families": {
+    "goal_status": "goal status is active for every valid pre-resolution goal example",
+    "object_retrieval_state": "retrieved is false for every valid pre-resolution ownership example",
+    "cause_effect": "cause/effect events provide no varying structural class label",
+    "primary_state_type": "predicts task/template identity rather than narrative state",
+    "difficulty": "predicts curriculum construction metadata rather than narrative state",
+    "genre": "predicts genre metadata rather than narrative state",
+    "primary_attribute": "predicts event schema/template rather than narrative state",
+    "primary_entity_slot": "is underspecified without a state-specific semantic role"
+  },
+  "metrics": {
+    "compute5": {
+      "character_location": {
+        "best_layer": "layer_05",
+        "test": {"accuracy": {"mean": 0.5416666666666666, "std": 0.07795119555779044}, "balanced_accuracy": {"mean": 0.5264550264550264, "std": 0.08556064353860438}, "macro_f1": {"mean": 0.5218687745003535, "std": 0.09111406526409262}, "chance": 0.5, "majority": 0.4375},
+        "generalization": {"accuracy": {"mean": 0.4047619047619048, "std": 0.08908708063747481}, "balanced_accuracy": {"mean": 0.4236111111111111, "std": 0.0687464926153588}, "macro_f1": {"mean": 0.3827431827431827, "std": 0.11693534636121272}, "chance": 0.5, "majority": 0.5714285714285714}
+      },
+      "injury_state": {
+        "best_layer": "layer_02",
+        "test": {"accuracy": {"mean": 0.3544303797468355, "std": 0.03580287499678723}, "balanced_accuracy": {"mean": 0.35956043956043954, "std": 0.038503390218722754}, "macro_f1": {"mean": 0.3365418354096996, "std": 0.030169499946070134}, "chance": 0.3333333333333333, "majority": 0.3291139240506329},
+        "generalization": {"accuracy": {"mean": 0.3142857142857143, "std": 0.04040610178208844}, "balanced_accuracy": {"mean": 0.31424501424501433, "std": 0.0500594203784226}, "macro_f1": {"mean": 0.2850505757858699, "std": 0.04439764195377231}, "chance": 0.3333333333333333, "majority": 0.37142857142857144}
+      },
+      "knowledge_holder": {
+        "best_layer": "layer_05",
+        "test": {"accuracy": {"mean": 0.3116883116883117, "std": 0.01836640990094929}, "balanced_accuracy": {"mean": 0.288471284639867, "std": 0.016489017553163086}, "macro_f1": {"mean": 0.26535625121247564, "std": 0.013023590127930378}, "chance": 0.3333333333333333, "majority": 0.2727272727272727},
+        "generalization": {"accuracy": {"mean": 0.4000000000000001, "std": 0.04665694748158433}, "balanced_accuracy": {"mean": 0.37421652421652424, "std": 0.05584663318352108}, "macro_f1": {"mean": 0.3224263348750353, "std": 0.08125205951916496}, "chance": 0.3333333333333333, "majority": 0.37142857142857144}
+      },
+      "object_location": {
+        "best_layer": "layer_04",
+        "test": {"accuracy": {"mean": 0.43915343915343913, "std": 0.01979712903054995}, "balanced_accuracy": {"mean": 0.47869022869022865, "std": 0.01989135330254023}, "macro_f1": {"mean": 0.4253770764330131, "std": 0.024603916044968893}, "chance": 0.5, "majority": 0.41269841269841273},
+        "generalization": {"accuracy": {"mean": 0.5555555555555555, "std": 0.05237828008789241}, "balanced_accuracy": {"mean": 0.5512820512820512, "std": 0.05180269459242109}, "macro_f1": {"mean": 0.5473001402524544, "std": 0.05112391945324898}, "chance": 0.5, "majority": 0.48148148148148145}
+      },
+      "object_ownership": {
+        "best_layer": "layer_06",
+        "test": {"accuracy": {"mean": 0.24338624338624334, "std": 0.032615947105655956}, "balanced_accuracy": {"mean": 0.2853462157809984, "std": 0.04287949362241304}, "macro_f1": {"mean": 0.22976207158547757, "std": 0.03151899043612354}, "chance": 0.3333333333333333, "majority": 0.36507936507936506},
+        "generalization": {"accuracy": {"mean": 0.3703703703703704, "std": 0.0302406141084343}, "balanced_accuracy": {"mean": 0.37989417989417995, "std": 0.01992398982408755}, "macro_f1": {"mean": 0.3343985795392445, "std": 0.010512659221554239}, "chance": 0.3333333333333333, "majority": 0.1111111111111111}
+      },
+      "obligation_state": {
+        "best_layer": "layer_06",
+        "test": {"accuracy": {"mean": 0.09027777777777778, "std": 0.025983731852596816}, "balanced_accuracy": {"mean": 0.09802188552188552, "std": 0.022115872060178125}, "macro_f1": {"mean": 0.08285560923242082, "std": 0.02646172571870208}, "chance": 0.16666666666666666, "majority": 0.16666666666666666},
+        "generalization": {"accuracy": {"mean": 0.1111111111111111, "std": 0.05939138709164986}, "balanced_accuracy": {"mean": 0.09788359788359786, "std": 0.055869608682388563}, "macro_f1": {"mean": 0.08587708587708587, "std": 0.04546882544659335}, "chance": 0.16666666666666666, "majority": 0.19047619047619047}
+      },
+      "relationship_state": {
+        "best_layer": "layer_06",
+        "test": {"accuracy": {"mean": 0.07971014492753624, "std": 0.010247924365022427}, "balanced_accuracy": {"mean": 0.07848324514991181, "std": 0.008729713347982067}, "macro_f1": {"mean": 0.057436388199334894, "std": 0.008738262546293896}, "chance": 0.16666666666666666, "majority": 0.15217391304347827},
+        "generalization": {"accuracy": {"mean": 0.19999999999999998, "std": 0.040824829046386304}, "balanced_accuracy": {"mean": 0.16574074074074074, "std": 0.035597005160631634}, "macro_f1": {"mean": 0.1619793786460453, "std": 0.020895486600846908}, "chance": 0.16666666666666666, "majority": 0.10000000000000002}
+      },
+      "temporal_order": {
+        "best_layer": "layer_08",
+        "test": {"accuracy": {"mean": 0.19858156028368792, "std": 0.010029883421085782}, "balanced_accuracy": {"mean": 0.1984126984126984, "std": 0.01364298711130015}, "macro_f1": {"mean": 0.1564779599867319, "std": 0.011053720790546222}, "chance": 0.3333333333333333, "majority": 0.3404255319148936},
+        "generalization": {"accuracy": {"mean": 0.4761904761904761, "std": 5.551115123125783e-17}, "balanced_accuracy": {"mean": 0.49867724867724866, "std": 0.0037413057205637305}, "macro_f1": {"mean": 0.4653387280838261, "std": 0.002852672364061139}, "chance": 0.3333333333333333, "majority": 0.3333333333333333}
+      }
+    },
+    "narrative_v1": {
+      "character_location": {
+        "best_layer": "final_norm",
+        "test": {"accuracy": {"mean": 0.5625, "std": 0.04419417382415922}, "balanced_accuracy": {"mean": 0.544973544973545, "std": 0.03464497580346244}, "macro_f1": {"mean": 0.5080537962311361, "std": 0.06399540658165433}, "chance": 0.5, "majority": 0.4375},
+        "generalization": {"accuracy": {"mean": 0.42857142857142855, "std": 0.05832118435198042}, "balanced_accuracy": {"mean": 0.4375, "std": 0.06133167268283228}, "macro_f1": {"mean": 0.3602489128804918, "std": 0.052004397876766154}, "chance": 0.5, "majority": 0.5714285714285714}
+      },
+      "injury_state": {
+        "best_layer": "layer_07",
+        "test": {"accuracy": {"mean": 0.3670886075949367, "std": 0.05754507045141712}, "balanced_accuracy": {"mean": 0.37737484737484733, "std": 0.05860729802111275}, "macro_f1": {"mean": 0.301523597821447, "std": 0.02628377174228171}, "chance": 0.3333333333333333, "majority": 0.3291139240506329},
+        "generalization": {"accuracy": {"mean": 0.39999999999999997, "std": 0.040406101782088415}, "balanced_accuracy": {"mean": 0.4123931623931624, "std": 0.03402918939139313}, "macro_f1": {"mean": 0.34916466704822396, "std": 0.02220506585066124}, "chance": 0.3333333333333333, "majority": 0.37142857142857144}
+      },
+      "knowledge_holder": {
+        "best_layer": "layer_08",
+        "test": {"accuracy": {"mean": 0.341991341991342, "std": 0.006122136633649764}, "balanced_accuracy": {"mean": 0.3312250400373005, "std": 0.020608471650377214}, "macro_f1": {"mean": 0.2706808178068473, "std": 0.005914153859898257}, "chance": 0.3333333333333333, "majority": 0.2727272727272727},
+        "generalization": {"accuracy": {"mean": 0.30476190476190473, "std": 0.03563483225498993}, "balanced_accuracy": {"mean": 0.31994301994301994, "std": 0.03564101425412196}, "macro_f1": {"mean": 0.24711176012831684, "std": 0.019782721843012722}, "chance": 0.3333333333333333, "majority": 0.37142857142857144}
+      },
+      "object_location": {
+        "best_layer": "layer_01",
+        "test": {"accuracy": {"mean": 0.5343915343915344, "std": 0.0523782800878924}, "balanced_accuracy": {"mean": 0.494975744975745, "std": 0.027283464566915508}, "macro_f1": {"mean": 0.4586935859484879, "std": 0.04006422581328518}, "chance": 0.5, "majority": 0.41269841269841273},
+        "generalization": {"accuracy": {"mean": 0.48148148148148145, "std": 0.0}, "balanced_accuracy": {"mean": 0.4743589743589743, "std": 0.007210629921256228}, "macro_f1": {"mean": 0.4269230769230769, "std": 0.07210897407404875}, "chance": 0.5, "majority": 0.48148148148148145}
+      },
+      "object_ownership": {
+        "best_layer": "final_norm",
+        "test": {"accuracy": {"mean": 0.39682539682539675, "std": 0.03428963332490931}, "balanced_accuracy": {"mean": 0.3611594202898551, "std": 0.015003765983613054}, "macro_f1": {"mean": 0.32567674481876757, "std": 0.016604457886337118}, "chance": 0.3333333333333333, "majority": 0.36507936507936506},
+        "generalization": {"accuracy": {"mean": 0.2098765432098765, "std": 0.04619330107128323}, "balanced_accuracy": {"mean": 0.39312169312169304, "std": 0.08158105645228486}, "macro_f1": {"mean": 0.19501763668430336, "std": 0.036793786310633216}, "chance": 0.3333333333333333, "majority": 0.1111111111111111}
+      },
+      "obligation_state": {
+        "best_layer": "layer_03",
+        "test": {"accuracy": {"mean": 0.13194444444444445, "std": 0.03540985773328323}, "balanced_accuracy": {"mean": 0.13783068783068783, "std": 0.031429194941528515}, "macro_f1": {"mean": 0.06958943274056993, "std": 0.014403552531524004}, "chance": 0.16666666666666666, "majority": 0.16666666666666666},
+        "generalization": {"accuracy": {"mean": 0.20634920634920637, "std": 0.02244783432338246}, "balanced_accuracy": {"mean": 0.21957671957671956, "std": 0.0037413057205637435}, "macro_f1": {"mean": 0.11473000683526997, "std": 0.024971850157247774}, "chance": 0.16666666666666666, "majority": 0.19047619047619047}
+      },
+      "relationship_state": {
+        "best_layer": "final_norm",
+        "test": {"accuracy": {"mean": 0.14492753623188406, "std": 0.03694941676516511}, "balanced_accuracy": {"mean": 0.15348324514991182, "std": 0.03648018226097156}, "macro_f1": {"mean": 0.10604157517200996, "std": 0.029988817342866448}, "chance": 0.16666666666666666, "majority": 0.15217391304347827},
+        "generalization": {"accuracy": {"mean": 0.13333333333333333, "std": 0.02357022603955158}, "balanced_accuracy": {"mean": 0.14351851851851852, "std": 0.026189140043946204}, "macro_f1": {"mean": 0.08978675645342311, "std": 0.012396589244879087}, "chance": 0.16666666666666666, "majority": 0.10000000000000002}
+      },
+      "temporal_order": {
+        "best_layer": "layer_05",
+        "test": {"accuracy": {"mean": 0.326241134751773, "std": 0.01002988342108577}, "balanced_accuracy": {"mean": 0.3116830065359477, "std": 0.011157271473650055}, "macro_f1": {"mean": 0.2491895909449101, "std": 0.005835865478127132}, "chance": 0.3333333333333333, "majority": 0.3404255319148936},
+        "generalization": {"accuracy": {"mean": 0.3333333333333333, "std": 0.0}, "balanced_accuracy": {"mean": 0.335978835978836, "std": 0.00374130572056373}, "macro_f1": {"mean": 0.1942798353909465, "std": 0.03477748536222876}, "chance": 0.3333333333333333, "majority": 0.3333333333333333}
+      }
+    }
+  },
+  "classification_basis": "Signals are isolated and inconsistent across families and held-out splits. Narrative-v1 does not consistently improve over Compute5, so the evidence does not support STATE_DECODED_BUT_NOT_USED_IN_GENERATION or NARRATIVE_V1_IMPROVED_INTERNAL_REPRESENTATION.",
+  "limitations": [
+    "Test and generalization holdouts were evaluated post hoc after probe epoch and layer selection on validation; they were not used for selection, but the reported interpretation was formed after observing them.",
+    "Character and location slots use case-insensitive lexical rank within each story; this policy may introduce lexical-order structure and does not identify invariant semantic roles.",
+    "Per-family held-out support is small, especially in the generalization split and for six-class relationship and obligation labels, producing high uncertainty and unstable classwise estimates."
+  ]
+}

@@ -9,9 +9,12 @@ data/packed/
 data/corpus_v1/
 data/corpus_v2/
 data/narrative_curriculum_v1/
+data/contrastive_narrative_v1/
 
 checkpoints/
 runs/
+
+experiments/frozen-state-probe-v1/results.json
 
 *.bin
 *.pt

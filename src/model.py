@@ -169,13 +169,23 @@ class FictionPulperLM(nn.Module):
         input_ids: torch.Tensor,
         labels: torch.Tensor | None = None,
         loss_mask: torch.Tensor | None = None,
-    ) -> tuple[torch.Tensor, torch.Tensor | None]:
+        return_hidden_states: bool = False,
+    ) -> (
+        tuple[torch.Tensor, torch.Tensor | None]
+        | tuple[torch.Tensor, torch.Tensor | None, tuple[torch.Tensor, ...]]
+    ):
         if input_ids.shape[1] > self.config.max_seq_len:
             raise ValueError("Input sequence exceeds max_seq_len")
         hidden_states = self.embed_tokens(input_ids)
+        captured_hidden_states = [hidden_states] if return_hidden_states else None
         for layer in self.layers:
             hidden_states = layer(hidden_states)
-        logits = self.lm_head(self.final_norm(hidden_states))
+            if captured_hidden_states is not None:
+                captured_hidden_states.append(hidden_states)
+        final_hidden_states = self.final_norm(hidden_states)
+        if captured_hidden_states is not None:
+            captured_hidden_states.append(final_hidden_states)
+        logits = self.lm_head(final_hidden_states)
         loss = None
         if labels is not None:
             loss_labels = labels
@@ -188,6 +198,8 @@ class FictionPulperLM(nn.Module):
                 loss_labels.reshape(-1),
                 ignore_index=-100,
             )
+        if captured_hidden_states is not None:
+            return logits, loss, tuple(captured_hidden_states)
         return logits, loss
 
     def trainable_parameter_count(self) -> int:

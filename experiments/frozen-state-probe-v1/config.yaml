@@ -1,0 +1,57 @@
+protocol_version: 2
+output_path: runs/frozen-state-probe-v1/results.json
+
+data:
+  curriculum_dir: data/narrative_curriculum_v1
+  tokenizer_path: data/tokenizer/tokenizer.json
+  maximum_examples_per_split: null
+
+checkpoints:
+  - id: compute5
+    architecture: fictionpulper_decoder_v1
+    path: checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt
+    source_tag: fictionpulper-15m-data30m-compute5
+    source_commit: 979a42e7f729de69ac57ef69ec4ac8adb622cf4a
+    enabled: true
+  - id: narrative_v1
+    architecture: fictionpulper_decoder_v1
+    path: checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt
+    source_tag: fictionpulper-15m-data30m-narrative-v1
+    source_commit: 71b46f8235eb3fdfc77fee782786a718f4ba5095
+    enabled: true
+  - id: contrastive_future
+    architecture: fictionpulper_decoder_v1
+    path: checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt
+    source_tag: null
+    source_commit: null
+    enabled: false
+
+labels:
+  requested_families:
+    - object_ownership
+    - object_location
+    - character_location
+    - knowledge_holder
+    - relationship_state
+    - injury_state
+    - temporal_order
+    - obligation_state
+    - goal_status
+    - object_retrieval_state
+    - cause_effect
+    - primary_state_type
+    - difficulty
+    - genre
+    - primary_attribute
+    - primary_entity_slot
+
+extraction:
+  device: cuda
+  batch_size: 32
+
+probe:
+  seeds: [1001, 1002, 1003]
+  epochs: 30
+  batch_size: 512
+  learning_rate: 0.01
+  weight_decay: 0.0001
