@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "experiment_id": "fictionpulper-15m-data30m-contrastive-v1",
+  "selection_metric": "Data30M validation loss only",
+  "required_training_status": "training_and_selection_complete",
+  "training_git_commit": "dcf7c8e03702740ea0f839c1e3d17ecf92f0496b",
+  "candidate": {
+    "summary_path": "runs/fictionpulper-15m-data30m-contrastive-v1/summary.json",
+    "manifest_path": "runs/fictionpulper-15m-data30m-contrastive-v1/manifest.json",
+    "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt",
+    "checkpoint_sha256": "5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4",
+    "expected_step": 2220,
+    "tokenizer_path": "data/tokenizer/tokenizer.json",
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+  },
+  "models": {
+    "compute5": {
+      "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt",
+      "checkpoint_sha256": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe"
+    },
+    "narrative_v1": {
+      "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt",
+      "checkpoint_sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5"
+    }
+  },
+  "pairs": {
+    "test": {
+      "path": "data/contrastive_narrative_v1/post-selection-test/test-pairs.jsonl",
+      "sha256": "f5878a7a7b63745f96e40b529c5cfc2f314c7ed74cc0b67d08c1dd4d23910d63",
+      "manifest_path": "data/contrastive_narrative_v1/post-selection-test/manifest.json",
+      "manifest_sha256": "57d2e4376fcf6cc411b18fb5d99a175f1ee1dd4f17a0dd7d162632342b199890",
+      "records_path": "data/narrative_curriculum_v1/test.jsonl",
+      "records_sha256": "417705b77c03da73bfa0fe86a05ee2b2de92acc97122a249bd75f99a277bb5fc",
+      "expected_pairs": 469
+    },
+    "generalization": {
+      "path": "data/contrastive_narrative_v1/post-selection-generalization/generalization_holdout-pairs.jsonl",
+      "sha256": "7fb1f2a3eec87318efe2c0cff606310374b5a192938a5b4e1dab1f6e61f96e5f",
+      "manifest_path": "data/contrastive_narrative_v1/post-selection-generalization/manifest.json",
+      "manifest_sha256": "e2d7458f25fda5fe7a096e7419e898b82e3a28952d079587f4979500428c2085",
+      "records_path": "data/narrative_curriculum_v1/generalization_holdout.jsonl",
+      "records_sha256": "07a1fb1ea1afd15a835ae99e5dc2d706ee48e3b73095642e68350d23964e6248",
+      "expected_pairs": 207
+    }
+  },
+  "benchmark_protocol": {
+    "path": "experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json",
+    "sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a",
+    "historical_in_order": [
+      "data10m_test_data30m_train_disjoint",
+      "legacy_seed_validation_leakage_clean",
+      "legacy_seed_test"
+    ]
+  },
+  "data30m_test": {
+    "packed_path": "data/packed/corpus-v2-data30m/test.bin",
+    "packed_sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
+    "index_sha256": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8",
+    "expected_documents": 328,
+    "expected_valid_targets": 1546717,
+    "expected_allocated_slots": 1712128
+  },
+  "sealed_sources": {
+    "compute5_metrics": {
+      "path": "runs/fictionpulper-15m-data30m-compute5/sealed-evaluations.json",
+      "sha256": "446de7e9d2a19a2a4d3d5443fc8e6db10b5afef850b2d25d6396bd1913c6d732"
+    },
+    "narrative_metrics": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/evaluation-results.json",
+      "sha256": "96509e86e65a441f06ae1a194deaee2bcdd5ccbf0c851fa2640b4d0914d18b90"
+    },
+    "historical_generations": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/generation-comparison.json",
+      "sha256": "f6b796cc5e5c296ae83ec077075eede8af2c8578bda11e9a0b7215911555a7e6"
+    },
+    "narrative_generations": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/narrative-state-comparison.json",
+      "sha256": "dea9edf409f1ebfe6ff794d0f64a72177d099dbcace59d26d7757f0662cf1f56"
+    }
+  },
+  "narrative_protocol": {
+    "path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+    "sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+    "fact_count": 13,
+    "prompt_count": 3
+  },
+  "generation": {
+    "sample_seed": 11337,
+    "effective_seed_policy": "sample_seed + prompt_index",
+    "settings": {
+      "greedy_max_new_tokens": 128,
+      "sampled_max_new_tokens": 256,
+      "temperature": 0.8,
+      "top_k": 50,
+      "top_p": 0.95
+    }
+  }
+}

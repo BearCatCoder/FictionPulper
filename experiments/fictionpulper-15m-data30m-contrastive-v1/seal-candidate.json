@@ -1,0 +1,50 @@
+{
+  "run_id": "fictionpulper-15m-data30m-contrastive-v1",
+  "status": "seal_candidate_only",
+  "classification": "OBJECTIVE_LEARNED_WITHOUT_NARRATIVE_TRANSFER",
+  "training_git_commit": "dcf7c8e03702740ea0f839c1e3d17ecf92f0496b",
+  "completion_git_commit": null,
+  "tag_created": false,
+  "seal_created": false,
+  "checkpoint_sha256": "5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4",
+  "protocol_sha256": "100ab71edfc87dc075ae48370fde35cca8b95948908b071805164f99f0360cdd",
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"
+    },
+    "data30m_v1": {
+      "tag": "fictionpulper-15m-data30m-v1",
+      "commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    "context2k": {
+      "tag": "fictionpulper-15m-data30m-context2k-v1",
+      "commit": "86775fd3ab6c38ba9f67b21cd639b57efab89a31"
+    },
+    "capacity50m": {
+      "tag": "fictionpulper-50m-data30m-v1",
+      "commit": "40aede83bfd2f8f548376bf364d48677230a31ac"
+    },
+    "narrative_v1": {
+      "tag": "fictionpulper-15m-data30m-narrative-v1",
+      "commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+    }
+  },
+  "experiment_record_sha256": {
+    "README.md": "028109c283289c96a0736649c5e4813d4b38b1d3aeaafc1bb723f99ddd9a6b38",
+    "summary.json": "8597f4292d67ffb4cd5e344c4f6b8af7dde5b38d0c979878adc5a297a16c538c",
+    "controlled-summary.md": "1bdc11670f58e1421acbe2271dc0a963117eae2c240260de4fa3d1c51fd558ed",
+    "quantitative-comparison.md": "7f3b67e473320f03ded31a6f4f961875f51222632edc3e3edc5d1f9283b8c780",
+    "qualitative-assessment.md": "732c39e06e84cacf21f5a11ab3e99f4c3c02a83629084dde2d728fa9ef918695",
+    "repetition-comparison.md": "c73d6afbc3bffd5ce3176c3bb4e894be75724db6125187a2f4a7a8d04d13dba6",
+    "manual-fact-scoring.json": "6415ac784b15c5683c1ee4fb54d3f7404670d886fe96e3d6c2b7c7cfb836ed39",
+    "provenance.json": "a84b7c325bc78bdd9b1fbe7cfd12ca5377c3eed592f4c20b36b2b428e19b7767"
+  },
+  "source_hashes_validated": true,
+  "full_tests_passed": true,
+  "full_test_count": 157
+}

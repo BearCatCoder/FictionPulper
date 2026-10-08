@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "protocol_path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+  "protocol_sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45",
+  "scoring_rule": "Retain a fact only when the continuation preserves the disclosed entity-state relationship. Generic lexical overlap, an unrelated entity with the same attribute, or prompt-adjacent vocabulary without the relationship does not count.",
+  "fixed_totals": {
+    "compute5": {"greedy": "0/13", "sampled": "0/13"},
+    "narrative_v1": {"greedy": "0/13", "sampled": "0/13"},
+    "contrastive_v1": {"greedy": "0/13", "sampled": "0/13"}
+  },
+  "facts": [
+    {
+      "id": "name_object_location_goal.character_name",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "character_name",
+      "fact": "Martin Vale",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I have been in the office", "sampled": "The stranger made no reply"}, "narrative_v1": {"greedy": "I am a man of the world", "sampled": "The master said no more"}, "contrastive_v1": {"greedy": "I have a letter from the first", "sampled": "Mrs. Lyeth glanced at the door"}},
+      "reason": "No continuation names Martin Vale or identifies its active character as him."
+    },
+    {
+      "id": "name_object_location_goal.object_possession",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "object_possession",
+      "fact": "a brass key in his left coat pocket",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I have been in the office", "sampled": "But the key is safe? In the dining-room"}, "narrative_v1": {"greedy": "I am a man of the world", "sampled": "a small key to the mansion"}, "contrastive_v1": {"greedy": "I have a letter", "sampled": "looking at his watch"}},
+      "reason": "Key mentions belong to other entities or locations; none preserves Martin's brass-key possession or left-pocket state."
+    },
+    {
+      "id": "name_object_location_goal.location",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "location",
+      "fact": "the Blackwater Hotel",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "going to the office", "sampled": "What do you think of the house?"}, "narrative_v1": {"greedy": "man of the world", "sampled": "come into the country"}, "contrastive_v1": {"greedy": "letter from the paper", "sampled": "The office. The house?"}},
+      "reason": "No output identifies the current place as the Blackwater Hotel."
+    },
+    {
+      "id": "name_object_location_goal.stated_goal",
+      "prompt_id": "name_object_location_goal",
+      "fact_type": "stated_goal",
+      "fact": "reach room 317 before midnight",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I have been in the office", "sampled": "Get on to this room, sir"}, "narrative_v1": {"greedy": "I am a man of the world", "sampled": "These are the three little rooms"}, "contrastive_v1": {"greedy": "I have a letter", "sampled": "I'm going to stay"}},
+      "reason": "Generic room language does not preserve room 317, the midnight deadline, or Martin's goal."
+    },
+    {
+      "id": "relationship_secret.character_name",
+      "prompt_id": "relationship_secret",
+      "fact_type": "character_name",
+      "fact": "Jonah Reed",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I am not going to marry her", "sampled": "you young fellow"}, "narrative_v1": {"greedy": "I have seen it in the dark", "sampled": "Show me one of those"}, "contrastive_v1": {"greedy": "The manager was a man", "sampled": "Good-night, Mr. Harriet"}},
+      "reason": "No continuation names Jonah Reed or maintains him as the active character."
+    },
+    {
+      "id": "relationship_secret.relationship",
+      "prompt_id": "relationship_secret",
+      "fact_type": "relationship",
+      "fact": "Elise Ward is Jonah's sister-in-law",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I am not going to marry her", "sampled": "I was only a little girl"}, "narrative_v1": {"greedy": "The girl was silent", "sampled": "my father will be yours"}, "contrastive_v1": {"greedy": "a man of middle age", "sampled": "You have a wife"}},
+      "reason": "Marriage and family words refer to unrelated generated characters; Elise, Jonah, and their sister-in-law relation are absent."
+    },
+    {
+      "id": "relationship_secret.secret",
+      "prompt_id": "relationship_secret",
+      "fact_type": "secret",
+      "fact": "Jonah saw Elise's brother Daniel leave alive on the northbound train",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I am not going to be married", "sampled": "Did you ever tell her?"}, "narrative_v1": {"greedy": "I have seen the place", "sampled": "don't let him know it"}, "contrastive_v1": {"greedy": "making a mistake", "sampled": "It is true"}},
+      "reason": "Generic secrecy or seeing language does not preserve Daniel's survival, Jonah's observation, Elise, or the northbound train."
+    },
+    {
+      "id": "relationship_secret.location",
+      "prompt_id": "relationship_secret",
+      "fact_type": "location",
+      "fact": "the Ashcombe station hotel",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I am not going to marry her", "sampled": "The girl went back to her own room"}, "narrative_v1": {"greedy": "the place", "sampled": "I shall live here"}, "contrastive_v1": {"greedy": "The manager", "sampled": "I have come from the station to the town"}},
+      "reason": "The sampled station mention is an unrelated journey and does not identify the Ashcombe station hotel as the scene."
+    },
+    {
+      "id": "possession_scene_detail_goal.character_name",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "character_name",
+      "fact": "Mara Venn",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "a man entered", "sampled": "The young lady had not been there"}, "narrative_v1": {"greedy": "a tall, thin man", "sampled": "Mr. Ryder turned his head"}, "contrastive_v1": {"greedy": "The manager looked at the door", "sampled": "The old woman"}},
+      "reason": "No continuation names Mara Venn or maintains her as the active character."
+    },
+    {
+      "id": "possession_scene_detail_goal.object_possession",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "object_possession",
+      "fact": "the lighthouse logbook wrapped in oilcloth",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "The door was opened", "sampled": "a single chair"}, "narrative_v1": {"greedy": "a man entered", "sampled": "I want to see you"}, "contrastive_v1": {"greedy": "I am going to get out", "sampled": "in her hands was the same shyness"}},
+      "reason": "No output mentions the logbook, oilcloth, or Mara's possession of it."
+    },
+    {
+      "id": "possession_scene_detail_goal.location",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "location",
+      "fact": "Saint Orra lighthouse",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "standing in the doorway", "sampled": "The carpet was dim and hot"}, "narrative_v1": {"greedy": "The door was opened", "sampled": "I'm going to New York"}, "contrastive_v1": {"greedy": "get out of the house", "sampled": "The two men took a seat in the lobby"}},
+      "reason": "No continuation identifies the setting as Saint Orra lighthouse."
+    },
+    {
+      "id": "possession_scene_detail_goal.scene_detail",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "scene_detail",
+      "fact": "the lower window is marked with a blue chalk circle",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "The door was open", "sampled": "the face was white and blue"}, "narrative_v1": {"greedy": "a dark-red face", "sampled": "There's no one on the road"}, "contrastive_v1": {"greedy": "The manager looked at the door", "sampled": "looking out through the entrance"}},
+      "reason": "Blue color or entrance language is unrelated; no lower window, chalk circle, or safe-entry relation is preserved."
+    },
+    {
+      "id": "possession_scene_detail_goal.stated_goal",
+      "prompt_id": "possession_scene_detail_goal",
+      "fact_type": "stated_goal",
+      "fact": "deliver the logbook to keeper Amos Bell",
+      "retained": {"compute5": {"greedy": false, "sampled": false}, "narrative_v1": {"greedy": false, "sampled": false}, "contrastive_v1": {"greedy": false, "sampled": false}},
+      "evidence": {"compute5": {"greedy": "I am going to tell you", "sampled": "She had come to the end of the room"}, "narrative_v1": {"greedy": "He was a tall, thin man", "sampled": "I'll take you up to the station"}, "contrastive_v1": {"greedy": "I am going to get out of the house", "sampled": "I was waiting"}},
+      "reason": "No output preserves delivery of the logbook to Amos Bell."
+    }
+  ]
+}

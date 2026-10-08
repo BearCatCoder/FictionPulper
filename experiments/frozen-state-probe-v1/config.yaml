@@ -19,12 +19,12 @@ checkpoints:
     source_tag: fictionpulper-15m-data30m-narrative-v1
     source_commit: 71b46f8235eb3fdfc77fee782786a718f4ba5095
     enabled: true
-  - id: contrastive_future
+  - id: contrastive_v1
     architecture: fictionpulper_decoder_v1
     path: checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt
     source_tag: null
-    source_commit: null
-    enabled: false
+    source_commit: dcf7c8e03702740ea0f839c1e3d17ecf92f0496b
+    enabled: true
 
 labels:
   requested_families:

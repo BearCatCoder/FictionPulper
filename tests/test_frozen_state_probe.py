@@ -203,16 +203,20 @@ class FrozenStateProbeTests(unittest.TestCase):
             "no_clear_linear_state_signal",
         })
 
-    def test_protocol_has_shared_seeds_and_future_checkpoint_slot(self):
+    def test_protocol_has_shared_seeds_and_completed_contrastive_checkpoint(self):
         root = Path(__file__).resolve().parents[1]
         config = yaml.safe_load(
             (root / "experiments/frozen-state-probe-v1/config.yaml").read_text(encoding="utf-8")
         )
         self.assertEqual(config["probe"]["seeds"], [1001, 1002, 1003])
         self.assertEqual({item["id"] for item in config["checkpoints"]}, {
-            "compute5", "narrative_v1", "contrastive_future",
+            "compute5", "narrative_v1", "contrastive_v1",
         })
-        self.assertFalse(config["checkpoints"][-1]["enabled"])
+        self.assertTrue(config["checkpoints"][-1]["enabled"])
+        self.assertEqual(
+            config["checkpoints"][-1]["path"],
+            "checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt",
+        )
         self.assertEqual(config["checkpoints"][0]["source_tag"], "fictionpulper-15m-data30m-compute5")
         source = resolve_source(config["checkpoints"][0])
         self.assertTrue(source["tag_matches_expected_commit"])
