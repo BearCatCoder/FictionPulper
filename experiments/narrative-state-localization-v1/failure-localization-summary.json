@@ -1,0 +1,108 @@
+{
+  "final_classification": {
+    "category": "D",
+    "label": "SYNTHETIC_SHORTCUT"
+  },
+  "classification_evidence": {
+    "category": "D",
+    "label": "SYNTHETIC_SHORTCUT",
+    "definitions": {
+      "A": "No robust state representation and no contextual/logit use.",
+      "B": "Broad robust representation exists, but gold-context logits do not use it.",
+      "C": "Gold-context state use exists, but it degrades under autoregressive rollout.",
+      "D": "The synthetic objective succeeds while balanced contextual and historical gold-prefix tests fail.",
+      "E": "State use survives controlled rollout; free-generation failure has another cause."
+    },
+    "policy": "A strong result for only one family or one held-out split is not broad representation and cannot establish category B."
+  },
+  "original_synthetic_pair_ranking": {
+    "contrastive_test_accuracy": 0.976545842217484,
+    "count": 469
+  },
+  "final_questions": [
+    {
+      "number": 1,
+      "question": "Is narrative state linearly available in frozen hidden states?",
+      "answer": "Only weakly and in isolated families; no model/family is robust on both test and generalization. Contrastive object_location is the sole convincing relative improvement, not broad representation."
+    },
+    {
+      "number": 2,
+      "question": "Does LM next-token scoring use earlier narrative state under a gold/correct context?",
+      "answer": "Not reliably. Contrastive reaches only 4/13 top-1 on historical gold-prefix forced choice and only 0.5982 direction accuracy on balanced swaps."
+    },
+    {
+      "number": 3,
+      "question": "Does Contrastive-v1's 97% ranking accuracy survive counterfactual context reversal?",
+      "answer": "No. Contrastive reverses 11/56 (0.1964), below the 0.25 random-pair benchmark; removed and irrelevant controls retain large candidate margins."
+    },
+    {
+      "number": 4,
+      "question": "At what rollout length does state-consistency scoring begin to collapse?",
+      "answer": "No collapse length is identifiable because the gold baseline is already absent: Contrastive starts at 4/13 with mean margin -0.2288, then fluctuates non-monotonically."
+    },
+    {
+      "number": 5,
+      "question": "Does correcting an erroneous rollout restore the state-consistency margin?",
+      "answer": "Yes. Replacing every generated suffix with the exact gold suffix restores every candidate score exactly (maximum absolute recovery error 0.0), but it restores the same weak gold-context baseline rather than correct state use."
+    },
+    {
+      "number": 6,
+      "question": "What is the primary failure localization?",
+      "answer": "D SYNTHETIC_SHORTCUT, with weak representation as a contributing limitation: 97.65% original synthetic pair ranking does not transfer to balanced context reversal or 13-fact gold scoring."
+    }
+  ],
+  "three_level_evidence": [
+    {
+      "level": "representation",
+      "Contrastive": "Weak/isolated; object_location relative improvement only",
+      "Compute5": "Weak/isolated",
+      "Narrative": "Weak/isolated",
+      "50M": "Not probed"
+    },
+    {
+      "level": "gold-prefix forced choice",
+      "Compute5": "4/13",
+      "Narrative": "3/13",
+      "Contrastive": "4/13",
+      "50M": "7/13"
+    },
+    {
+      "level": "historical free generation",
+      "Compute5": "0/13",
+      "Narrative": "0/13",
+      "Contrastive": "0/13",
+      "50M": "0/13"
+    }
+  ],
+  "historical_free_generation": {
+    "compute5": {
+      "greedy": "0/13",
+      "sampled": "0/13"
+    },
+    "narrative_v1": {
+      "greedy": "0/13",
+      "sampled": "0/13"
+    },
+    "contrastive_v1": {
+      "greedy": "0/13",
+      "sampled": "0/13"
+    },
+    "capacity50m": {
+      "greedy": "0/13",
+      "sampled": "0/13"
+    }
+  },
+  "controls": {
+    "counterfactual_removed_absolute_margin": 0.5450966911656516,
+    "counterfactual_irrelevant_absolute_margin": 0.543916221175875,
+    "counterfactual_latest_update_accuracy": 0.625,
+    "rollout_recovery_maximum_absolute_error": 0.0
+  },
+  "limitations": [
+    "Controlled synthetic swaps use held-out vocabulary but templated prompts.",
+    "Probe labels are lexical-rank labels, not the historical 13 facts.",
+    "Each model is represented by one selected checkpoint seed.",
+    "The historical suite contains only 13 facts.",
+    "Exact-phrase contradiction checking is conservative."
+  ]
+}

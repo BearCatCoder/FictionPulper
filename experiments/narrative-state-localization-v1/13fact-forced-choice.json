@@ -1,0 +1,647 @@
+{
+  "protocol": {
+    "path": "experiments/narrative-state-localization-v1/13fact-forced-choice-protocol.json",
+    "sha256": "85af4e7a5d694fd120f3997174fee6271b238b9655df15ab7d8fe73bb245a7f0"
+  },
+  "immutable_narrative_protocol": {
+    "path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+    "sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45"
+  },
+  "score": "mean_log_probability_decision_span",
+  "provenance": {
+    "diagnostic_git_commit": "b6c5c2cf80c95e724942ab917f045f7f6f11084d",
+    "tracked_worktree_dirty": false,
+    "tokenizer": {
+      "path": "data/tokenizer/tokenizer.json",
+      "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+    },
+    "checkpoints": {
+      "compute5": {
+        "path": "checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt",
+        "sha256": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe",
+        "source_tag": "fictionpulper-15m-data30m-compute5",
+        "source_commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+      },
+      "narrative_v1": {
+        "path": "checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt",
+        "sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5",
+        "source_tag": "fictionpulper-15m-data30m-narrative-v1",
+        "source_commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+      },
+      "contrastive_v1": {
+        "path": "checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt",
+        "sha256": "5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4",
+        "source_tag": "fictionpulper-15m-data30m-contrastive-v1",
+        "source_commit": "ad0e69b1f0342de06eef1e8eb9be46728abb11e1"
+      },
+      "capacity50m": {
+        "path": "checkpoints/fictionpulper-50m-data30m-v1/best-validation.pt",
+        "sha256": "8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01",
+        "source_tag": "fictionpulper-50m-data30m-v1",
+        "source_commit": "40aede83bfd2f8f548376bf364d48677230a31ac"
+      }
+    }
+  },
+  "models": {
+    "compute5": {
+      "top1_total": 4,
+      "denominator": 13,
+      "mean_correct_vs_best_negative_margin": -0.5349405912252573,
+      "facts": [
+        {
+          "fact_id": "name_object_location_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -3.048290967941284,
+            -3.3718795776367188,
+            -4.590944290161133
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.32358860969543457,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -3.453270673751831,
+            -3.717106819152832,
+            -3.5875630378723145
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.1342923641204834,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:location",
+          "candidate_mean_log_probabilities": [
+            -3.045595407485962,
+            -4.661760330200195,
+            -4.7864837646484375
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 1.6161649227142334,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -5.320684432983398,
+            -5.602419376373291,
+            -2.780350923538208
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -2.5403335094451904,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:character_name",
+          "candidate_mean_log_probabilities": [
+            -3.498908042907715,
+            -2.16672420501709,
+            -3.2883448600769043
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -1.332183837890625,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:relationship",
+          "candidate_mean_log_probabilities": [
+            -2.760275363922119,
+            -2.8858251571655273,
+            -3.3215930461883545
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.1255497932434082,
+          "top1": true
+        },
+        {
+          "fact_id": "relationship_secret:secret",
+          "candidate_mean_log_probabilities": [
+            -4.111552715301514,
+            -3.4417741298675537,
+            -4.1797943115234375
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.66977858543396,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:location",
+          "candidate_mean_log_probabilities": [
+            -4.562302589416504,
+            -2.5756819248199463,
+            -4.498387336730957
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -1.9866206645965576,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -4.793633937835693,
+            -4.1104817390441895,
+            -3.4755477905273438
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -1.3180861473083496,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -3.6856496334075928,
+            -3.6661717891693115,
+            -4.01880407333374
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.01947784423828125,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:location",
+          "candidate_mean_log_probabilities": [
+            -4.6441473960876465,
+            -5.285854816436768,
+            -3.684077739715576
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.9600696563720703,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:scene_detail",
+          "candidate_mean_log_probabilities": [
+            -4.095220565795898,
+            -4.317234992980957,
+            -3.952702760696411
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.1425178050994873,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -3.9728379249572754,
+            -4.445594787597656,
+            -3.7880825996398926
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.1847553253173828,
+          "top1": false
+        }
+      ]
+    },
+    "narrative_v1": {
+      "top1_total": 3,
+      "denominator": 13,
+      "mean_correct_vs_best_negative_margin": -0.5611392901493952,
+      "facts": [
+        {
+          "fact_id": "name_object_location_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -4.037114143371582,
+            -3.7102890014648438,
+            -5.075006484985352
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.3268251419067383,
+          "top1": false
+        },
+        {
+          "fact_id": "name_object_location_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -3.2611653804779053,
+            -4.223117351531982,
+            -3.5241916179656982
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.26302623748779297,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:location",
+          "candidate_mean_log_probabilities": [
+            -2.826817035675049,
+            -4.544711112976074,
+            -5.060135841369629
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 1.7178940773010254,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -4.821449279785156,
+            -5.573905944824219,
+            -3.0460751056671143
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -1.775374174118042,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:character_name",
+          "candidate_mean_log_probabilities": [
+            -3.601862668991089,
+            -2.201962947845459,
+            -4.360576629638672
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -1.3998997211456299,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:relationship",
+          "candidate_mean_log_probabilities": [
+            -3.027355194091797,
+            -3.07905650138855,
+            -3.608126401901245
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.05170130729675293,
+          "top1": true
+        },
+        {
+          "fact_id": "relationship_secret:secret",
+          "candidate_mean_log_probabilities": [
+            -3.8671512603759766,
+            -3.282277822494507,
+            -3.9148130416870117
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.5848734378814697,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:location",
+          "candidate_mean_log_probabilities": [
+            -4.368435382843018,
+            -2.5320568084716797,
+            -4.807119846343994
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -1.836378574371338,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -5.088279724121094,
+            -4.133288383483887,
+            -4.267463684082031
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -0.954991340637207,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -4.024834156036377,
+            -3.5917322635650635,
+            -3.8806750774383545
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -0.4331018924713135,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:location",
+          "candidate_mean_log_probabilities": [
+            -5.654328346252441,
+            -5.132623672485352,
+            -4.964045524597168
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -0.6902828216552734,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:scene_detail",
+          "candidate_mean_log_probabilities": [
+            -4.441214084625244,
+            -4.195533275604248,
+            -3.883293628692627
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -0.5579204559326172,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -4.716352462768555,
+            -5.004969120025635,
+            -3.9485676288604736
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.767784833908081,
+          "top1": false
+        }
+      ]
+    },
+    "contrastive_v1": {
+      "top1_total": 4,
+      "denominator": 13,
+      "mean_correct_vs_best_negative_margin": -0.22884746698232797,
+      "facts": [
+        {
+          "fact_id": "name_object_location_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -3.7558913230895996,
+            -3.712261915206909,
+            -4.2175421714782715
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.04362940788269043,
+          "top1": false
+        },
+        {
+          "fact_id": "name_object_location_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -2.974533796310425,
+            -3.675177812576294,
+            -3.6944518089294434
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.7006440162658691,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:location",
+          "candidate_mean_log_probabilities": [
+            -3.6168551445007324,
+            -4.339315891265869,
+            -5.344138145446777
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.7224607467651367,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -4.6435980796813965,
+            -5.359818458557129,
+            -3.1803247928619385
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -1.463273286819458,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:character_name",
+          "candidate_mean_log_probabilities": [
+            -2.7197532653808594,
+            -2.337189197540283,
+            -4.232555389404297
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.38256406784057617,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:relationship",
+          "candidate_mean_log_probabilities": [
+            -2.403874635696411,
+            -2.4702253341674805,
+            -2.760218381881714
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.06635069847106934,
+          "top1": true
+        },
+        {
+          "fact_id": "relationship_secret:secret",
+          "candidate_mean_log_probabilities": [
+            -3.8522539138793945,
+            -3.3156726360321045,
+            -3.8724982738494873
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.53658127784729,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:location",
+          "candidate_mean_log_probabilities": [
+            -3.537332057952881,
+            -3.0044760704040527,
+            -5.1523284912109375
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.5328559875488281,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -3.2980830669403076,
+            -3.919363021850586,
+            -4.202602386474609
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.6212799549102783,
+          "top1": true
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -3.826072931289673,
+            -3.3127706050872803,
+            -3.895235776901245
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.5133023262023926,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:location",
+          "candidate_mean_log_probabilities": [
+            -4.837623596191406,
+            -5.062369346618652,
+            -4.3820390701293945
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.4555845260620117,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:scene_detail",
+          "candidate_mean_log_probabilities": [
+            -4.492880821228027,
+            -4.3506669998168945,
+            -3.9249393939971924
+          ],
+          "correct_rank": 3,
+          "correct_vs_best_negative_margin": -0.567941427230835,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -4.366716384887695,
+            -4.6164960861206055,
+            -3.77669620513916
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.5900201797485352,
+          "top1": false
+        }
+      ]
+    },
+    "capacity50m": {
+      "top1_total": 7,
+      "denominator": 13,
+      "mean_correct_vs_best_negative_margin": 0.005621864245488093,
+      "facts": [
+        {
+          "fact_id": "name_object_location_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -1.6268231868743896,
+            -2.3948323726654053,
+            -3.9798660278320312
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.7680091857910156,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -3.293691396713257,
+            -3.8803911209106445,
+            -3.788431406021118
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.49474000930786133,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:location",
+          "candidate_mean_log_probabilities": [
+            -2.5205109119415283,
+            -5.008833408355713,
+            -5.839423179626465
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 2.4883224964141846,
+          "top1": true
+        },
+        {
+          "fact_id": "name_object_location_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -4.983185291290283,
+            -5.398765563964844,
+            -3.071129560470581
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -1.9120557308197021,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:character_name",
+          "candidate_mean_log_probabilities": [
+            -1.448204755783081,
+            -1.264360785484314,
+            -3.1086997985839844
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.1838439702987671,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:relationship",
+          "candidate_mean_log_probabilities": [
+            -2.086738109588623,
+            -2.2057199478149414,
+            -2.5244174003601074
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.11898183822631836,
+          "top1": true
+        },
+        {
+          "fact_id": "relationship_secret:secret",
+          "candidate_mean_log_probabilities": [
+            -3.6668920516967773,
+            -3.323584794998169,
+            -3.745850086212158
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.3433072566986084,
+          "top1": false
+        },
+        {
+          "fact_id": "relationship_secret:location",
+          "candidate_mean_log_probabilities": [
+            -3.965867757797241,
+            -2.37874698638916,
+            -5.022810459136963
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -1.587120771408081,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:character_name",
+          "candidate_mean_log_probabilities": [
+            -2.540194272994995,
+            -3.5872135162353516,
+            -3.53572154045105
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.9955272674560547,
+          "top1": true
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:object_possession",
+          "candidate_mean_log_probabilities": [
+            -2.9755003452301025,
+            -3.6328623294830322,
+            -3.363382339477539
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.3878819942474365,
+          "top1": true
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:location",
+          "candidate_mean_log_probabilities": [
+            -4.223968505859375,
+            -5.412119388580322,
+            -3.453892469406128
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.7700760364532471,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:scene_detail",
+          "candidate_mean_log_probabilities": [
+            -4.073605537414551,
+            -3.501678466796875,
+            -4.089987277984619
+          ],
+          "correct_rank": 2,
+          "correct_vs_best_negative_margin": -0.5719270706176758,
+          "top1": false
+        },
+        {
+          "fact_id": "possession_scene_detail_goal:stated_goal",
+          "candidate_mean_log_probabilities": [
+            -3.805290937423706,
+            -4.364375591278076,
+            -3.9932432174682617
+          ],
+          "correct_rank": 1,
+          "correct_vs_best_negative_margin": 0.18795228004455566,
+          "top1": true
+        }
+      ]
+    }
+  }
+}

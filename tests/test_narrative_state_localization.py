@@ -26,7 +26,13 @@ from src.narrative_state_localization import (
     validate_rollout_context,
     aggregate_context_swap,
 )
-from src.report_narrative_state_localization import ARTIFACT_NAMES, classify_failure
+from src.report_narrative_state_localization import (
+    ARTIFACT_NAMES,
+    _aggregate_metric_records,
+    classify_failure,
+    classify_probe_states,
+    compact_probe,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -191,12 +197,65 @@ class NarrativeStateLocalizationTests(unittest.TestCase):
 
     def test_report_classification_is_conservative_and_unsealed(self):
         self.assertEqual(classify_failure(probe_supported=False, context_reversal=False, forced_choice=False, rollout_retained=False, contrastive_pair_objective_high=False)["category"], "A")
-        self.assertEqual(classify_failure(probe_supported=True, context_reversal=False, forced_choice=False, rollout_retained=True)["category"], "B")
+        self.assertEqual(classify_failure(probe_supported=True, context_reversal=False, forced_choice=False, rollout_retained=True, contrastive_pair_objective_high=False)["category"], "B")
         self.assertEqual(classify_failure(probe_supported=True, context_reversal=True, forced_choice=True, rollout_retained=False)["category"], "C")
         self.assertEqual(classify_failure(probe_supported=False, context_reversal=False, forced_choice=False, rollout_retained=False)["category"], "D")
+        self.assertEqual(classify_failure(probe_supported=True, context_reversal=False, forced_choice=False, rollout_retained=True)["category"], "D")
         self.assertEqual(classify_failure(probe_supported=True, context_reversal=True, forced_choice=True, rollout_retained=True)["category"], "E")
         self.assertIsNone(classify_failure(probe_supported=None, context_reversal=None, forced_choice=None, rollout_retained=None)["category"])
         self.assertNotIn("seal.json", ARTIFACT_NAMES)
+
+    def test_probe_seed_aggregation_retains_support_and_is_deterministic(self):
+        records = [
+            {"accuracy": 0.4, "balanced_accuracy": 0.5, "macro_f1": 0.3,
+             "chance": 0.5, "majority": 0.6, "n": 5, "support": {"0": 3, "1": 2}},
+            {"accuracy": 0.6, "balanced_accuracy": 0.7, "macro_f1": 0.5,
+             "chance": 0.5, "majority": 0.6, "n": 5, "support": {"0": 3, "1": 2}},
+        ]
+        first = _aggregate_metric_records(records)
+        self.assertEqual(first, _aggregate_metric_records(records))
+        self.assertAlmostEqual(first["macro_f1"]["mean"], 0.4)
+        self.assertAlmostEqual(first["macro_f1"]["std"], 0.1)
+        self.assertEqual(first["support"], {"0": 3, "1": 2})
+
+    def test_real_probe_relative_classification_is_only_contrastive_object_location(self):
+        raw = json.loads((ROOT / "runs/narrative-state-localization-v1/probe-layerwise.json").read_text())
+        labels = classify_probe_states(raw)
+        relative = [(model, family, label) for model, families in labels.items()
+                    for family, label in families.items() if label.endswith("_IMPROVED")]
+        self.assertEqual(relative, [("contrastive_v1", "object_location", "CONTRASTIVE_IMPROVED")])
+        self.assertFalse(any(label == "ROBUSTLY_DECODED" for families in labels.values() for label in families.values()))
+
+    def test_real_probe_compaction_drops_seed_epoch_details_and_is_reproducible(self):
+        raw = json.loads((ROOT / "runs/narrative-state-localization-v1/probe-layerwise.json").read_text())
+        first = compact_probe(raw)
+        second = compact_probe(raw)
+        self.assertEqual(first, second)
+        encoded = json.dumps(first, sort_keys=True)
+        self.assertNotIn('"selected_epoch"', encoded)
+        layer = first[1]["models"]["contrastive_v1"]["families"]["object_location"]["layers"][1]
+        self.assertIn("distance_buckets", layer["seed_aggregated"]["test"])
+
+    def test_generated_report_answers_all_questions_and_artifact_hashes_reproduce(self):
+        experiment = ROOT / "experiments/narrative-state-localization-v1"
+        failure = json.loads((experiment / "failure-localization-summary.json").read_text())
+        self.assertEqual(failure["final_classification"], {"category": "D", "label": "SYNTHETIC_SHORTCUT"})
+        self.assertEqual([item["number"] for item in failure["final_questions"]], [1, 2, 3, 4, 5, 6])
+        expected_phrases = (
+            "linearly available", "next-token scoring", "97% ranking accuracy",
+            "rollout length", "correcting an erroneous rollout", "primary failure localization",
+        )
+        self.assertTrue(all(
+            phrase in item["question"]
+            for phrase, item in zip(expected_phrases, failure["final_questions"], strict=True)
+        ))
+        self.assertIn("97.65%", failure["final_questions"][5]["answer"])
+        candidate = json.loads((experiment / "seal-candidate.json").read_text())
+        self.assertTrue(candidate["validation_pending"])
+        self.assertFalse(candidate["seal_json_created"])
+        for name, expected in candidate["report_artifacts"].items():
+            self.assertEqual(sha256_file(experiment / name), expected)
+        self.assertFalse((experiment / "seal.json").exists())
 
 
 if __name__ == "__main__":

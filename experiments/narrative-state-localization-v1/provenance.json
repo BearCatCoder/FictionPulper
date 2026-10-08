@@ -1,0 +1,255 @@
+{
+  "status": "reporting_complete_unsealed",
+  "validation_pending": true,
+  "preparation_commit": "b6c5c2cf80c95e724942ab917f045f7f6f11084d",
+  "rollout_fix_commit": "158b3c1fe5779dfd8bc0a9d1e279807c76ad49bb",
+  "config": {
+    "path": "experiments/narrative-state-localization-v1/config.yaml",
+    "sha256": "9a19038765f4cdc52b7a53405192d8365c47ca76fa61cb24749f20bc9de3bf50"
+  },
+  "preflight": {
+    "path": "experiments/narrative-state-localization-v1/preflight.json",
+    "sha256": "65c66f1603296dbd7c1103f4c433dfdbfd1e0baeb69f96137960b26d4fc3f9e8"
+  },
+  "checkpoints": [
+    {
+      "id": "compute5",
+      "path": "checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt",
+      "sha256": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe",
+      "source_tag": "fictionpulper-15m-data30m-compute5",
+      "source_commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"
+    },
+    {
+      "id": "narrative_v1",
+      "path": "checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt",
+      "sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5",
+      "source_tag": "fictionpulper-15m-data30m-narrative-v1",
+      "source_commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"
+    },
+    {
+      "id": "contrastive_v1",
+      "path": "checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt",
+      "sha256": "5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4",
+      "source_tag": "fictionpulper-15m-data30m-contrastive-v1",
+      "source_commit": "ad0e69b1f0342de06eef1e8eb9be46728abb11e1"
+    },
+    {
+      "id": "capacity50m",
+      "path": "checkpoints/fictionpulper-50m-data30m-v1/best-validation.pt",
+      "sha256": "8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01",
+      "source_tag": "fictionpulper-50m-data30m-v1",
+      "source_commit": "40aede83bfd2f8f548376bf364d48677230a31ac"
+    }
+  ],
+  "tokenizer": {
+    "path": "data/tokenizer/tokenizer.json",
+    "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+  },
+  "curriculum": {
+    "directory": "data/narrative_curriculum_v1",
+    "manifest_sha256": "fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14"
+  },
+  "protocols": {
+    "immutable_narrative": {
+      "path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+      "sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45"
+    },
+    "forced_choice": {
+      "path": "experiments/narrative-state-localization-v1/13fact-forced-choice-protocol.json",
+      "sha256": "85af4e7a5d694fd120f3997174fee6271b238b9655df15ab7d8fe73bb245a7f0"
+    }
+  },
+  "probe": {
+    "seeds": [
+      1001,
+      1002,
+      1003
+    ],
+    "settings": {
+      "batch_size": 512,
+      "epochs": 30,
+      "learning_rate": 0.01,
+      "retain_layerwise_held_out": true,
+      "weight_decay": 0.0001
+    },
+    "source_artifacts": {
+      "config": {
+        "path": "experiments/narrative-state-localization-v1/probe-config.yaml",
+        "sha256": "7f81864f59c1720ddedd591a291b2305a86351ecfd98f83c3593bd359e982df0"
+      },
+      "curriculum": {
+        "directory": "data/narrative_curriculum_v1",
+        "files": {
+          "generalization_holdout.jsonl": "07a1fb1ea1afd15a835ae99e5dc2d706ee48e3b73095642e68350d23964e6248",
+          "generalization_holdout.state.jsonl": "fb143b12cbf4312f1b1b0437db22b371a45476039a8d6aaae244bd3e4e34cae3",
+          "manifest.json": "fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14",
+          "test.jsonl": "417705b77c03da73bfa0fe86a05ee2b2de92acc97122a249bd75f99a277bb5fc",
+          "test.state.jsonl": "5d1e3c74c6314f1935154825405e85899d205b8e52847172b0261b2b6729a19c",
+          "train.jsonl": "412d54eb48ba0a50263fa65b6ff95429f8930ce83bda0feadb2d29038b4f6421",
+          "train.state.jsonl": "584796e28133bb1e5f7341b23ce5cc1221cbcd40b0a9d773e667b1ab4fd2e47c",
+          "validation.jsonl": "7d163bcdc650f487d3030b392c6ae12f50e7cc3a4f76229bf91d704737582ce0",
+          "validation.state.jsonl": "eaa3d03723cbafe5e7862d94b1163712b2a7313c505f9b5c064ff2f549546580"
+        }
+      },
+      "tokenizer": {
+        "path": "data/tokenizer/tokenizer.json",
+        "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+      }
+    }
+  },
+  "counterfactual_generator": {
+    "protocol_version": 1,
+    "generator": "build_counterfactual_protocol/v1",
+    "embedded_protocol_sha256": "1503f7015d827a124ba20dc1f462a5837bcce57211d3dfb9600e61c585e31960",
+    "target_case_count": 63,
+    "case_count": 56,
+    "coverage_note": "One case per family/distance where the sealed sidecars contain that state/distance cell.",
+    "coverage_by_family_distance": {
+      "ownership": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1,
+        "d768": 1,
+        "d900": 1
+      },
+      "object_location": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1,
+        "d768": 1,
+        "d900": 1
+      },
+      "character_location": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1
+      },
+      "goal": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1
+      },
+      "knowledge": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1,
+        "d768": 1,
+        "d900": 1
+      },
+      "relationship": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1,
+        "d768": 1
+      },
+      "persistent_physical_state": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1,
+        "d768": 1,
+        "d900": 1
+      },
+      "object_state": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1,
+        "d768": 1,
+        "d900": 1
+      },
+      "cause_effect": {
+        "d064": 1,
+        "d128": 1,
+        "d256": 1,
+        "d384": 1,
+        "d512": 1
+      }
+    },
+    "source_artifacts": {
+      "data/narrative_curriculum_v1/manifest.json": "fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14",
+      "data/narrative_curriculum_v1/test.jsonl": "417705b77c03da73bfa0fe86a05ee2b2de92acc97122a249bd75f99a277bb5fc",
+      "data/narrative_curriculum_v1/test.state.jsonl": "5d1e3c74c6314f1935154825405e85899d205b8e52847172b0261b2b6729a19c",
+      "data/narrative_curriculum_v1/generalization_holdout.jsonl": "07a1fb1ea1afd15a835ae99e5dc2d706ee48e3b73095642e68350d23964e6248",
+      "data/narrative_curriculum_v1/generalization_holdout.state.jsonl": "fb143b12cbf4312f1b1b0437db22b371a45476039a8d6aaae244bd3e4e34cae3"
+    }
+  },
+  "rollout_settings": {
+    "lengths": [
+      0,
+      32,
+      64,
+      128,
+      256
+    ],
+    "modes": [
+      "greedy",
+      "sampled"
+    ],
+    "sampled": {
+      "temperature": 0.8,
+      "top_k": 50,
+      "top_p": 0.95,
+      "seed": 11337
+    },
+    "recovery_tolerance": 1e-06
+  },
+  "generation_seeds": {
+    "base": 11337,
+    "policy": "stable_sampling_seed(base, fact_index, mode_index + model_index * 2), recorded per fact"
+  },
+  "raw_outputs": {
+    "probe": {
+      "path": "runs/narrative-state-localization-v1/probe-layerwise.json",
+      "sha256": "5f24d4adb7f91bc20158c8405386127b572378719287644adc342b4a60091e29",
+      "execution_commit": "b6c5c2cf80c95e724942ab917f045f7f6f11084d"
+    },
+    "context_swap": {
+      "path": "runs/narrative-state-localization-v1/counterfactual-context-swap.json",
+      "sha256": "79413cb5864572c05498fb7ea2103075e1eceb1831014d8d7260ec2e93bf558c",
+      "execution_commit": "b6c5c2cf80c95e724942ab917f045f7f6f11084d"
+    },
+    "forced_choice": {
+      "path": "runs/narrative-state-localization-v1/13fact-forced-choice.json",
+      "sha256": "18bc728d500f075c7ddf1cda1fc518f556dd40312e2ea67a6501ec82e81a3cf0",
+      "execution_commit": "b6c5c2cf80c95e724942ab917f045f7f6f11084d"
+    },
+    "rollout": {
+      "path": "runs/narrative-state-localization-v1/teacher-forced-vs-rollout.json",
+      "sha256": "290056fbc11fef72768eee032164a9aac5c8878f2f07001f9938dbafd4fc0e05",
+      "execution_commit": "158b3c1fe5779dfd8bc0a9d1e279807c76ad49bb"
+    }
+  },
+  "historical_sources": {
+    "experiments/fictionpulper-15m-data30m-contrastive-v1/manual-fact-scoring.json": "6415ac784b15c5683c1ee4fb54d3f7404670d886fe96e3d6c2b7c7cfb836ed39",
+    "experiments/fictionpulper-50m-data30m-v1/summary.json": "8f59d2df7c91d80d5a6cb38f599e75edf5aadaf03df74298092b78a8e645e3b8",
+    "experiments/fictionpulper-15m-data30m-contrastive-v1/summary.json": "8597f4292d67ffb4cd5e344c4f6b8af7dde5b38d0c979878adc5a297a16c538c"
+  },
+  "compact_artifacts": {
+    "probe-summary.json": "04c985309e84f7253c536f46bac924fab50a40d02b41da49e72df6b44ce27c5b",
+    "probe-layerwise.json": "83e315f2115d6549edecfc2640aa58badac56af4d0155749980b5eb5b45fe1f8",
+    "counterfactual-context-swap.json": "6c43244262683a7d2b332e592b4981447ae599fa5931ef18e93c8c53d891fc25",
+    "13fact-forced-choice.json": "7f026a37d5c21bcf23268456047d1ab6b98838c229a83e6bcd3a9fe3c15f7cc4",
+    "teacher-forced-vs-rollout.json": "5ea7cdc37d515e4d7f6e510017a2fbea2f778f008af0f75988f87f0c5c883e29",
+    "failure-localization-summary.json": "3112974db2ee91aae1b9917c0af5bb12ef2577124a6f5dcd779942d82eab0783",
+    "probe-layerwise.md": "82a56e5845171fc3982dd1e895ab9baa9e82c191b1b9e83607c322c6915c4092",
+    "counterfactual-context-swap.md": "507f7b73e2fb20b742a980ac18059d1ef7970a1daf5a341399c61b85ce2d276d",
+    "13fact-forced-choice.md": "510a30d568cf1da6427b532bb6e05f4d1b6d5aca3f35ca797e53023ecac8fa7c",
+    "teacher-forced-vs-rollout.md": "cb579912f9cf69097412599eaf7b9e9dd2c4e6078f1866336a1089c9ca64b76d",
+    "failure-localization-summary.md": "6226d334bb4e173a76e1dd728ce2238ea76e1aedd20d62a2b78db6b49e968a1f"
+  }
+}

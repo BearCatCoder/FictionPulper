@@ -1,0 +1,25 @@
+{
+  "experiment_id": "narrative-state-localization-v1",
+  "status": "seal_candidate_unsealed",
+  "validation_pending": true,
+  "validation_note": "Reporter ran before the full test suite; no final test count is asserted here.",
+  "final_classification": {
+    "category": "D",
+    "label": "SYNTHETIC_SHORTCUT"
+  },
+  "report_artifacts": {
+    "probe-summary.json": "04c985309e84f7253c536f46bac924fab50a40d02b41da49e72df6b44ce27c5b",
+    "probe-layerwise.json": "83e315f2115d6549edecfc2640aa58badac56af4d0155749980b5eb5b45fe1f8",
+    "counterfactual-context-swap.json": "6c43244262683a7d2b332e592b4981447ae599fa5931ef18e93c8c53d891fc25",
+    "13fact-forced-choice.json": "7f026a37d5c21bcf23268456047d1ab6b98838c229a83e6bcd3a9fe3c15f7cc4",
+    "teacher-forced-vs-rollout.json": "5ea7cdc37d515e4d7f6e510017a2fbea2f778f008af0f75988f87f0c5c883e29",
+    "failure-localization-summary.json": "3112974db2ee91aae1b9917c0af5bb12ef2577124a6f5dcd779942d82eab0783",
+    "probe-layerwise.md": "82a56e5845171fc3982dd1e895ab9baa9e82c191b1b9e83607c322c6915c4092",
+    "counterfactual-context-swap.md": "507f7b73e2fb20b742a980ac18059d1ef7970a1daf5a341399c61b85ce2d276d",
+    "13fact-forced-choice.md": "510a30d568cf1da6427b532bb6e05f4d1b6d5aca3f35ca797e53023ecac8fa7c",
+    "teacher-forced-vs-rollout.md": "cb579912f9cf69097412599eaf7b9e9dd2c4e6078f1866336a1089c9ca64b76d",
+    "failure-localization-summary.md": "6226d334bb4e173a76e1dd728ce2238ea76e1aedd20d62a2b78db6b49e968a1f",
+    "provenance.json": "26f5f41d48376b5fc6102f06bae49cf56062d98ab13a3f3be80f35d5831ed1a5"
+  },
+  "seal_json_created": false
+}
