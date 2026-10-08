@@ -183,7 +183,7 @@ def build_mixed_schedule(
         source_name = max(
             available,
             key=lambda name: (
-                (ordinal + 1) * source_target_counts[name] / total_targets
+                (ordinal + 1) * source_target_counts[name] / total_chunks
                 - cumulative[name],
                 -source_names.index(name),
             ),

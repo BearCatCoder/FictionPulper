@@ -74,6 +74,31 @@ class MixedScheduleTests(unittest.TestCase):
                 all("document_id" in entry and "relative_start" in entry for entry in first["entries"])
             )
 
+    def test_schedule_keeps_source_targets_distributed_across_steps(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sources = {
+                "real": write_packed(root, "real", [257, 257]),
+                "curriculum": write_packed(root, "curriculum", [257, 257]),
+            }
+            schedule = build_mixed_schedule(
+                sources,
+                source_target_counts={"real": 192, "curriculum": 64},
+                total_chunks=32,
+                batch_size=2,
+                gradient_accumulation_steps=2,
+                max_steps=8,
+                seed=1337,
+            )
+            midpoint = schedule["entries"][:16]
+            midpoint_curriculum = sum(
+                entry["valid_targets"]
+                for entry in midpoint
+                if entry["source"] == "curriculum"
+            )
+            self.assertGreater(midpoint_curriculum, 0)
+            self.assertLess(midpoint_curriculum, 64)
+
     def test_schedule_dataset_masks_to_persisted_presentation_count(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

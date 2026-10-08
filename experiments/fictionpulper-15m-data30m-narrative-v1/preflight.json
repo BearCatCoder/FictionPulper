@@ -110,8 +110,8 @@
   },
   "mixed_schedule": {
     "path": "data/narrative_curriculum_v1/packed/mixed-source-schedule.json",
-    "file_sha256": "14b40c000c7a9d2a5799ff2362f763478b343a33db94ffecf9ee71d9e852638c",
-    "content_sha256": "10d4171e7b2613fc90456bf51d81b67f13bdd4061887909b8c56767bd7373425"
+    "file_sha256": "6f0872295a23ba0874cf84daef7fac9a95aa4254051b1f4c1b49ef2222575820",
+    "content_sha256": "e76a033fa6a3170d469d0aefaa0745ffcce0a27a691d6ca612f9fa68434b6822"
   },
   "training": {
     "commit": null,
