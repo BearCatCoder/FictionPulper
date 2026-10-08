@@ -81,7 +81,7 @@
     "config": "4069e52072484c573abf70cba6272e8eca4f8a59f996f7d2ed7f6001722b1d94",
     "dynamic_annotations": "c19541b05df8c137191bde5513e58366af803f6b5a1ae71de2205f66349a8ea1",
     "dynamic_taxonomy": "e14aedb989906bad06ec5785fb80f2990111eb7337a2dc5efba214bf77efe67a",
-    "dynamic_trainer": "a401be0de3ef880b6507175818d19d5ea61f6e4fed1eb85c5cb16b68227ffb83"
+    "dynamic_trainer": "ea43322baddef5b9a096cd0f3af789c07101ec2d9c538a33eabbe291be8b3157"
   },
   "validation": {
     "phase0_integrity_gates_passed": true,
@@ -90,6 +90,8 @@
     "new_test_count": 19,
     "cuda_bf16_available": true,
     "numerical_gradient_preflight_passed": true,
+    "worst_schedule_microbatch_preflight_passed": true,
+    "worst_schedule_microbatch_peak_vram_gb": 6.366379737854004,
     "safe_to_train": true
   }
 }

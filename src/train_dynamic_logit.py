@@ -17,6 +17,7 @@ import torch.nn.functional as F
 import yaml
 from tokenizers import Tokenizer
 from torch.utils.data import DataLoader
+from torch.utils.checkpoint import checkpoint
 from torch.utils.tensorboard import SummaryWriter
 
 from src.continuity_curriculum.common import canonical_json, sha256_bytes
@@ -63,6 +64,7 @@ DYNAMIC_TRAIN_PATH = "data/dynamic_logit_v1/train.jsonl"
 DYNAMIC_VALIDATION_PATH = "data/dynamic_logit_v1/validation.jsonl"
 STALE_CATEGORIES = frozenset({"PREVIOUS", "INITIAL", "OLDER"})
 DECISION_KEY_FIELDS = ("pair", "world", "boundary", "depth")
+DYNAMIC_CANDIDATE_BATCH_SIZE = 4
 
 
 def _record_hash(record: Mapping[str, Any]) -> str:
@@ -161,29 +163,47 @@ def selected_pair_decisions(
 
 def batched_candidate_scores(
     model: Any, records: Sequence[Mapping[str, Any]], device: torch.device,
-) -> tuple[torch.Tensor, torch.Tensor]:
-    """Return mean exact-span log probabilities and teacher-forced token logits."""
+    *, batch_size: int = DYNAMIC_CANDIDATE_BATCH_SIZE,
+) -> tuple[torch.Tensor, list[torch.Tensor]]:
+    """Return exact-span scores without retaining full-sequence vocabulary logits."""
+    if batch_size < 1:
+        raise ValueError("Dynamic candidate batch size must be positive")
     if not records:
         parameter = next(model.parameters())
-        return parameter.sum().reshape(1)[:0], parameter.sum().reshape(1, 1, 1)[:0]
-    lengths = [len(item["input_token_ids"]) - 1 for item in records]
-    if min(lengths) < 1:
-        raise ValueError("Dynamic candidate input is too short")
-    inputs = torch.zeros(len(records), max(lengths), dtype=torch.long, device=device)
-    for row, (record, length) in enumerate(zip(records, lengths, strict=True)):
-        inputs[row, :length] = torch.tensor(record["input_token_ids"][:-1], device=device)
-    logits, loss = model(inputs, labels=None)
-    if loss is not None:
-        raise RuntimeError("Dynamic scoring forward unexpectedly produced CE loss")
-    scores = []
-    for row, record in enumerate(records):
-        start, end = int(record["decision_start"]), int(record["decision_end"])
-        targets = torch.tensor(record["input_token_ids"][start:end], dtype=torch.long, device=device)
-        if start < 1 or end <= start or end > len(record["input_token_ids"]):
-            raise ValueError("Invalid dynamic decision span")
-        token_logits = logits[row, start - 1:end - 1].float()
-        scores.append(F.log_softmax(token_logits, -1).gather(1, targets[:, None]).mean())
-    return torch.stack(scores), logits
+        return parameter.sum().reshape(1)[:0], []
+    scores: list[torch.Tensor] = []
+    decision_logits: list[torch.Tensor] = []
+    for offset in range(0, len(records), batch_size):
+        batch = records[offset:offset + batch_size]
+        lengths = [len(item["input_token_ids"]) - 1 for item in batch]
+        if min(lengths) < 1:
+            raise ValueError("Dynamic candidate input is too short")
+        inputs = torch.zeros(len(batch), max(lengths), dtype=torch.long, device=device)
+        for row, (record, length) in enumerate(zip(batch, lengths, strict=True)):
+            inputs[row, :length] = torch.tensor(record["input_token_ids"][:-1], device=device)
+
+        def forward_logits(values: torch.Tensor) -> torch.Tensor:
+            logits, loss = model(values, labels=None)
+            if loss is not None:
+                raise RuntimeError("Dynamic scoring forward unexpectedly produced CE loss")
+            return logits
+
+        if torch.is_grad_enabled() and getattr(model, "training", False):
+            logits = checkpoint(forward_logits, inputs, use_reentrant=False)
+        else:
+            logits = forward_logits(inputs)
+        for row, record in enumerate(batch):
+            start, end = int(record["decision_start"]), int(record["decision_end"])
+            targets = torch.tensor(record["input_token_ids"][start:end], dtype=torch.long, device=device)
+            if start < 1 or end <= start or end > len(record["input_token_ids"]):
+                raise ValueError("Invalid dynamic decision span")
+            # Materialize only the supervised span so the large padded vocabulary
+            # tensor can be released before the next candidate chunk.
+            token_logits = logits[row, start - 1:end - 1].float().contiguous()
+            decision_logits.append(token_logits)
+            scores.append(F.log_softmax(token_logits, -1).gather(1, targets[:, None]).mean())
+        del logits
+    return torch.stack(scores), decision_logits
 
 
 def candidate_set_cross_entropy(scores: torch.Tensor, current_index: int) -> torch.Tensor:
@@ -202,7 +222,8 @@ def stable_token_unlikelihood(logits: torch.Tensor, token_ids: torch.Tensor) -> 
 
 
 def stale_unlikelihood_loss(
-    logits: torch.Tensor, records: Sequence[Mapping[str, Any]], *, zero: torch.Tensor | None = None,
+    logits: torch.Tensor | Sequence[torch.Tensor], records: Sequence[Mapping[str, Any]],
+    *, zero: torch.Tensor | None = None,
 ) -> tuple[torch.Tensor, int]:
     """Penalize only historical stale candidates, never NEVER_VALID negatives."""
     losses = []
@@ -210,11 +231,25 @@ def stale_unlikelihood_loss(
         if str(record["category"]) not in STALE_CATEGORIES:
             continue
         start, end = int(record["decision_start"]), int(record["decision_end"])
-        targets = torch.tensor(record["input_token_ids"][start:end], dtype=torch.long, device=logits.device)
-        losses.append(stable_token_unlikelihood(logits[row, start - 1:end - 1], targets))
+        if isinstance(logits, torch.Tensor):
+            targets = torch.tensor(
+                record["input_token_ids"][start:end], dtype=torch.long, device=logits.device
+            )
+            token_logits = logits[row, start - 1:end - 1]
+        else:
+            token_logits = logits[row]
+            targets = torch.tensor(
+                record["input_token_ids"][start:end], dtype=torch.long, device=token_logits.device
+            )
+        losses.append(stable_token_unlikelihood(token_logits, targets))
     if losses:
         return torch.stack(losses).mean(), len(losses)
-    anchor = zero if zero is not None else logits.sum()
+    if zero is not None:
+        anchor = zero
+    elif isinstance(logits, torch.Tensor):
+        anchor = logits.sum()
+    else:
+        anchor = logits[0].sum() if logits else torch.tensor(0.0)
     return anchor * 0.0, 0
 
 

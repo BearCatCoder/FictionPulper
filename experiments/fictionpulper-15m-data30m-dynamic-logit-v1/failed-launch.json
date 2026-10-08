@@ -1,0 +1,24 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-dynamic-logit-v1",
+  "status": "FAILED_BEFORE_STEP_1",
+  "started_at": "2026-10-08T15:45:41.361167",
+  "training_git_commit": "b01289082af4ec6aa898624bb87b50ba13b1e049",
+  "optimizer_steps_completed": 0,
+  "checkpoint_created": false,
+  "failure": "CUDA_OUT_OF_MEMORY",
+  "failure_location": "batched dynamic candidate vocabulary projection",
+  "cause": "The initial implementation retained full-sequence vocabulary logits for every dynamic candidate in one forward pass.",
+  "resolution": "Chunk candidate forwards in groups of four, activation-checkpoint those forwards, and retain vocabulary logits only for validated decision spans.",
+  "experimental_semantics_changed": false,
+  "loss_weights_changed": false,
+  "learning_rate_changed": false,
+  "mixture_changed": false,
+  "positive_lm_exposure_changed": false,
+  "fresh_restart_required": true,
+  "worst_schedule_microbatch_preflight": {
+    "pair_presentations": 12,
+    "dynamic_decisions": 48,
+    "finite": true,
+    "peak_vram_gb": 6.366379737854004
+  }
+}
