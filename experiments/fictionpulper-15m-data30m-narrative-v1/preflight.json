@@ -1,0 +1,124 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-narrative-v1",
+  "status": "prepared_not_trained",
+  "selection_metric": "Data30M validation loss only",
+  "baseline_tags": {
+    "corpus_v2": {
+      "tag": "fictionpulper-corpus-v2-30m",
+      "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3",
+      "seal_sha256": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916"
+    },
+    "data30m_v1": {
+      "tag": "fictionpulper-15m-data30m-v1",
+      "commit": "22abf181205a3eef25b577b6c3d6e760bf740cd4",
+      "seal_sha256": "cb20b73873aa8299da5d959ff2985ba7a68a753e655c3d558d3418280e9676ff"
+    },
+    "compute5": {
+      "tag": "fictionpulper-15m-data30m-compute5",
+      "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a",
+      "seal_sha256": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c"
+    },
+    "context2k": {
+      "tag": "fictionpulper-15m-data30m-context2k-v1",
+      "commit": "86775fd3ab6c38ba9f67b21cd639b57efab89a31",
+      "seal_sha256": "ec775b666de0d2dfec917a215e63cc18d82ffa533615957738c2dc7b7ae06023"
+    },
+    "capacity50m": {
+      "tag": "fictionpulper-50m-data30m-v1",
+      "commit": "40aede83bfd2f8f548376bf364d48677230a31ac",
+      "seal_sha256": "ac9f0abf9c3c1c60f0ee02485918e86c8407e051c578e34cf1bfa7ae15451fb3"
+    }
+  },
+  "configuration": {
+    "path": "configs/data30m-15m-narrative-v1.yaml",
+    "sha256": "3ed52f931c706fa77fa65eaae87254aae30816e1612cc6df0ee28cc7d1f5e556"
+  },
+  "post_selection_protocol": {
+    "path": "experiments/fictionpulper-15m-data30m-narrative-v1/post-selection-protocol.json",
+    "sha256": "427201a1dfe1e885afb35a787d0cd91658a35ac329085046e04cae335e2224a6"
+  },
+  "sealed_evaluation_protocol": {
+    "path": "experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json",
+    "sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a"
+  },
+  "narrative_state_protocol": {
+    "path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+    "sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45"
+  },
+  "curriculum": {
+    "manifest_path": "data/narrative_curriculum_v1/manifest.json",
+    "manifest_sha256": "fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14",
+    "config_sha256": "454971b4311e76139ca93ab2115ba30f83ff1b3a9f2dce9f24baf08402dcca11",
+    "files": {
+      "distance-audit.json": {
+        "bytes": 909,
+        "sha256": "16629c72f13d61042a1ecc8a10474d9b6f8b17debe7052e19a9ef6f047971614"
+      },
+      "duplicate-audit.json": {
+        "bytes": 800,
+        "sha256": "3842e1f1d92613299a096e1f3cc6845a3f335f3c2287e74099b98393c096b8da"
+      },
+      "generalization_holdout.jsonl": {
+        "bytes": 444400,
+        "sha256": "07a1fb1ea1afd15a835ae99e5dc2d706ee48e3b73095642e68350d23964e6248"
+      },
+      "generalization_holdout.state.jsonl": {
+        "bytes": 1434412,
+        "sha256": "fb143b12cbf4312f1b1b0437db22b371a45476039a8d6aaae244bd3e4e34cae3"
+      },
+      "quality-audit.json": {
+        "bytes": 312,
+        "sha256": "bc69a2b5e4a946b137f76c0a56b698f7c9d00197e393e73411ad7fd88d99b07d"
+      },
+      "state-audit.json": {
+        "bytes": 837,
+        "sha256": "beda7264cb2a1c933155ca5a37af12a7c832005883c9ced324794451388ae17b"
+      },
+      "stats.json": {
+        "bytes": 2110,
+        "sha256": "620b22491aaeccec1727711eb9a250a00eea0ee5bf8eeec24feb9b017cbee301"
+      },
+      "template-audit.json": {
+        "bytes": 1679,
+        "sha256": "6cf167b5837511039f20d133a0970022c853b32cd3273591c99035f883591467"
+      },
+      "test.jsonl": {
+        "bytes": 968068,
+        "sha256": "417705b77c03da73bfa0fe86a05ee2b2de92acc97122a249bd75f99a277bb5fc"
+      },
+      "test.state.jsonl": {
+        "bytes": 3148532,
+        "sha256": "5d1e3c74c6314f1935154825405e85899d205b8e52847172b0261b2b6729a19c"
+      },
+      "train.jsonl": {
+        "bytes": 18358482,
+        "sha256": "412d54eb48ba0a50263fa65b6ff95429f8930ce83bda0feadb2d29038b4f6421"
+      },
+      "train.state.jsonl": {
+        "bytes": 58116232,
+        "sha256": "584796e28133bb1e5f7341b23ce5cc1221cbcd40b0a9d773e667b1ab4fd2e47c"
+      },
+      "validation.jsonl": {
+        "bytes": 993263,
+        "sha256": "7d163bcdc650f487d3030b392c6ae12f50e7cc3a4f76229bf91d704737582ce0"
+      },
+      "validation.state.jsonl": {
+        "bytes": 3203732,
+        "sha256": "eaa3d03723cbafe5e7862d94b1163712b2a7313c505f9b5c064ff2f549546580"
+      }
+    }
+  },
+  "mixed_schedule": {
+    "path": "data/narrative_curriculum_v1/packed/mixed-source-schedule.json",
+    "file_sha256": "14b40c000c7a9d2a5799ff2362f763478b343a33db94ffecf9ee71d9e852638c",
+    "content_sha256": "10d4171e7b2613fc90456bf51d81b67f13bdd4061887909b8c56767bd7373425"
+  },
+  "training": {
+    "commit": null,
+    "started_at": null,
+    "completed_at": null,
+    "status": "not_started",
+    "best_checkpoint_step": null,
+    "best_checkpoint_sha256": null
+  }
+}

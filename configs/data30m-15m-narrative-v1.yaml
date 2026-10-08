@@ -1,0 +1,81 @@
+experiment_id: fictionpulper-15m-data30m-narrative-v1
+seed: 1337
+
+model:
+  vocab_size: 4096
+  hidden_size: 384
+  num_layers: 8
+  num_attention_heads: 6
+  num_key_value_heads: 2
+  intermediate_size: 1120
+  max_seq_len: 1024
+  activation: swiglu
+  normalization: rmsnorm
+  positional_encoding: rope
+  tie_word_embeddings: true
+  attention_bias: false
+  mlp_bias: false
+  expected_parameter_count: 15047040
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+training:
+  optimizer: adamw
+  batch_size: 16
+  gradient_accumulation_steps: 4
+  max_steps: 2220
+  learning_rate: 1.0e-3
+  min_learning_rate: 1.0e-4
+  warmup_steps: 111
+  weight_decay: 0.1
+  grad_clip: 1.0
+  precision: bf16
+  epochs: 5
+  validation_interval: 444
+  checkpoint_steps: [444, 888, 1332, 1776, 2220]
+  require_clean_worktree: true
+  checkpoint_dir: checkpoints/fictionpulper-15m-data30m-narrative-v1
+
+data:
+  corpus_path: data/corpus_v2/corpus.jsonl
+  split_path: data/corpus_v2/data30m-v1/splits.json
+  packed_metadata_path: data/packed/corpus-v2-data30m/metadata.json
+  train_path: data/packed/corpus-v2-data30m/train.bin
+  validation_path: data/packed/corpus-v2-data30m/validation.bin
+  expected_corpus_sha256: 0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087
+  expected_split_sha256: 5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026
+  expected_packed_metadata_sha256: 8e3faed0ca188dbdfa1138a0685ff2d8106178404bcbff85b4b12a0f9bbb1426
+  expected_train_sha256: 1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9
+  expected_train_index_sha256: e6e4d2cb31f0e49660f05c553561f667fada6006362fe3dcbe04d8f869145799
+  expected_validation_sha256: 94402ee72eeed77da6779cea5e1743c0091346ebcfafe9945eb11feaad3dcaf8
+  expected_validation_index_sha256: cced04f9da8e638c95e95989a004e38a1cf5c927f6d6a1d136f02e06c9bdda6e
+
+curriculum_packing:
+  source_dir: data/narrative_curriculum_v1
+  output_dir: data/narrative_curriculum_v1/packed
+
+mixed_data:
+  schedule:
+    path: data/narrative_curriculum_v1/packed/mixed-source-schedule.json
+    total_chunks: 142080
+    target_total_valid_presentations: 135886355
+  training_sources:
+    real:
+      path: data/packed/corpus-v2-data30m/train.bin
+      valid_targets: 115503402
+    curriculum:
+      path: data/narrative_curriculum_v1/packed/train.bin
+      valid_targets: 20382953
+  curriculum_validation_path: data/narrative_curriculum_v1/packed/validation.bin
+
+selection:
+  metric: data30m_validation_loss
+  curriculum_validation_role: diagnostic_only
+  test_access: post_training_and_checkpoint_selection_only
+
+logging:
+  run_dir: runs

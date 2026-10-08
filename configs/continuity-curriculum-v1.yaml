@@ -1,0 +1,101 @@
+seed: 271828
+output_path: data/narrative_curriculum_v1
+maximum_document_tokens: 1024
+
+target:
+  main_tokens: 4500000
+  allowed_main_token_range: [4000000, 5000000]
+  generalization_holdout_tokens: 100000
+
+splits:
+  main:
+    train: 0.90
+    validation: 0.05
+    test: 0.05
+  generalization_holdout: additional
+
+tokenizer:
+  name: tokenizer-v1
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+distance_buckets:
+  d064: {target: 64, minimum: 48, maximum: 80}
+  d128: {target: 128, minimum: 108, maximum: 148}
+  d256: {target: 256, minimum: 232, maximum: 280}
+  d384: {target: 384, minimum: 356, maximum: 412}
+  d512: {target: 512, minimum: 480, maximum: 544}
+  d768: {target: 768, minimum: 736, maximum: 800}
+  d900: {target: 880, minimum: 852, maximum: 908}
+
+# Higher levels reserve context for more introduced and resolved state. Every
+# distance bucket remains represented, while every document stays within 1024.
+difficulty_distance_buckets:
+  "1": [d064, d128, d256, d384, d512, d768, d900]
+  "2": [d064, d128, d256, d384, d512, d768]
+  "3": [d064, d128, d256, d384, d512]
+  "4": [d064, d128, d256, d384]
+  "5": [d064, d128, d256]
+
+# Names, objects, locations, lexical combinations, and template families are
+# deliberately disjoint across all four splits.
+holdouts:
+  train:
+    names: [Mara, Elias, Nora, Julian, Clara, Simon, Ruth, Daniel]
+    objects: [brass key, canvas parcel, silver compass, blue notebook, pocket watch, sealed letter]
+    locations: [covered market, north quay, old station, village inn, clockmaker's shop, riverside cafe]
+    lexical_combinations: ["weathered|restless", "polished|hopeful", "narrow|quiet", "scarlet|uneasy"]
+    template_families: [interrupted_errand, witness_exchange, night_watch, delayed_departure, quiet_investigation, storm_shelter, border_crossing, missing_courier]
+    goals: [deliver the warning before dawn, locate the missing witness, reopen the mountain road]
+    secrets: [the northern door has no lock, the map was copied yesterday, the signal came from below]
+    injuries: [injured ankle, bandaged shoulder, burned left hand]
+    roles: [physician, surveyor, deputy, archivist]
+    causes: [the river rose during the night, a cable snapped under strain, the warning lamp was covered]
+    effects: [the lower road became impassable, the lift stopped between floors, the patrol missed the signal]
+  validation:
+    names: [Irene, Tobias, Celia, Martin]
+    objects: [ivory comb, green portfolio, copper whistle, glass brooch]
+    locations: [city museum, winter garden, hill observatory, east arcade]
+    lexical_combinations: ["faded|watchful", "square|patient", "amber|uncertain"]
+    template_families: [sealed_room, rescue_route, false_trail, dangerous_bargain]
+    goals: [recover the missing ledger, guide the doctor across town]
+    secrets: [the curator changed the label, the west stair ends at a false wall]
+    injuries: [sprained wrist, cut brow]
+    roles: [curator, inspector]
+    causes: [the skylight broke in the storm, the alarm wire was cut]
+    effects: [rain damaged the gallery, the guard heard no warning]
+  test:
+    names: [Beatrice, Anton, Lydia, Felix]
+    objects: [velvet case, tin lantern, carved token, red atlas]
+    locations: [canal bridge, parish library, western courtyard, ferry office]
+    lexical_combinations: ["dusky|solemn", "striped|curious", "pale|determined"]
+    template_families: [return_journey, public_ceremony, failed_signal, unexpected_guest]
+    goals: [reach the ferry before high water, identify the writer of the note]
+    secrets: [the final page is a forgery, the ferry carries a hidden compartment]
+    injuries: [bruised knee, cracked rib]
+    roles: [librarian, ferryman]
+    causes: [fog covered the channel, a hinge rusted through]
+    effects: [the ferry returned to its berth, the iron door fell inward]
+  generalization_holdout:
+    names: [Odette, Caspar, Miriam, Quentin]
+    objects: [obsidian seal, yellow valise, bone needle, crystal cylinder]
+    locations: [salt lighthouse, orbital greenhouse, desert telegraph, moonlit cloister]
+    lexical_combinations: ["ashen|defiant", "faceted|wary", "golden|melancholy"]
+    template_families: [hidden_passage, last_transport, remote_outpost, double_message]
+    goals: [restore the beacon before moonset, cross the fault before the next tremor]
+    secrets: [the beacon answers an unknown star, the garden is growing without sunlight]
+    injuries: [frostbitten fingers, wounded thigh]
+    roles: [signal keeper, xenobiologist]
+    causes: [the outer mirror changed its angle, the fault opened beneath the rails]
+    effects: [the beacon illuminated the sea, the last transport could not pass]
+
+audits:
+  minimum_story_words: 60
+  maximum_template_family_share: 0.15
+  similarity:
+    shingle_width: 5
+    fingerprint_size: 48
+    candidate_shared_hashes: 4
+    maximum_posting_size: 32
+    maximum_candidate_pairs: 500000
+    reject_jaccard: 0.88

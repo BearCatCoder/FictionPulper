@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "experiment_id": "fictionpulper-15m-data30m-narrative-v1",
+  "selection_metric": "Data30M validation loss only",
+  "required_training_status": "training_and_selection_complete",
+  "sealed_evaluation_protocol": {
+    "path": "experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json",
+    "sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a"
+  },
+  "narrative_state_protocol": {
+    "path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+    "sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45"
+  },
+  "candidate": {
+    "summary_path": "runs/fictionpulper-15m-data30m-narrative-v1/summary.json",
+    "manifest_path": "runs/fictionpulper-15m-data30m-narrative-v1/manifest.json",
+    "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt",
+    "expected_steps": 2220,
+    "tokenizer_path": "data/tokenizer/tokenizer.json",
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+  },
+  "baseline": {
+    "label": "compute5_context1024",
+    "checkpoint_path": "checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt",
+    "checkpoint_sha256": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe",
+    "seal_path": "experiments/fictionpulper-15m-data30m-compute5/seal.json",
+    "seal_sha256": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c"
+  },
+  "held_out": {
+    "data30m_test": {
+      "packed_path": "data/packed/corpus-v2-data30m/test.bin",
+      "packed_sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
+      "index_sha256": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8",
+      "expected_documents": 328,
+      "expected_valid_targets": 1546717,
+      "expected_allocated_slots": 1712128
+    },
+    "curriculum_test": {
+      "jsonl_path": "data/narrative_curriculum_v1/test.jsonl",
+      "jsonl_sha256": "417705b77c03da73bfa0fe86a05ee2b2de92acc97122a249bd75f99a277bb5fc",
+      "state_path": "data/narrative_curriculum_v1/test.state.jsonl",
+      "state_sha256": "5d1e3c74c6314f1935154825405e85899d205b8e52847172b0261b2b6729a19c",
+      "expected_documents": 469
+    },
+    "curriculum_generalization_holdout": {
+      "jsonl_path": "data/narrative_curriculum_v1/generalization_holdout.jsonl",
+      "jsonl_sha256": "07a1fb1ea1afd15a835ae99e5dc2d706ee48e3b73095642e68350d23964e6248",
+      "state_path": "data/narrative_curriculum_v1/generalization_holdout.state.jsonl",
+      "state_sha256": "fb143b12cbf4312f1b1b0437db22b371a45476039a8d6aaae244bd3e4e34cae3",
+      "expected_documents": 207
+    },
+    "historical_benchmarks_in_order": [
+      "data10m_test_data30m_train_disjoint",
+      "legacy_seed_validation_leakage_clean",
+      "legacy_seed_test"
+    ]
+  },
+  "generation": {
+    "sample_seed": 11337,
+    "effective_seed_policy": "sample_seed + prompt_index",
+    "settings": {
+      "greedy_max_new_tokens": 128,
+      "sampled_max_new_tokens": 256,
+      "temperature": 0.8,
+      "top_k": 50,
+      "top_p": 0.95
+    }
+  },
+  "curriculum_state_recall": {
+    "mode": "greedy continuation at every sidecar anchor resolution",
+    "definition": "Success requires generated token IDs to equal every token ID of metadata anchors[].resolved_quote from the first generated token. Prompt text ends exactly at that quote's character start. One anchor is one trial.",
+    "teacher_forced_metrics_are_separate": true,
+    "group_by": ["state_type", "distance_bucket", "difficulty", "genre"]
+  }
+}
