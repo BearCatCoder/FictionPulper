@@ -1,0 +1,55 @@
+experiment_id: narrative-state-localization-v1
+output_dir: runs/narrative-state-localization-v1
+preflight:
+  path: experiments/narrative-state-localization-v1/preflight.json
+  sha256: 65c66f1603296dbd7c1103f4c433dfdbfd1e0baeb69f96137960b26d4fc3f9e8
+probe_config: experiments/narrative-state-localization-v1/probe-config.yaml
+probe_config_sha256: 7f81864f59c1720ddedd591a291b2305a86351ecfd98f83c3593bd359e982df0
+maximum_context: 1024
+
+tokenizer:
+  path: data/tokenizer/tokenizer.json
+  sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+curriculum:
+  directory: data/narrative_curriculum_v1
+  manifest_sha256: fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14
+
+protocols:
+  immutable_narrative:
+    path: experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json
+    sha256: 6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45
+  forced_choice:
+    path: experiments/narrative-state-localization-v1/13fact-forced-choice-protocol.json
+    sha256: 85af4e7a5d694fd120f3997174fee6271b238b9655df15ab7d8fe73bb245a7f0
+
+checkpoints:
+  - id: compute5
+    path: checkpoints/fictionpulper-15m-data30m-compute5/best-validation.pt
+    sha256: a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe
+    source_tag: fictionpulper-15m-data30m-compute5
+    source_commit: 979a42e7f729de69ac57ef69ec4ac8adb622cf4a
+  - id: narrative_v1
+    path: checkpoints/fictionpulper-15m-data30m-narrative-v1/best-validation.pt
+    sha256: 4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5
+    source_tag: fictionpulper-15m-data30m-narrative-v1
+    source_commit: 71b46f8235eb3fdfc77fee782786a718f4ba5095
+  - id: contrastive_v1
+    path: checkpoints/fictionpulper-15m-data30m-contrastive-v1/best-validation.pt
+    sha256: 5dc3bd250432334c748d125d79eeb502fb4eb7cfe4363b69a0482526de3714b4
+    source_tag: fictionpulper-15m-data30m-contrastive-v1
+    source_commit: ad0e69b1f0342de06eef1e8eb9be46728abb11e1
+  - id: capacity50m
+    path: checkpoints/fictionpulper-50m-data30m-v1/best-validation.pt
+    sha256: 8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01
+    source_tag: fictionpulper-50m-data30m-v1
+    source_commit: 40aede83bfd2f8f548376bf364d48677230a31ac
+
+rollout:
+  lengths: [0, 32, 64, 128, 256]
+  modes: [greedy, sampled]
+  sampled:
+    temperature: 0.8
+    top_k: 50
+    top_p: 0.95
+    seed: 11337
+  recovery_tolerance: 0.000001

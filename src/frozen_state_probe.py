@@ -467,6 +467,11 @@ def aggregate_best_layer(seed_results: list[dict[str, Any]]) -> dict[str, Any]:
     return summaries
 
 
+def retain_layerwise_held_out(config: dict[str, Any]) -> bool:
+    """Opt-in only; legacy probe configs retain their selection-only curves."""
+    return bool(config.get("probe", {}).get("retain_layerwise_held_out", False))
+
+
 def resolve_source(spec: dict[str, Any]) -> dict[str, Any]:
     tag = spec.get("source_tag")
     expected_commit = spec.get("source_commit")
@@ -578,12 +583,13 @@ def run(config: dict[str, Any], *, config_path: Path | None = None) -> dict[str,
         names = layer_names(model.config.num_layers)
         for family in supported:
             curves = []
+            report_all_splits = retain_layerwise_held_out(config)
             for name in names:
                 layer_features = {split: states_by_split[split][name] for split in SPLITS}
                 seed_results = [
                     train_probe(
                         layer_features, examples, family, config["probe"], int(seed),
-                        report_held_out=False,
+                        report_held_out=report_all_splits,
                     )
                     for seed in config["probe"]["seeds"]
                 ]
