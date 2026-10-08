@@ -1,0 +1,33 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-dynamic-logit-v1",
+  "training_commit": "ea8b4b11d862dcce02dbc5d0d4c0811231600784",
+  "completion_commit": null,
+  "candidate_checkpoint": {
+    "path": "checkpoints/fictionpulper-15m-data30m-dynamic-logit-v1/best-validation.pt",
+    "sha256": "1d2ac1947afd10436729b007ae5d1fbeb9ef0815fc507ee15ab1a9e8e5c43575"
+  },
+  "protocol": {
+    "path": "experiments/fictionpulper-15m-data30m-dynamic-logit-v1/post-selection-protocol.json",
+    "sha256": "3c35c86ced4cc53cf65d2e396d8b7a57f3254de121536170d504567d95480f10"
+  },
+  "run_artifacts": {
+    "manifest.json": "6b04a8c5372d1e41239f2a46d2c8ee7d44e342fef90bd3e41e731f2cc7c19e19",
+    "metrics.json": "d0850d248a03ea174d4cb48dd27f9f15916a13870752984a25e2b83624fd69db",
+    "summary.json": "678154982189cdec4e7f9143ef4b7de01abd3f673a9c024b0707c623734d508c"
+  },
+  "post_selection_manifest": {
+    "path": "runs/fictionpulper-15m-data30m-dynamic-logit-v1/post-selection/artifact-manifest.json",
+    "sha256": "1a40b7615d20a34c44a379611f7fcfb15b0dcd17a8ca4fc295ae627737d93790"
+  },
+  "baseline_tags": {
+    "corpus_v2": {"tag": "fictionpulper-corpus-v2-30m", "commit": "823ab270439fcfdbe9ba0002d275ececdadeb8e3"},
+    "compute5": {"tag": "fictionpulper-15m-data30m-compute5", "commit": "979a42e7f729de69ac57ef69ec4ac8adb622cf4a"},
+    "narrative_v1": {"tag": "fictionpulper-15m-data30m-narrative-v1", "commit": "71b46f8235eb3fdfc77fee782786a718f4ba5095"},
+    "contrastive_v1": {"tag": "fictionpulper-15m-data30m-contrastive-v1", "commit": "ad0e69b1f0342de06eef1e8eb9be46728abb11e1"},
+    "counterfactual_v1": {"tag": "fictionpulper-15m-data30m-counterfactual-v1", "commit": "947cbbc86cc5c61c0ef2c5a47f890b6bd29b2401"},
+    "state_transition_v1": {"tag": "fictionpulper-15m-data30m-state-transition-v1", "commit": "6c34d544fb90b59f681e6f852fb474dd7d6157db"},
+    "localization_v1": {"tag": "fictionpulper-narrative-state-localization-v1", "commit": "f5108d7a6b7f7070650faa694d7f74405903e395"}
+  },
+  "held_out_access_during_training": false,
+  "source_hashes_validated": true
+}

@@ -1,0 +1,31 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-dynamic-logit-v1",
+  "status": "seal_candidate_only",
+  "classification": "DIRECT_LOGIT_SUPERVISION_LEARNED_STATIC_STATE_BUT_TRANSITION_FAILED",
+  "training_git_commit": "ea8b4b11d862dcce02dbc5d0d4c0811231600784",
+  "completion_git_commit": null,
+  "tag_created": false,
+  "final_seal_created": false,
+  "checkpoint_sha256": "1d2ac1947afd10436729b007ae5d1fbeb9ef0815fc507ee15ab1a9e8e5c43575",
+  "protocol_sha256": "3c35c86ced4cc53cf65d2e396d8b7a57f3254de121536170d504567d95480f10",
+  "post_selection_manifest_sha256": "1a40b7615d20a34c44a379611f7fcfb15b0dcd17a8ca4fc295ae627737d93790",
+  "experiment_record_sha256": {
+    "README.md": "6099745ad9c1db183870e4bd2bfd7ac7c9c4ecf50333c0f0be5b2b57c440ed90",
+    "summary.json": "904df98bfdac0c2fe26d7d205c9e61577c968e04003e553aa82cee90091a51a4",
+    "controlled-summary.md": "42018ea99c3d0392dbb8a29b52dc6e5b6b58f18ecbe45d0f28841b867481a343",
+    "quantitative-comparison.md": "7b8a6654f1f9273448c5a38405e69232e640a53384e0763ea3272c995d2b5daf",
+    "qualitative-assessment.md": "b4e967f6f3976ff657e1c3b918f2226489a8fef9880b8e8bd778947ceb42a062",
+    "repetition-comparison.md": "c6882aa7d7f9fdb2a1724548231bbe0b8bcf8c0b0f2e9aa66c94167206bd06df",
+    "manual-fact-scoring.json": "2a05af819182fd9e95b2507a921245e52d925ce3bd0aa897d52800dabd614c98",
+    "provenance.json": "912e4028483bf3ef57904955e769962d5cc33242dc74f6dba4bdb905d336dd98"
+  },
+  "source_hashes_validated": true,
+  "full_tests_passed": true,
+  "full_test_count": 250,
+  "dynamic_depth_2_transfer_observed": false,
+  "latest_state_transfer_observed": false,
+  "historical_forced_choice_improved": false,
+  "free_generation_transfer_observed": false,
+  "broad_probe_improvement_observed": false,
+  "real_fiction_materially_degraded": false
+}

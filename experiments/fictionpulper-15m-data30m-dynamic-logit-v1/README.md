@@ -1,55 +1,37 @@
 # FictionPulper-15M-data30M-dynamic-logit-v1
 
-Status: training and real-validation-only checkpoint selection complete;
-post-selection evaluation pending.
+Status: reporting complete; completion commit, tag, and final seal pending.
 
-This controlled experiment preserves the sealed 15,047,040-parameter model,
-tokenizer-v1, Data30M fiction split, Counterfactual-v1 positive curriculum,
-mixed schedule, optimization policy, and 135,886,355 positive LM target
-presentations. Its only training treatment is direct dynamic-state supervision
-on the tied LM vocabulary logits:
+Primary classification: `DIRECT_LOGIT_SUPERVISION_LEARNED_STATIC_STATE_BUT_TRANSITION_FAILED`.
 
-```text
-L = L_CE + 0.25 L_pair + 0.25 L_dynamic + 0.10 L_stale
-```
+This controlled run applied pair, dynamic-current, and stale-state losses directly
+to the tied LM vocabulary logits. It preserved the locked 15,047,040-parameter
+architecture, tokenizer, Data30M corpus, curriculum exposure, schedule, seed,
+optimizer, and 2,220-step budget. No auxiliary state head was used.
 
-The primary objective has no auxiliary state head. Dynamic candidates are
-derived deterministically from sealed Counterfactual-v1 prose and sealed
-State-Transition-v1 timelines. No positive prose is regenerated.
+The treatment learned easy static distinctions: door and relationship state are
+100% accurate on both held-out splits, and persistent physical state is 100% on
+test and 95% on generalization. It did not learn repeated updates. Depth-2
+CURRENT selection is 50.781% on test and 50.000% on generalization, with mean
+current-minus-previous margins of 0.0030 and 0.0188. Depths 3 and 4+ are
+unavailable, not zero.
 
-The sealed source has depth-1 decisions across all families and depth-2
-decisions for `latest_state_update`. It has no depth-3 or depth-4+ prose;
-those depths are therefore unavailable rather than reported as failures.
+Exact latest-state paired reversal remains 0% on both splits. Static
+counterfactual reversal is 35.258%/40.541%, below Counterfactual-v1 at
+48.024%/44.595%. The candidate scores 4/13 forced choice and retains 0/13 facts
+in both greedy and sampled generation. Real-fiction loss is modestly worse but
+not materially degraded. Frozen probes show no broad two-split improvement.
 
-Training completed all 2,220 optimizer steps from fresh seed-1337
-initialization. Step 2,220 was selected solely by Data30M validation loss
-(`3.1554934784`). The selected checkpoint SHA-256 is
-`1d2ac1947afd10436729b007ae5d1fbeb9ef0815fc507ee15ab1a9e8e5c43575`.
+See `controlled-summary.md` for all ten final answers and
+`manual-fact-scoring.json` for the conservative semantic audit.
 
-## Baseline Taxonomy
-
-The stale-state baseline is derived from sealed post-selection scores in
-`baseline-stale-state-taxonomy.json` without rerunning inference.
-
-| Model | Split | CURRENT | PREVIOUS | Mean current-minus-stale margin |
-|---|---|---:|---:|---:|
-| Counterfactual-v1 | test | 28/64 (43.75%) | 36/64 (56.25%) | -0.015015 |
-| Counterfactual-v1 | generalization | 14/28 (50.00%) | 14/28 (50.00%) | 0.005894 |
-| State-Transition-v1 | test | 31/64 (48.44%) | 33/64 (51.56%) | -0.008196 |
-| State-Transition-v1 | generalization | 14/28 (50.00%) | 14/28 (50.00%) | 0.005210 |
-
-At depth 2, `PREVIOUS` is also `INITIAL`; precedence assigns it to
-`PREVIOUS`, while alias counts preserve the initial-state interpretation.
-No older or never-valid option exists in this sealed two-candidate subset.
-
-## Commands
+Key training command:
 
 ```bash
-python -m src.dynamic_logit_annotations \
-  --expected-source-manifest-sha256 41bfec4201e36a28fa5f4bea265b326ab7a0dbc67ba95c86533a1bdf191eede8 \
-  --expected-transition-manifest-sha256 36372208b3b4d35523668d4292c2884eab8ae68a239bddba4a131c3e32496593 \
-  --expected-tokenizer-sha256 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
-
 python -m src.train_dynamic_logit \
   --config configs/data30m-15m-dynamic-logit-v1.yaml
 ```
+
+The held-out suite was run only after step 2,220 was selected by Data30M
+validation loss. The selected checkpoint SHA-256 is
+`1d2ac1947afd10436729b007ae5d1fbeb9ef0815fc507ee15ab1a9e8e5c43575`.
