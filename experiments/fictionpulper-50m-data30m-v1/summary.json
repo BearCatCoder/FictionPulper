@@ -1,0 +1,83 @@
+{
+  "run_id": "fictionpulper-50m-data30m-v1",
+  "status": "completed_unsealed",
+  "classification": "meaningful likelihood improvement without material storytelling improvement",
+  "raw_training_run": {
+    "run_id": "smoke-5m-20261007-212756",
+    "path": "runs/smoke-5m-20261007-212756",
+    "naming_disclosure": "Training was accidentally launched without --run-id. Raw artifacts retain their generated ID; derived reports use the intended experiment ID. Training and sealed test evaluation were not rerun."
+  },
+  "controlled_comparison": {
+    "baseline": "fictionpulper-15m-data30m-compute5",
+    "experimental_variable": "model capacity from 15047040 to 50348544 trainable parameters",
+    "parameter_multiplier": 3.3460763047084345,
+    "fixed_context": 1024,
+    "fixed_valid_target_presentations": 135886355,
+    "same_corpus_splits_tokenizer_packing": true,
+    "same_optimizer_batch_schedule_seed_and_decoding": true,
+    "fresh_random_initialization": true,
+    "prior_checkpoint_loaded": false
+  },
+  "selection": {
+    "metric": "Data30M validation loss only",
+    "epoch": 5,
+    "optimizer_step": 2220,
+    "checkpoint_sha256": "8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01",
+    "test_access_after_selection": true
+  },
+  "metrics": {
+    "baseline_15m": {
+      "best_validation_loss": 3.1456916993451474,
+      "data30m_test_loss": 3.223102356171976,
+      "data30m_test_perplexity": 25.10588689210002,
+      "data30m_test_accuracy": 0.3637051897664537,
+      "common_held_out_95_document_loss": 3.2246202187302235,
+      "training_seconds": 422.8691877780075,
+      "valid_targets_per_second": 321343.7132036584,
+      "peak_vram_gib": 3.9406185150146484
+    },
+    "candidate_50m": {
+      "best_validation_loss": 3.007466330171598,
+      "data30m_test_loss": 3.101755504562244,
+      "data30m_test_perplexity": 22.236954110994716,
+      "data30m_test_accuracy": 0.3825981094149738,
+      "common_held_out_95_document_loss": 3.1131359159633174,
+      "training_seconds": 1234.4846752800077,
+      "valid_targets_per_second": 110075.36806334033,
+      "peak_vram_gib": 9.30289077758789
+    },
+    "relative_change_percent": {
+      "best_validation_loss": -4.394116855199903,
+      "data30m_test_loss": -3.764908408116885,
+      "data30m_test_perplexity": -11.427330942082992,
+      "data30m_test_accuracy": 5.1945697174824,
+      "common_held_out_95_document_loss": -3.457284740675781,
+      "runtime": 191.9306279482514,
+      "throughput": -65.74528657619085,
+      "peak_vram": 136.07691894411425
+    }
+  },
+  "learning_curve": {
+    "classification": "improving but effectively plateaued by epoch 5",
+    "epoch_4_to_5_validation_loss_reduction": 0.007272821972033938,
+    "final_train_validation_gap": 0.23949953061877238,
+    "training_extended": false
+  },
+  "generation_assessment": {
+    "original_prompt_count": 10,
+    "narrative_state_prompt_count": 3,
+    "narrative_state_fact_count": 13,
+    "baseline_facts_convincingly_retained": 0,
+    "candidate_facts_convincingly_retained": 0,
+    "material_narrative_improvement": false,
+    "sampled_quality": "mixed local fluency with persistent prompt drift, contradiction, and weak event continuity",
+    "greedy_quality": "candidate is more repetitive on aggregate than baseline"
+  },
+  "efficiency_assessment": {
+    "runtime_multiplier": 2.919306279482514,
+    "throughput_ratio": 0.3425471342380915,
+    "peak_vram_multiplier": 2.3607691894411424,
+    "extra_compute_and_memory_justified_for_storytelling": false,
+    "note": "The extra capacity is justified only if lower cross-entropy is the objective; it did not produce a material storytelling gain under the locked Data30M exposure."
+  }
+}

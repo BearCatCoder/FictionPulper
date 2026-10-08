@@ -1,0 +1,14 @@
+# Repetition Comparison
+
+Metrics use generated continuation only; prompt tokens are excluded.
+
+| Suite | Model | Mode | Distinct-1 | Distinct-2 | Distinct-3 | Repeated 4-gram | Repeated sentence | Longest repeated span |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| Original 10 | baseline | greedy | 0.25078125 | 0.39133858267716537 | 0.473015873015873 | 0.4632 | 0.1506060606060606 | 17.7 |
+| Original 10 | baseline | sampled | 0.476953125 | 0.8282352941176471 | 0.9358267716535433 | 0.019367588932806323 | 0.0 | 4.9 |
+| Original 10 | candidate | greedy | 0.22109375 | 0.31968503937007875 | 0.3682539682539683 | 0.5912 | 0.4073115773115773 | 32.3 |
+| Original 10 | candidate | sampled | 0.48515625 | 0.812156862745098 | 0.9212598425196851 | 0.04110671936758893 | 0.0 | 5.7 |
+| Narrative-state 3 | baseline | greedy | 0.19270833333333334 | 0.25984251968503935 | 0.30687830687830686 | 0.6506666666666667 | 0.3888888888888889 | 35.666666666666664 |
+| Narrative-state 3 | baseline | sampled | 0.4635416666666667 | 0.807843137254902 | 0.9146981627296588 | 0.03689064558629776 | 0.0 | 5.333333333333333 |
+| Narrative-state 3 | candidate | greedy | 0.11979166666666667 | 0.15748031496062992 | 0.17724867724867724 | 0.8026666666666666 | 0.5924908424908425 | 37 |
+| Narrative-state 3 | candidate | sampled | 0.4908854166666667 | 0.8091503267973856 | 0.9173228346456693 | 0.025032938076416336 | 0.0 | 5 |

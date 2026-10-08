@@ -24,6 +24,29 @@ def load_checkpoint(path: Path, device: torch.device) -> tuple[FictionPulperLM, 
     return model, payload
 
 
+def fact_visibility(
+    entry: dict[str, Any], *, context: int, max_new_tokens: int
+) -> dict[str, Any]:
+    controls = 2
+    start_tokens = entry["prompt_token_count"] + controls
+    maximum_tokens = start_tokens + max_new_tokens
+    visible_at_start = start_tokens <= context
+    visible_for_full_generation = maximum_tokens <= context
+    if visible_at_start and not visible_for_full_generation:
+        raise RuntimeError(
+            f"Fact prefix for {entry['id']} would leave the {context}-token context "
+            f"during {max_new_tokens}-token generation "
+            f"({start_tokens} prompt/control tokens + {max_new_tokens} generated tokens)"
+        )
+    return {
+        "control_token_count": controls,
+        "max_new_tokens": max_new_tokens,
+        "maximum_sequence_tokens": maximum_tokens,
+        "fact_prefix_visible_at_generation_start": visible_at_start,
+        "fact_prefix_visible_for_full_generation": visible_for_full_generation,
+    }
+
+
 def generate_suite(
     *,
     model: FictionPulperLM,
@@ -34,6 +57,18 @@ def generate_suite(
 ) -> list[dict[str, Any]]:
     entries = []
     for index, item in enumerate(protocol["entries"]):
+        visibility = {
+            "greedy": fact_visibility(
+                item,
+                context=model.config.max_seq_len,
+                max_new_tokens=GENERATION_SETTINGS["greedy_max_new_tokens"],
+            ),
+            "sampled": fact_visibility(
+                item,
+                context=model.config.max_seq_len,
+                max_new_tokens=GENERATION_SETTINGS["sampled_max_new_tokens"],
+            ),
+        }
         greedy = generate(
             model,
             tokenizer,
@@ -64,6 +99,7 @@ def generate_suite(
                 "fact_prefix_visible_at_generation_start": (
                     item["prompt_token_count"] + 2 <= model.config.max_seq_len
                 ),
+                "fact_visibility": visibility,
                 "greedy": greedy,
                 "sampled": sampled,
                 "sample_seed": seed + index,
@@ -76,7 +112,7 @@ def generate_suite(
     return entries
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--baseline-checkpoint", type=Path, required=True)
     parser.add_argument("--candidate-checkpoint", type=Path, required=True)
@@ -84,7 +120,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tokenizer", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=11337)
-    return parser.parse_args()
+    parser.add_argument("--baseline-label", default="compute5_context1024")
+    parser.add_argument("--candidate-label", default="context2k")
+    parser.add_argument("--baseline-context", type=int, default=1024)
+    parser.add_argument("--candidate-context", type=int, default=2048)
+    return parser.parse_args(argv)
 
 
 def main() -> None:
@@ -96,24 +136,47 @@ def main() -> None:
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     if sha256_file(args.tokenizer) != protocol["tokenizer_sha256"]:
         raise RuntimeError("Context-retention protocol tokenizer hash changed")
+    if args.baseline_label == args.candidate_label:
+        raise RuntimeError("Baseline and candidate labels must differ")
+    if args.baseline_context <= 0 or args.candidate_context <= 0:
+        raise RuntimeError("Baseline and candidate contexts must be positive")
 
     checkpoints = {
-        "compute5_context1024": args.baseline_checkpoint,
-        "context2k": args.candidate_checkpoint,
+        args.baseline_label: (args.baseline_checkpoint, args.baseline_context),
+        args.candidate_label: (args.candidate_checkpoint, args.candidate_context),
     }
     result: dict[str, Any] = {
         "protocol_path": str(args.protocol),
         "protocol_sha256": sha256_file(args.protocol),
+        "protocol": {
+            key: protocol[key]
+            for key in (
+                "name",
+                "purpose",
+                "source_suite",
+                "minimum_prompt_tokens",
+                "maximum_prompt_tokens",
+                "maximum_context",
+                "tokenizer_path",
+                "tokenizer_sha256",
+            )
+            if key in protocol
+        },
         "post_checkpoint_selection": True,
         "used_for_checkpoint_selection": False,
         "sample_seed": args.seed,
         "generation_settings": GENERATION_SETTINGS,
         "models": {},
     }
-    for label, path in checkpoints.items():
+    for label, (path, expected_context) in checkpoints.items():
         model, payload = load_checkpoint(path, device)
         if payload["tokenizer_hash"] != protocol["tokenizer_sha256"]:
             raise RuntimeError(f"Tokenizer hash mismatch for {label}")
+        if model.config.max_seq_len != expected_context:
+            raise RuntimeError(
+                f"{label} checkpoint context is {model.config.max_seq_len}, "
+                f"expected {expected_context}"
+            )
         result["models"][label] = {
             "checkpoint_path": str(path),
             "checkpoint_sha256": sha256_file(path),
@@ -130,10 +193,6 @@ def main() -> None:
         }
         del model, payload
         torch.cuda.empty_cache()
-    if result["models"]["compute5_context1024"]["max_seq_len"] != 1024:
-        raise RuntimeError("Compute5 checkpoint does not have 1024 context")
-    if result["models"]["context2k"]["max_seq_len"] != 2048:
-        raise RuntimeError("Candidate checkpoint does not have 2048 context")
     write_json_atomic(args.output, result)
     print(json.dumps(result, indent=2))
 
