@@ -1,0 +1,419 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-narrative-v1",
+  "status": "reporting_complete_unsealed",
+  "completion_commit": null,
+  "seal_created": false,
+  "selection_metric": "Data30M validation loss only",
+  "controlled_exposure": {
+    "parameters": 15047040,
+    "context": 1024,
+    "seed": 1337,
+    "total_valid_target_presentations": 135886355,
+    "compute5_mix": {
+      "real_fiction_percent": 100.0,
+      "curriculum_percent": 0.0
+    },
+    "candidate_mix": {
+      "real": 85.00000018397726,
+      "curriculum": 14.999999816022735
+    }
+  },
+  "real_fiction_lm_metrics": {
+    "compute5": {
+      "loss": 3.223102356171976,
+      "perplexity": 25.10588689210002,
+      "next_token_accuracy": 0.3637051897664537,
+      "valid_tokens": 1546717
+    },
+    "narrative_curriculum": {
+      "loss": 3.220216419984231,
+      "perplexity": 25.033537352883737,
+      "next_token_accuracy": 0.3643672371868933,
+      "valid_tokens": 1546717
+    },
+    "relative_change_percent": {
+      "loss": -0.08953907970742359,
+      "perplexity": -0.2881775876997561,
+      "next_token_accuracy": 0.18202858773190833
+    }
+  },
+  "synthetic_curriculum_metrics": {
+    "curriculum_test": {
+      "teacher_forced_lm": {
+        "loss": 2.593965900587492,
+        "perplexity": 13.382741118717403,
+        "next_token_accuracy": 0.5080849284478272,
+        "valid_tokens": 224801
+      },
+      "exact_state_recall": {
+        "aggregate": {
+          "correct": 0,
+          "total": 1405,
+          "accuracy": 0.0
+        },
+        "by_state_type": {
+          "cause_effect": {
+            "correct": 0,
+            "total": 126,
+            "accuracy": 0.0
+          },
+          "character_identity_role_relationship": {
+            "correct": 0,
+            "total": 124,
+            "accuracy": 0.0
+          },
+          "goal_persistence_completion_failure": {
+            "correct": 0,
+            "total": 186,
+            "accuracy": 0.0
+          },
+          "knowledge_ignorance_secret": {
+            "correct": 0,
+            "total": 155,
+            "accuracy": 0.0
+          },
+          "ownership_transfer_hiding_retrieval": {
+            "correct": 0,
+            "total": 219,
+            "accuracy": 0.0
+          },
+          "persistent_injury": {
+            "correct": 0,
+            "total": 157,
+            "accuracy": 0.0
+          },
+          "physical_scene_location_movement": {
+            "correct": 0,
+            "total": 187,
+            "accuracy": 0.0
+          },
+          "promise_debt_obligation": {
+            "correct": 0,
+            "total": 127,
+            "accuracy": 0.0
+          },
+          "temporal_ordering": {
+            "correct": 0,
+            "total": 124,
+            "accuracy": 0.0
+          }
+        },
+        "by_distance_bucket": {
+          "d064": {
+            "correct": 0,
+            "total": 354,
+            "accuracy": 0.0
+          },
+          "d128": {
+            "correct": 0,
+            "total": 354,
+            "accuracy": 0.0
+          },
+          "d256": {
+            "correct": 0,
+            "total": 350,
+            "accuracy": 0.0
+          },
+          "d384": {
+            "correct": 0,
+            "total": 194,
+            "accuracy": 0.0
+          },
+          "d512": {
+            "correct": 0,
+            "total": 97,
+            "accuracy": 0.0
+          },
+          "d768": {
+            "correct": 0,
+            "total": 43,
+            "accuracy": 0.0
+          },
+          "d900": {
+            "correct": 0,
+            "total": 13,
+            "accuracy": 0.0
+          }
+        },
+        "by_difficulty": {
+          "1": {
+            "correct": 0,
+            "total": 94,
+            "accuracy": 0.0
+          },
+          "2": {
+            "correct": 0,
+            "total": 188,
+            "accuracy": 0.0
+          },
+          "3": {
+            "correct": 0,
+            "total": 282,
+            "accuracy": 0.0
+          },
+          "4": {
+            "correct": 0,
+            "total": 376,
+            "accuracy": 0.0
+          },
+          "5": {
+            "correct": 0,
+            "total": 465,
+            "accuracy": 0.0
+          }
+        },
+        "by_genre": {
+          "adventure": {
+            "correct": 0,
+            "total": 200,
+            "accuracy": 0.0
+          },
+          "crime_noir": {
+            "correct": 0,
+            "total": 199,
+            "accuracy": 0.0
+          },
+          "fantasy_weird": {
+            "correct": 0,
+            "total": 202,
+            "accuracy": 0.0
+          },
+          "horror": {
+            "correct": 0,
+            "total": 199,
+            "accuracy": 0.0
+          },
+          "mystery": {
+            "correct": 0,
+            "total": 201,
+            "accuracy": 0.0
+          },
+          "science_fiction": {
+            "correct": 0,
+            "total": 201,
+            "accuracy": 0.0
+          },
+          "western": {
+            "correct": 0,
+            "total": 203,
+            "accuracy": 0.0
+          }
+        }
+      }
+    },
+    "curriculum_generalization_holdout": {
+      "teacher_forced_lm": {
+        "loss": 2.9215267567604704,
+        "perplexity": 18.56961711646832,
+        "next_token_accuracy": 0.4811276444781996,
+        "valid_tokens": 100067
+      },
+      "exact_state_recall": {
+        "aggregate": {
+          "correct": 0,
+          "total": 618,
+          "accuracy": 0.0
+        },
+        "by_state_type": {
+          "cause_effect": {
+            "correct": 0,
+            "total": 55,
+            "accuracy": 0.0
+          },
+          "character_identity_role_relationship": {
+            "correct": 0,
+            "total": 54,
+            "accuracy": 0.0
+          },
+          "goal_persistence_completion_failure": {
+            "correct": 0,
+            "total": 82,
+            "accuracy": 0.0
+          },
+          "knowledge_ignorance_secret": {
+            "correct": 0,
+            "total": 69,
+            "accuracy": 0.0
+          },
+          "ownership_transfer_hiding_retrieval": {
+            "correct": 0,
+            "total": 96,
+            "accuracy": 0.0
+          },
+          "persistent_injury": {
+            "correct": 0,
+            "total": 69,
+            "accuracy": 0.0
+          },
+          "physical_scene_location_movement": {
+            "correct": 0,
+            "total": 83,
+            "accuracy": 0.0
+          },
+          "promise_debt_obligation": {
+            "correct": 0,
+            "total": 56,
+            "accuracy": 0.0
+          },
+          "temporal_ordering": {
+            "correct": 0,
+            "total": 54,
+            "accuracy": 0.0
+          }
+        },
+        "by_distance_bucket": {
+          "d064": {
+            "correct": 0,
+            "total": 161,
+            "accuracy": 0.0
+          },
+          "d128": {
+            "correct": 0,
+            "total": 154,
+            "accuracy": 0.0
+          },
+          "d256": {
+            "correct": 0,
+            "total": 149,
+            "accuracy": 0.0
+          },
+          "d384": {
+            "correct": 0,
+            "total": 84,
+            "accuracy": 0.0
+          },
+          "d512": {
+            "correct": 0,
+            "total": 44,
+            "accuracy": 0.0
+          },
+          "d768": {
+            "correct": 0,
+            "total": 20,
+            "accuracy": 0.0
+          },
+          "d900": {
+            "correct": 0,
+            "total": 6,
+            "accuracy": 0.0
+          }
+        },
+        "by_difficulty": {
+          "1": {
+            "correct": 0,
+            "total": 42,
+            "accuracy": 0.0
+          },
+          "2": {
+            "correct": 0,
+            "total": 84,
+            "accuracy": 0.0
+          },
+          "3": {
+            "correct": 0,
+            "total": 123,
+            "accuracy": 0.0
+          },
+          "4": {
+            "correct": 0,
+            "total": 164,
+            "accuracy": 0.0
+          },
+          "5": {
+            "correct": 0,
+            "total": 205,
+            "accuracy": 0.0
+          }
+        },
+        "by_genre": {
+          "adventure": {
+            "correct": 0,
+            "total": 90,
+            "accuracy": 0.0
+          },
+          "crime_noir": {
+            "correct": 0,
+            "total": 87,
+            "accuracy": 0.0
+          },
+          "fantasy_weird": {
+            "correct": 0,
+            "total": 90,
+            "accuracy": 0.0
+          },
+          "horror": {
+            "correct": 0,
+            "total": 85,
+            "accuracy": 0.0
+          },
+          "mystery": {
+            "correct": 0,
+            "total": 86,
+            "accuracy": 0.0
+          },
+          "science_fiction": {
+            "correct": 0,
+            "total": 90,
+            "accuracy": 0.0
+          },
+          "western": {
+            "correct": 0,
+            "total": 90,
+            "accuracy": 0.0
+          }
+        }
+      }
+    }
+  },
+  "narrative_semantic_diagnostic": {
+    "method": "manual audit of the unchanged narrative-state outputs; 13 disclosed facts across three prompts",
+    "candidate": {
+      "greedy": {
+        "correct": 0,
+        "total": 13
+      },
+      "sampled": {
+        "correct": 0,
+        "total": 13
+      }
+    },
+    "compute5": {
+      "greedy": {
+        "correct": 0,
+        "total": 13
+      },
+      "sampled": {
+        "correct": 0,
+        "total": 13
+      }
+    }
+  },
+  "repetition": {
+    "report_path": "experiments/fictionpulper-15m-data30m-narrative-v1/repetition-comparison.md",
+    "source_sha256": "36382508e9e76cebc4673a16d846ee8ccff8a989064b080092d35b8d9466d183"
+  },
+  "resources": {
+    "compute5": {
+      "training_seconds": 422.8691877780075,
+      "valid_targets_per_second": 321343.7132036584,
+      "peak_vram_gib": 3.9406185150146484
+    },
+    "narrative_curriculum": {
+      "training_seconds": 395.27206267598376,
+      "total_elapsed_seconds": 405.74219161800283,
+      "valid_targets_per_second": 343779.305018554,
+      "peak_vram_gib": 3.9406185150146484
+    }
+  },
+  "curriculum_damage_assessment": {
+    "data30m_test_loss_change_percent": -0.08953907970742359,
+    "data30m_test_perplexity_change_percent": -0.2881775876997561,
+    "data30m_test_accuracy_change_percent": 0.18202858773190833,
+    "conclusion": "No material real-fiction LM damage: changes are below 0.3% in loss, perplexity, and accuracy, but no storytelling or state-retention benefit was demonstrated."
+  },
+  "hypothesis_result": "failed: curriculum LM structure was learned, but exact state recall and manually audited semantic state retention were both zero",
+  "provenance": {
+    "path": "experiments/fictionpulper-15m-data30m-narrative-v1/provenance.json",
+    "sha256": "38c6853b3df2a6fe64fa4a4601ef8160bae13aa7f943f22d4d3c4ffd8b4e4a6f"
+  }
+}

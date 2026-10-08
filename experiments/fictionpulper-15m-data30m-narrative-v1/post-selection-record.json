@@ -1,0 +1,76 @@
+{
+  "status": "post_selection_evaluation_complete",
+  "used_for_checkpoint_selection": false,
+  "selection_metric": "Data30M validation loss only",
+  "checkpoint_sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5",
+  "real_fiction_lm_metrics": {
+    "compute5": {
+      "loss": 3.223102356171976,
+      "perplexity": 25.10588689210002,
+      "next_token_accuracy": 0.3637051897664537,
+      "valid_tokens": 1546717
+    },
+    "narrative_curriculum": {
+      "loss": 3.220216419984231,
+      "perplexity": 25.033537352883737,
+      "next_token_accuracy": 0.3643672371868933,
+      "valid_tokens": 1546717
+    },
+    "relative_change_percent": {
+      "loss": -0.08953907970742359,
+      "perplexity": -0.2881775876997561,
+      "next_token_accuracy": 0.18202858773190833
+    }
+  },
+  "synthetic_curriculum_lm_metrics": {
+    "curriculum_test": {
+      "loss": 2.593965900587492,
+      "perplexity": 13.382741118717403,
+      "next_token_accuracy": 0.5080849284478272,
+      "valid_tokens": 224801
+    },
+    "curriculum_generalization_holdout": {
+      "loss": 2.9215267567604704,
+      "perplexity": 18.56961711646832,
+      "next_token_accuracy": 0.4811276444781996,
+      "valid_tokens": 100067
+    }
+  },
+  "exact_state_recall_aggregate": {
+    "curriculum_test": {
+      "correct": 0,
+      "total": 1405,
+      "accuracy": 0.0
+    },
+    "curriculum_generalization_holdout": {
+      "correct": 0,
+      "total": 618,
+      "accuracy": 0.0
+    }
+  },
+  "grouped_state_recall_record": "experiments/fictionpulper-15m-data30m-narrative-v1/summary.json",
+  "narrative_semantic_diagnostic": {
+    "method": "manual audit of the unchanged narrative-state outputs; 13 disclosed facts across three prompts",
+    "candidate": {
+      "greedy": {
+        "correct": 0,
+        "total": 13
+      },
+      "sampled": {
+        "correct": 0,
+        "total": 13
+      }
+    },
+    "compute5": {
+      "greedy": {
+        "correct": 0,
+        "total": 13
+      },
+      "sampled": {
+        "correct": 0,
+        "total": 13
+      }
+    }
+  },
+  "source_artifact_manifest_sha256": "947963bb2ddd517e5b1f868e326426a6f2940ef5dfb2d778e72a96936d558efc"
+}

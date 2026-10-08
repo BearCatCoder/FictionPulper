@@ -1,6 +1,6 @@
 {
   "experiment_id": "fictionpulper-15m-data30m-narrative-v1",
-  "status": "prepared_not_trained",
+  "status": "reporting_complete_unsealed",
   "selection_metric": "Data30M validation loss only",
   "baseline_tags": {
     "corpus_v2": {
@@ -114,11 +114,18 @@
     "content_sha256": "e76a033fa6a3170d469d0aefaa0745ffcce0a27a691d6ca612f9fa68434b6822"
   },
   "training": {
-    "commit": null,
-    "started_at": null,
-    "completed_at": null,
-    "status": "not_started",
-    "best_checkpoint_step": null,
-    "best_checkpoint_sha256": null
+    "commit": "0ad45d34f732e44c67b7104fa92f7599f28941f6",
+    "started_at": "2026-10-08T09:21:01.422393",
+    "completed_at": "2026-10-08T09:27:47.122839",
+    "status": "training_and_selection_complete",
+    "best_checkpoint_step": 2220,
+    "best_checkpoint_sha256": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5"
+  },
+  "reporting": {
+    "source_artifacts_verified": true,
+    "post_selection_complete": true,
+    "manual_narrative_audit_recorded": true,
+    "completion_commit": null,
+    "seal_created": false
   }
 }

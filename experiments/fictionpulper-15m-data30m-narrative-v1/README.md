@@ -27,3 +27,13 @@ Teacher-forced loss, perplexity, and next-token accuracy are reported independen
 The original ten prompts use the historical decoding settings and seed 11337 for both the candidate and the exact sealed Compute5 checkpoint. The exact 50M narrative-state protocol is run for both models, with greedy and sampled outputs left unscored and ready for separate fact scoring. Repetition outputs include distinct-1/2/3, repeated 4-gram rate, longest repeated token span, and repeated sentence rate over continuations only.
 
 Full artifacts and their SHA-256 manifest are written under `runs/fictionpulper-15m-data30m-narrative-v1/post-selection/`. A compact `post-selection-record.json` is generated here for later review and experiment sealing. The tooling does not commit, tag, push, or modify any sealed experiment.
+
+## Compact Reporting
+
+After the post-selection artifacts and manual narrative-state audit are complete, generate the tracked compact reports without rerunning evaluation:
+
+```bash
+python -m src.report_narrative
+```
+
+The reporter verifies existing curriculum, checkpoint, metrics, evaluation, generation, repetition, and diagnostic hashes. It writes only under this experiment directory. It intentionally leaves `completion_commit` null and does not create `seal.json`; sealing must wait for the completion commit.

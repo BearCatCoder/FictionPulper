@@ -1,0 +1,155 @@
+{
+  "curriculum": {
+    "config_sha256": "454971b4311e76139ca93ab2115ba30f83ff1b3a9f2dce9f24baf08402dcca11",
+    "manifest_path": "data/narrative_curriculum_v1/manifest.json",
+    "manifest_sha256": "fd745c14c970812eee6d6bbc3cd61318e7a6697beefb9de180f538f34b23ea14",
+    "files": {
+      "distance-audit.json": {
+        "bytes": 909,
+        "sha256": "16629c72f13d61042a1ecc8a10474d9b6f8b17debe7052e19a9ef6f047971614"
+      },
+      "duplicate-audit.json": {
+        "bytes": 800,
+        "sha256": "3842e1f1d92613299a096e1f3cc6845a3f335f3c2287e74099b98393c096b8da"
+      },
+      "generalization_holdout.jsonl": {
+        "bytes": 444400,
+        "sha256": "07a1fb1ea1afd15a835ae99e5dc2d706ee48e3b73095642e68350d23964e6248"
+      },
+      "generalization_holdout.state.jsonl": {
+        "bytes": 1434412,
+        "sha256": "fb143b12cbf4312f1b1b0437db22b371a45476039a8d6aaae244bd3e4e34cae3"
+      },
+      "quality-audit.json": {
+        "bytes": 312,
+        "sha256": "bc69a2b5e4a946b137f76c0a56b698f7c9d00197e393e73411ad7fd88d99b07d"
+      },
+      "state-audit.json": {
+        "bytes": 837,
+        "sha256": "beda7264cb2a1c933155ca5a37af12a7c832005883c9ced324794451388ae17b"
+      },
+      "stats.json": {
+        "bytes": 2110,
+        "sha256": "620b22491aaeccec1727711eb9a250a00eea0ee5bf8eeec24feb9b017cbee301"
+      },
+      "template-audit.json": {
+        "bytes": 1679,
+        "sha256": "6cf167b5837511039f20d133a0970022c853b32cd3273591c99035f883591467"
+      },
+      "test.jsonl": {
+        "bytes": 968068,
+        "sha256": "417705b77c03da73bfa0fe86a05ee2b2de92acc97122a249bd75f99a277bb5fc"
+      },
+      "test.state.jsonl": {
+        "bytes": 3148532,
+        "sha256": "5d1e3c74c6314f1935154825405e85899d205b8e52847172b0261b2b6729a19c"
+      },
+      "train.jsonl": {
+        "bytes": 18358482,
+        "sha256": "412d54eb48ba0a50263fa65b6ff95429f8930ce83bda0feadb2d29038b4f6421"
+      },
+      "train.state.jsonl": {
+        "bytes": 58116232,
+        "sha256": "584796e28133bb1e5f7341b23ce5cc1221cbcd40b0a9d773e667b1ab4fd2e47c"
+      },
+      "validation.jsonl": {
+        "bytes": 993263,
+        "sha256": "7d163bcdc650f487d3030b392c6ae12f50e7cc3a4f76229bf91d704737582ce0"
+      },
+      "validation.state.jsonl": {
+        "bytes": 3203732,
+        "sha256": "eaa3d03723cbafe5e7862d94b1163712b2a7313c505f9b5c064ff2f549546580"
+      }
+    }
+  },
+  "real_fiction_data": {
+    "corpus_sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087",
+    "split_manifest_sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026",
+    "packed_metadata_sha256": "8e3faed0ca188dbdfa1138a0685ff2d8106178404bcbff85b4b12a0f9bbb1426",
+    "packed_artifacts": {
+      "train": {
+        "bin_path": "data/packed/corpus-v2-data30m/train.bin",
+        "bin_sha256": "1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9",
+        "index_path": "data/packed/corpus-v2-data30m/train.index.json",
+        "index_sha256": "e6e4d2cb31f0e49660f05c553561f667fada6006362fe3dcbe04d8f869145799"
+      },
+      "validation": {
+        "bin_path": "data/packed/corpus-v2-data30m/validation.bin",
+        "bin_sha256": "94402ee72eeed77da6779cea5e1743c0091346ebcfafe9945eb11feaad3dcaf8",
+        "index_path": "data/packed/corpus-v2-data30m/validation.index.json",
+        "index_sha256": "cced04f9da8e638c95e95989a004e38a1cf5c927f6d6a1d136f02e06c9bdda6e"
+      },
+      "test": {
+        "bin_path": "data/packed/corpus-v2-data30m/test.bin",
+        "bin_sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
+        "index_path": "data/packed/corpus-v2-data30m/test.index.json",
+        "index_sha256": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8"
+      }
+    }
+  },
+  "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+  "schedule": {
+    "path": "data/narrative_curriculum_v1/packed/mixed-source-schedule.json",
+    "file_sha256": "6f0872295a23ba0874cf84daef7fac9a95aa4254051b1f4c1b49ef2222575820",
+    "content_sha256": "e76a033fa6a3170d469d0aefaa0745ffcce0a27a691d6ca612f9fa68434b6822"
+  },
+  "training": {
+    "commit": "0ad45d34f732e44c67b7104fa92f7599f28941f6",
+    "completion_commit": null,
+    "config_sha256": "3ed52f931c706fa77fa65eaae87254aae30816e1612cc6df0ee28cc7d1f5e556"
+  },
+  "checkpoints": {
+    "candidate": {
+      "best-validation.pt": "4e88c42176ab27180b3b6992c7e96d7c5d4c529434c6a2b48b67e6c451738ad5",
+      "latest.pt": "0f9df3ee194cca8c97c2631892674975aac26dfb5184ddac7e0cd39567c31378",
+      "step-0444.pt": "13c139c549f61e8630193b6d7fc59d50693121d14102931c2f20278c4bf29d4b",
+      "step-0888.pt": "3783d60e88a205a91c29adf9739be8a3ad2fe38548c0281c1a1fc716ad609f2d",
+      "step-1332.pt": "1e66757c08b05e60d203d00fa64d3845834d191683423a5acd78da3c00ac64e1",
+      "step-1776.pt": "299968d9cd5ca66e95b97f0f26903801c55ed1892bbd0077bb4c5fcb1f95addb",
+      "step-2220.pt": "96cec27b1b1b06146996e89177d1b3dfbaa146a99526d3529de2efbbb051144b"
+    },
+    "compute5_best_validation": "a9b53087a5c0dee6c2a8640999ac88d54cfb62a2d94833bc737f968f267c01fe",
+    "compute5_latest": "566c87f8c60c0e52ea2d28ba41a106468b5a1a20506151df4f7e884c6bb7de4d"
+  },
+  "run_artifacts": {
+    "manifest.json": "9e6a3000c1853f1beab607c506768710c4e84358d11d88c0aed75c1708d24807",
+    "metrics.json": "d9e4a38cc3907bfc1564dff19059b56d4affd75550804ff4a27a3e4f67b39c0c",
+    "summary.json": "aed805d334c931ea601fa5de6711cbfefd72dc7058063e7c05a2fe1228af3d5f"
+  },
+  "post_selection_artifacts": {
+    "evaluation-results.json": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/evaluation-results.json",
+      "sha256": "96509e86e65a441f06ae1a194deaee2bcdd5ccbf0c851fa2640b4d0914d18b90"
+    },
+    "curriculum-state-recall.json": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/curriculum-state-recall.json",
+      "sha256": "44d38e05e3b604076a7ecfa12392e524c02401fd3ac855b50a0106bd6d748b2b"
+    },
+    "generation-comparison.json": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/generation-comparison.json",
+      "sha256": "f6b796cc5e5c296ae83ec077075eede8af2c8578bda11e9a0b7215911555a7e6"
+    },
+    "narrative-state-comparison.json": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/narrative-state-comparison.json",
+      "sha256": "dea9edf409f1ebfe6ff794d0f64a72177d099dbcace59d26d7757f0662cf1f56"
+    },
+    "repetition-comparison.json": {
+      "path": "runs/fictionpulper-15m-data30m-narrative-v1/post-selection/repetition-comparison.json",
+      "sha256": "36382508e9e76cebc4673a16d846ee8ccff8a989064b080092d35b8d9466d183"
+    }
+  },
+  "protocols": {
+    "post_selection": {
+      "path": "experiments/fictionpulper-15m-data30m-narrative-v1/post-selection-protocol.json",
+      "sha256": "427201a1dfe1e885afb35a787d0cd91658a35ac329085046e04cae335e2224a6"
+    },
+    "evaluation": {
+      "path": "experiments/fictionpulper-15m-data30m-v1/evaluation-protocol.json",
+      "sha256": "16b8f2df65e9be1df2923b9a93e9570258b8f2e16b156bbd3ebd27697659c60a"
+    },
+    "narrative_state": {
+      "path": "experiments/fictionpulper-50m-data30m-v1/narrative-state-protocol.json",
+      "sha256": "6c83108450efc8973c360278c1f6b6e4262143a40ca58c8d69a4eb165ff78f45"
+    }
+  }
+}
