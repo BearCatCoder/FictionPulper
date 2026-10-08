@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "baseline_branch": {
+    "master": "947cbbc86cc5c61c0ef2c5a47f890b6bd29b2401",
+    "origin_master": "947cbbc86cc5c61c0ef2c5a47f890b6bd29b2401",
+    "tracked_worktree_clean_before_preparation": true
+  },
+  "base_parameters": 15047040,
+  "auxiliary_parameters": 6930,
+  "total_training_parameters": 15053970,
+  "representation": "final_hidden_after_final_rmsnorm",
+  "lambda_contrastive": 0.25,
+  "lambda_state": 0.25,
+  "state_sidecar": {
+    "schema_version": 1,
+    "generator_version": "state-transition-v1",
+    "manifest_sha256": "36372208b3b4d35523668d4292c2884eab8ae68a239bddba4a131c3e32496593",
+    "train_sha256": "bb4c1ae07c967b852defd45f6974468af09bff4800450a690f25a87a87e73b25",
+    "transition_annotation_sha256": "a2b5db38c5549cc9ffeb2e170cdbbe8e63e69fd6283ecc3e904d6169a19d9c9d",
+    "carry_annotation_sha256": "e2a7d80877e044d4410a7372df3a2828a33ebb3b96d90c2c7be10f63a3ae6734",
+    "transition_records_all_splits": 14852,
+    "carry_records_all_splits": 36278,
+    "train_annotations": 45030
+  },
+  "gradient_sanity": {
+    "state_loss": 0.746067225933075,
+    "head_gradient_norm_sum": 4.415751442313194,
+    "base_gradient_norm_sum": 97.43125980719924
+  },
+  "tests": {
+    "count": 214,
+    "passed": true
+  },
+  "gates": {
+    "state_timelines_deterministic": true,
+    "pre_post_transitions_valid": true,
+    "carry_stops_at_next_transition": true,
+    "state_class_ids_valid": true,
+    "state_heads_receive_gradients": true,
+    "base_lm_receives_state_gradients": true,
+    "state_labels_absent_from_token_stream": true,
+    "checkpoint_auxiliary_reload_tested": true,
+    "lm_only_export_equivalence_tested": true,
+    "historical_protocol_hashes_valid": true
+  }
+}
