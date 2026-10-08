@@ -1,6 +1,7 @@
 # FictionPulper-15M-data30M-dynamic-logit-v1
 
-Status: preparation complete; training not started.
+Status: training and real-validation-only checkpoint selection complete;
+post-selection evaluation pending.
 
 This controlled experiment preserves the sealed 15,047,040-parameter model,
 tokenizer-v1, Data30M fiction split, Counterfactual-v1 positive curriculum,
@@ -19,6 +20,11 @@ State-Transition-v1 timelines. No positive prose is regenerated.
 The sealed source has depth-1 decisions across all families and depth-2
 decisions for `latest_state_update`. It has no depth-3 or depth-4+ prose;
 those depths are therefore unavailable rather than reported as failures.
+
+Training completed all 2,220 optimizer steps from fresh seed-1337
+initialization. Step 2,220 was selected solely by Data30M validation loss
+(`3.1554934784`). The selected checkpoint SHA-256 is
+`1d2ac1947afd10436729b007ae5d1fbeb9ef0815fc507ee15ab1a9e8e5c43575`.
 
 ## Baseline Taxonomy
 

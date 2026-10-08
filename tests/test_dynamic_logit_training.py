@@ -127,6 +127,16 @@ class DynamicLossTests(unittest.TestCase):
             results[0]["current_vs_initial_margin"],
         )
 
+    def test_current_initial_alias_is_not_a_stale_margin(self):
+        logits = torch.zeros(2, 2, 8, requires_grad=True)
+        model = RecordingModel(logits)
+        decision = [[
+            record("X", "CURRENT", [0, 1, 0], aliases=["CURRENT", "INITIAL"]),
+            record("Y", "NEVER_VALID", [0, 2, 0]),
+        ]]
+        _, _, results = dynamic_objective(model, decision, torch.device("cpu"))
+        self.assertIsNone(results[0]["current_vs_initial_margin"])
+
     def test_category_margin_and_dimension_aggregation(self):
         results = [
             {"loss": 0.2, "current_correct": 1.0, "selected_category": "CURRENT",

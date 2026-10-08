@@ -1,0 +1,39 @@
+{
+  "experiment_id": "fictionpulper-15m-data30m-dynamic-logit-v1",
+  "status": "training_and_selection_complete",
+  "training_git_commit": "ea8b4b11d862dcce02dbc5d0d4c0811231600784",
+  "fresh_random_initialization": true,
+  "resume_checkpoint": null,
+  "model_parameters": 15047040,
+  "auxiliary_heads": false,
+  "seed": 1337,
+  "optimizer_steps": 2220,
+  "selection_metric": "Data30M validation loss only",
+  "selected_step": 2220,
+  "best_data30m_validation_loss": 3.1554934784493414,
+  "exposure": {
+    "real_targets": 115503402,
+    "curriculum_targets": 20382953,
+    "positive_lm_targets": 135886355,
+    "pair_presentations": 41238,
+    "dynamic_decisions": 172326,
+    "stale_candidates": 14748
+  },
+  "runtime_seconds": 2787.752700634999,
+  "final_gpu_memory_reserved_gb": 8.46484375,
+  "artifact_sha256": {
+    "training_manifest": "6b04a8c5372d1e41239f2a46d2c8ee7d44e342fef90bd3e41e731f2cc7c19e19",
+    "training_metrics": "d0850d248a03ea174d4cb48dd27f9f15916a13870752984a25e2b83624fd69db",
+    "training_summary": "678154982189cdec4e7f9143ef4b7de01abd3f673a9c024b0707c623734d508c",
+    "best_checkpoint": "1d2ac1947afd10436729b007ae5d1fbeb9ef0815fc507ee15ab1a9e8e5c43575",
+    "latest_checkpoint": "7be5f299dd65ddb4e4704b539fb9018c38f7472955d1b6c80808c97c851b9158"
+  },
+  "training_time_depth2_validation": {
+    "current_accuracy": 0.48484848484848486,
+    "previous_selection_rate": 0.5151515151515151,
+    "mean_current_vs_previous_margin": -0.04369543357328935,
+    "selection_eligible": false
+  },
+  "failed_launch_recorded": true,
+  "failed_launch_optimizer_steps": 0
+}

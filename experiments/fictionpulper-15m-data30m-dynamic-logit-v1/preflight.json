@@ -81,7 +81,7 @@
     "config": "4069e52072484c573abf70cba6272e8eca4f8a59f996f7d2ed7f6001722b1d94",
     "dynamic_annotations": "c19541b05df8c137191bde5513e58366af803f6b5a1ae71de2205f66349a8ea1",
     "dynamic_taxonomy": "e14aedb989906bad06ec5785fb80f2990111eb7337a2dc5efba214bf77efe67a",
-    "dynamic_trainer": "ea43322baddef5b9a096cd0f3af789c07101ec2d9c538a33eabbe291be8b3157"
+    "dynamic_trainer_at_training_commit": "ea43322baddef5b9a096cd0f3af789c07101ec2d9c538a33eabbe291be8b3157"
   },
   "validation": {
     "phase0_integrity_gates_passed": true,

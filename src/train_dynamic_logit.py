@@ -271,10 +271,11 @@ def dynamic_objective(
         current_score = decision_scores[current]
         category_scores: dict[str, torch.Tensor] = {}
         for index, item in enumerate(decision):
+            if item["category"] == "CURRENT":
+                continue
             aliases = item.get("all_applicable_categories", [item["category"]])
             for category in aliases:
-                if category != "CURRENT":
-                    category_scores[str(category)] = decision_scores[index]
+                category_scores[str(category)] = decision_scores[index]
         result: dict[str, Any] = {
             "loss": float(dynamic_losses[-1].detach()),
             "current_correct": float(decision_scores.argmax().eq(torch.tensor(current, device=device)).detach()),
