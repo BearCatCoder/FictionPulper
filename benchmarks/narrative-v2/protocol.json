@@ -1,0 +1,93 @@
+{
+  "benchmark_id": "fictionpulper-narrative-benchmark-v2",
+  "protocol_version": 2,
+  "status": "frozen-specification",
+  "immutability": "This path is append-never and edit-never after merge. Corrections require benchmark v3; historical protocols remain untouched.",
+  "scenario_count": 112,
+  "scenario_unit": "paired counterfactual world",
+  "state_families": ["static_fact", "ownership", "location", "knowledge", "goal", "causal_dependency", "temporal_ordering"],
+  "depth_buckets": ["1", "2", "3", "4_plus"],
+  "depth_definition": "Number of state updates or causally dependent inference steps in the minimal proof. Narrative distance and filler events do not increase depth. The 4_plus bucket contains explicit depths 4 and 5.",
+  "split_policy": {
+    "scenario_counts": {"development": 28, "test": 28, "generalization": 56},
+    "assignment_unit": "template family plus lexical pool; never an individual rendered world",
+    "development": "Public during implementation and scorer debugging; never used to train language-model weights.",
+    "test": "Post-selection only. Names, normalized verbs, lexical pools, templates, contexts, and continuations are disjoint from development and generalization.",
+    "generalization": "Post-selection only and jointly unseen: names, normalized verbs, lexical combinations, template IDs, and template families are exclusive to this split.",
+    "training_contamination": "Before release, audit all authored names, verbs, template signatures, normalized contexts, and continuations against every synthetic curriculum and benchmark used by the candidate. Any match blocks evaluation; it is never silently relabeled.",
+    "near_duplicate_rule": "No normalized exact duplicate or 5-word-shingle Jaccard similarity above 0.70 may cross splits.",
+    "artifact_layout": "Authored scenarios are stored in separate development.jsonl, test.jsonl, and generalization.jsonl files behind a hash-locked manifest. The loader may open only development until checkpoint selection is sealed, then test, then generalization.",
+    "access_order": ["checkpoint_selection_complete", "development", "test", "generalization"]
+  },
+  "balance_policy": {
+    "family_depth_cell_size": 4,
+    "worlds_per_scenario": 2,
+    "candidate_surface_rule": "Shared X/Y candidates; each is correct exactly once in every A/B pair.",
+    "candidate_order_rule": "X/Y and Y/X presentation orders differ by at most one globally and per reported stratum where possible.",
+    "required_reports": ["split", "state_family", "depth_bucket", "reasoning_depth", "template_family", "genre", "candidate_order", "world_orientation"]
+  },
+  "evaluation_modes": {
+    "forced_choice": {
+      "definition": "Rank shared X/Y candidates from the fixed context without generation.",
+      "score": "Arithmetic mean of token log probabilities over only the complete decision-bearing candidate span.",
+      "primary_metric": "joint_paired_reversal_success",
+      "secondary_metrics": ["world_accuracy", "signed_margin", "tie_rate", "fact_removed_bias", "candidate_only_bias"]
+    },
+    "teacher_forced": {
+      "definition": "Condition on the fixed context and score every target token in complete authored continuations; prompt tokens are excluded.",
+      "score": "Mean token negative log likelihood for gold and matched counterfactual continuations.",
+      "primary_metric": "joint_gold_over_counterfactual_preference",
+      "secondary_metrics": ["gold_nll", "counterfactual_nll", "signed_margin", "perplexity"],
+      "not_generation": true
+    },
+    "free_generation": {
+      "definition": "Continue the narrative without questions, answer choices, candidate text, or gold continuation prefixes.",
+      "primary_metric": "blinded_human_pair_consistency",
+      "primary_metric_definition": "One pair succeeds only when adjudicated A and B labels are both consistent. Report greedy and each sampled seed separately, then sampled-seed mean and standard deviation; never pool modes or seeds. Unresolved uncertain pairs fail the strict all-pairs rate and are also reported separately with a resolved-only denominator.",
+      "automated_checks_are_diagnostic_only": true,
+      "human_review_required": true
+    }
+  },
+  "decoding": {
+    "greedy": {"max_new_tokens": 128},
+    "sampled": {"max_new_tokens": 256, "temperature": 0.8, "top_k": 50, "top_p": 0.95, "base_seeds": [11337, 21337, 31337]},
+    "effective_seed": "First 64 bits of SHA-256(canonical JSON [base_seed, scenario_id, world, blinded_model_id]).",
+    "stop_tokens": ["<|eos|>"],
+    "retry_policy": "Never retry, replace, or discard empty, short, malformed, or EOS-terminated output. Record actual token count and stop reason."
+  },
+  "uncertainty": {
+    "confidence_level": 0.95,
+    "method": "percentile paired bootstrap",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 260209,
+    "resampling_unit": "scenario pair; A/B worlds remain coupled",
+    "sampled_generation": "Report per-seed values plus mean and standard deviation across the three locked seeds.",
+    "report_counts": true,
+    "significance_rule": "Do not infer significance solely from confidence-interval overlap."
+  },
+  "scorer_provenance": {
+    "required": [
+      "protocol_sha256", "allocation_plan_sha256", "scenario_schema_sha256", "scenario_data_manifest_sha256",
+      "scorer_path", "scorer_sha256", "git_commit", "tracked_worktree_clean", "tokenizer_path",
+      "tokenizer_sha256", "checkpoint_path", "checkpoint_sha256", "model_config_sha256", "precision",
+      "device", "python_version", "torch_version", "cuda_version"
+    ],
+    "tamper_policy": "A missing or mismatched field makes the run invalid rather than best-effort."
+  },
+  "authoring_contract": {
+    "allocation_join": "Every authored record must match scenario_id, split, state family, depth, template and lexical pool IDs, novelty declaration, world orientation, candidate order, and evaluation modes in scenario-allocation.jsonl.",
+    "release_gate": "Schema validation, allocation join, normalized surface leakage, exact/near-duplicate, proof replay, candidate cancellation, token-boundary, and training-contamination audits must all pass before scenario files are frozen.",
+    "unsupported_policy": "Missing or invalid cells are reported unavailable and block v2 release; they are never scored as failures or silently replaced."
+  },
+  "baseline_plan": {
+    "baselines": ["uniform_random_forced_choice", "candidate_only_forced_choice", "development_majority_by_family_depth", "selected_5m_checkpoint", "selected_15m_checkpoint", "selected_50m_checkpoint"],
+    "selection": "Checkpoint identity and hashes must be frozen using validation metrics before test or generalization files are opened.",
+    "outputs": "Raw model outputs and review rows live under ignored runs/benchmark-v2/<model-id>; compact hash-locked reports may be committed after review.",
+    "comparison": "Report each evaluation mode separately; no composite score is permitted in v2."
+  },
+  "artifacts": {
+    "allocation_plan": {"path": "scenario-allocation.jsonl", "sha256": "1b2323ec787de9ded066242fadf0333c657f8b5bc27b7cfb8a2df0a5404c7398"},
+    "scenario_schema": {"path": "scenario.schema.json", "sha256": "2b9a338e0fa20e768bb73ff05d5dff32d3950a524b117f717750816b95947b00"},
+    "human_review_rubric": {"path": "human-review-rubric.json", "sha256": "7132055bd0019fe5c7a7f3df4cf3c40060fcb4e9353e6f92fcc521a328476c97"}
+  }
+}

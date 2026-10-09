@@ -1,0 +1,21 @@
+{
+  "rubric_version": 2,
+  "primary_labels": ["consistent", "inconsistent", "uncertain"],
+  "decision_rule": "Consistent requires the continuation to preserve every required proposition and contradict no forbidden proposition. Lexical overlap alone is insufficient.",
+  "partial_credit": false,
+  "evidence_quote_required": true,
+  "reviewer_note_required": true,
+  "minimum_independent_reviewers": 2,
+  "blinding": "Reviewers see randomized anonymous model labels and do not see checkpoint identity, condition, other reviews, or candidate answers.",
+  "randomization_seed": 260209,
+  "adjudication": "Any disagreement or uncertain label requires a third blinded adjudicator. Original reviews remain immutable.",
+  "agreement_metrics": ["raw_agreement", "cohen_kappa"],
+  "uncertain_policy": "Report uncertain separately; exclude it from binary consistency and provide both strict and resolved denominators.",
+  "pair_metric": "A pair succeeds only if adjudicated labels for both A and B are consistent. Unresolved uncertain pairs fail the strict all-pairs rate and are separately reported as uncertain; a resolved-only rate is diagnostic.",
+  "mode_seed_policy": "Report greedy and each sampled seed separately. Report sampled-seed mean and standard deviation, but never pool greedy, sampled seeds, or worlds into one trial.",
+  "required_review_fields": [
+    "review_id", "scenario_id", "world", "generation_mode", "sampling_seed",
+    "blinded_model_id", "generated_text_sha256", "reviewer_id", "label", "confidence",
+    "evidence_quote", "reviewer_note", "adjudicated_label"
+  ]
+}
