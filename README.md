@@ -306,6 +306,25 @@ a seal because the 57.04% unclassified token share exceeds the 35% gate and the
 deterministic review is pending. It reported zero unresolved accepted near-
 duplicate clusters and zero cross-split collection/duplicate leaks.
 
+## Prepare The 50M Data100M Experiment
+
+Issue #7 preregisters the fresh-init 50,348,544-parameter plain-LM architecture,
+five-epoch exposure policy, stable 16 x 4 batch geometry, validation-only
+checkpoint selection, and clean post-selection comparisons. Run its fail-closed
+readiness check with:
+
+```bash
+python -m src.data100m_preflight \
+  --config configs/data100m-50m-v1.yaml \
+  --require-ready
+```
+
+The experiment is currently **prepared but blocked**, not trained: Corpus-v3 has
+no passing seal or packed dataset. Exact blockers, the synthetic model-only BF16
+hardware-gate command, and the eventual training command are documented under
+[`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md).
+No validation-selected Data100M checkpoint or Data100M evaluation is claimed.
+
 Epoch 3 was selected at Data30M validation loss 3.2461. The primary Data30M test measured loss 3.3224, perplexity 27.73, and next-token accuracy 34.89%. On a common 95-record Data10M test subset disjoint from both training sets, Data30M improved loss from 3.4802 to 3.3170 and perplexity from 32.47 to 27.58. Validation was still improving but flattening at the locked endpoint; training was not extended. Complete results are under `experiments/fictionpulper-15m-data30m-v1/`.
 
 ## Data10M Experiment

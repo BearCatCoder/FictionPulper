@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "experiment_id": "fictionpulper-50m-data100m-v1",
+  "selection_metric": "complete Corpus-v3 validation loss only",
+  "primary_test": "sealed Corpus-v3 test split, opened once after checkpoint selection",
+  "common_clean_lm_comparison": {
+    "policy": "evaluate historical Compute5 and 50M checkpoints on the final sealed Corpus-v3 test split",
+    "reason": "historical held-out subsets cannot be presumed disjoint from Corpus-v3 training",
+    "required_before_candidate_comparison": true,
+    "status": "preregistered_pending_corpus_v3_seal_and_pack"
+  },
+  "narrative_benchmark_v2": {
+    "protocol_path": "benchmarks/narrative-v2/protocol.json",
+    "protocol_sha256": "84e34abf414d81ddef6e8baef71d07d2adf65b0dcfe152607b239f83b1095c79",
+    "authored_manifest_path": "benchmarks/narrative-v2/authored-manifest.json",
+    "authored_manifest_sha256": "f4ed9129acba773669e9a4e11acb6fe611fcbd7ec3e89f5a34e4477a9b079789",
+    "development_use": "scorer verification only; never checkpoint selection or weight training",
+    "test_access": "after checkpoint selection",
+    "generalization_access": "after test evaluation"
+  },
+  "historical_baselines": {
+    "compute5_seal_path": "experiments/fictionpulper-15m-data30m-compute5/seal.json",
+    "compute5_seal_sha256": "10fcd7a62b819bd2af9a9fb4f5bf86df81558130f0e6f01af44c48491185db5c",
+    "capacity50m_seal_path": "experiments/fictionpulper-50m-data30m-v1/seal.json",
+    "capacity50m_seal_sha256": "ac9f0abf9c3c1c60f0ee02485918e86c8407e051c578e34cf1bfa7ae15451fb3"
+  },
+  "decoding": {
+    "source": "benchmarks/narrative-v2/protocol.json",
+    "policy": "use the frozen greedy and sampled settings and all prescribed seeds without tuning"
+  }
+}

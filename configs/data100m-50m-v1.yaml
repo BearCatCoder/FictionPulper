@@ -1,0 +1,83 @@
+experiment:
+  id: fictionpulper-50m-data100m-v1
+  status: prepared_blocked_on_corpus_v3
+  experimental_variable: unique Corpus-v3 data at fixed 50M architecture and tokenizer-v1
+
+seed: 1337
+
+model:
+  vocab_size: 4096
+  hidden_size: 512
+  num_layers: 16
+  num_attention_heads: 8
+  num_key_value_heads: 2
+  intermediate_size: 1536
+  max_seq_len: 1024
+  activation: swiglu
+  normalization: rmsnorm
+  positional_encoding: rope
+  tie_word_embeddings: true
+  attention_bias: false
+  mlp_bias: false
+  expected_parameter_count: 50348544
+
+tokenizer:
+  type: BPE
+  vocab_size: 4096
+  path: data/tokenizer/tokenizer.json
+  expected_sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+training:
+  initialization: fresh_random
+  resume_checkpoint: null
+  objective: ordinary_causal_language_modeling
+  optimizer: adamw
+  batch_size: 16
+  gradient_accumulation_steps: 4
+  allocated_token_slots_per_optimizer_step: 65536
+  epochs: 5
+  max_steps: null
+  learning_rate: 1.0e-3
+  min_learning_rate: 1.0e-4
+  warmup_fraction: 0.05
+  warmup_steps: null
+  weight_decay: 0.1
+  grad_clip: 1.0
+  precision: bf16
+  checkpoint_selection: minimum_complete_validation_loss
+  test_access: after_checkpoint_selection
+  checkpoint_epochs: [1, 2, 3, 4, 5]
+  require_clean_worktree: true
+  checkpoint_dir: checkpoints/fictionpulper-50m-data100m-v1
+
+data:
+  corpus_seal_path: data/corpus_v3/seal.json
+  corpus_path: data/corpus_v3/corpus.jsonl
+  corpus_stats_path: data/corpus_v3/stats.json
+  split_path: data/corpus_v3/splits.json
+  packed_metadata_path: data/packed/corpus-v3-data100m/metadata.json
+  train_path: data/packed/corpus-v3-data100m/train.bin
+  validation_path: data/packed/corpus-v3-data100m/validation.bin
+  test_path: data/packed/corpus-v3-data100m/test.bin
+  expected_corpus_sha256: null
+  expected_split_sha256: null
+  expected_packed_metadata_sha256: null
+
+evaluation:
+  protocol_path: experiments/fictionpulper-50m-data100m-v1/evaluation-protocol.json
+  expected_protocol_sha256: de8cb048e19c1fdd79ed32538b99baea56d79daf100565ea9689e75443d64219
+
+hardware_gate:
+  device: cuda
+  maximum_peak_reserved_gib: 16.0
+  synthetic_fixed_subset_sequences: 16
+  optimizer_updates: 8
+  used_for_hyperparameter_tuning: false
+  report_path: experiments/fictionpulper-50m-data100m-v1/preflight.json
+  expected_report_sha256: null
+
+comparison:
+  write_training_comparison_artifacts: false
+
+logging:
+  tensorboard_dir: runs/fictionpulper-50m-data100m-v1/tensorboard
