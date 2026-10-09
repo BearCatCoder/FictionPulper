@@ -279,6 +279,33 @@ never rewrites or repacks Corpus-v2. The completed report, deterministic
 documented in [`docs/corpus-v2-audit.md`](docs/corpus-v2-audit.md) and tracked
 under `experiments/fictionpulper-corpus-v2-audit-v1/`.
 
+## Build Corpus v3
+
+Corpus-v3 is an isolated, resumable, hash-pinned acquisition and deterministic
+audit pipeline targeting approximately 100M tokenizer-v1 document tokens as a
+feasibility goal. Run it with:
+
+```bash
+python -m src.corpus_v3 --config configs/corpus-v3.yaml
+python -m unittest tests.test_corpus_v3
+```
+
+The builder prioritizes dialogue-rich compact fiction while enforcing complete
+row-level rights evidence, immutable source hashes, high-confidence story
+boundaries, creator and collection concentration limits, deterministic review,
+and exact/fuzzy duplicate controls. Collections and duplicate clusters cannot
+cross splits. It writes stage and final reports even when supply is exhausted,
+but writes `seal.json` only when every freeze gate passes. The committed config
+contains no new external source inventory, and no 100M build is claimed. Exact
+inventory schema, review workflow, outputs, and limitations are documented in
+[`docs/corpus-v3.md`](docs/corpus-v3.md).
+
+The base-only feasibility pass found 1,947 individually eligible stories and
+exactly 14,923,683 tokenizer-v1 document tokens. It reproducibly stopped without
+a seal because the 57.04% unclassified token share exceeds the 35% gate and the
+deterministic review is pending. It reported zero unresolved accepted near-
+duplicate clusters and zero cross-split collection/duplicate leaks.
+
 Epoch 3 was selected at Data30M validation loss 3.2461. The primary Data30M test measured loss 3.3224, perplexity 27.73, and next-token accuracy 34.89%. On a common 95-record Data10M test subset disjoint from both training sets, Data30M improved loss from 3.4802 to 3.3170 and perplexity from 32.47 to 27.58. Validation was still improving but flattening at the locked endpoint; training was not extended. Complete results are under `experiments/fictionpulper-15m-data30m-v1/`.
 
 ## Data10M Experiment
