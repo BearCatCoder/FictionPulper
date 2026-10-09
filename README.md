@@ -64,6 +64,74 @@ and generalization remain post-selection only, and hidden authored examples are
 never training data. This dataset build did not run model training, model
 evaluation, inference, checkpoint selection, or human review.
 
+Issue #3 adds the free-generation runner and manual-review workflow without
+changing any frozen benchmark or sealed experiment artifact. The runner reads
+the locked greedy and three-seed sampled protocols directly from v2, derives
+the specified per-world effective seeds, retains empty/EOS outputs, and writes
+raw token IDs, stop reasons, diagnostic proposition checks, and full scorer and
+model provenance. Automated checks for entities, current/stale/counterfactual
+facts, causal markers, contradictions, premise state, and repetition are
+diagnostic only; they are never substituted for the primary human score.
+
+Run development generation for a hash-locked selected checkpoint:
+
+```bash
+python -m src.narrative_v2_free_generation generate \
+  --split development \
+  --checkpoint checkpoints/<run>/best-validation.pt \
+  --checkpoint-sha256 <checkpoint-sha256> \
+  --tokenizer data/tokenizer/tokenizer.json \
+  --tokenizer-sha256 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012 \
+  --model-id <sealed-model-id> \
+  --blinded-model-id model-a \
+  --output-dir runs/benchmark-v2/model-a/development
+```
+
+Test additionally requires `--checkpoint-selection-complete`.
+Generalization requires both `--checkpoint-selection-complete` and
+`--test-evaluation-complete`; the access-controlled loader checks these before
+opening a held-out file.
+
+Export a shuffled anonymous packet and a separate private model key:
+
+```bash
+python -m src.narrative_v2_free_generation export-review \
+  --generations runs/benchmark-v2/model-a/development/raw-generations.jsonl \
+  --generation-manifest runs/benchmark-v2/model-a/development/generation-manifest.json \
+  --output runs/benchmark-v2/model-a/development/review-packet.jsonl \
+  --key-output runs/benchmark-v2/model-a/development/review-key.json
+```
+
+Two independent reviewers complete separate packet copies. Preserve both
+original rows. A disagreement or `uncertain` label requires one independent
+adjudicator row whose `label` and `adjudicated_label` contain the final label.
+Evidence must quote the generation verbatim; use `<EMPTY_OUTPUT>` only for an
+empty generation. Scenario, world, decoding mode, and seed stay only in the
+private key; the scorer verifies the original packet and key hashes before
+restoring those required report fields. Score the combined immutable review
+rows with:
+
+```bash
+python -m src.narrative_v2_free_generation score-reviews \
+  --generations runs/benchmark-v2/model-a/development/raw-generations.jsonl \
+  --generation-manifest runs/benchmark-v2/model-a/development/generation-manifest.json \
+  --review-packet runs/benchmark-v2/model-a/development/review-packet.jsonl \
+  --review-key runs/benchmark-v2/model-a/development/review-key.json \
+  --reviews runs/benchmark-v2/model-a/development/completed-reviews.jsonl \
+  --output runs/benchmark-v2/model-a/development/human-score-report.json
+python -m unittest tests.test_narrative_v2_free_generation
+```
+
+The report keeps greedy and every sampled seed separate, reports sampled-seed
+mean and standard deviation, and includes strict and resolved-only pair rates,
+uncertain counts, reviewer agreement, Cohen's kappa, and fixed 10,000-replicate
+paired-bootstrap intervals overall and by family, depth, and family/depth. No
+checkpoint inference or human review was run while implementing this workflow;
+those model-specific results belong to the post-selection baseline evaluation.
+Implementation validation passed the benchmark specification, authored-data,
+and free-generation workflow suites (30 tests) and the full repository suite
+(280 tests) on 2026-10-09.
+
 Release generation requires the ignored, locally built synthetic training
 JSONL artifacts listed under `training_contamination.training_artifacts` in the
 authoring config. Their hashes are locked, and recursively extracted rendered
