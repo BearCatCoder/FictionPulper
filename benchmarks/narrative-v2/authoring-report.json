@@ -1,0 +1,269 @@
+{
+  "allocation_join": {
+    "records": 112,
+    "status": "PASS"
+  },
+  "candidate_orders": {
+    "XY": 56,
+    "YX": 56
+  },
+  "controls": {
+    "candidate_frame_cancellation": 112,
+    "candidate_only_records": 112,
+    "candidate_order_balanced": true,
+    "candidate_token_length_delta_max": 4,
+    "decisive_world_selection_leaks": 0,
+    "fact_removed_chain_replayable": 0,
+    "fact_removed_contexts": 112,
+    "irrelevant_substituted_contexts": 112,
+    "status": "PASS"
+  },
+  "counts_by_family_depth": {
+    "causal_dependency/1": 4,
+    "causal_dependency/2": 4,
+    "causal_dependency/3": 4,
+    "causal_dependency/4_plus": 4,
+    "goal/1": 4,
+    "goal/2": 4,
+    "goal/3": 4,
+    "goal/4_plus": 4,
+    "knowledge/1": 4,
+    "knowledge/2": 4,
+    "knowledge/3": 4,
+    "knowledge/4_plus": 4,
+    "location/1": 4,
+    "location/2": 4,
+    "location/3": 4,
+    "location/4_plus": 4,
+    "ownership/1": 4,
+    "ownership/2": 4,
+    "ownership/3": 4,
+    "ownership/4_plus": 4,
+    "static_fact/1": 4,
+    "static_fact/2": 4,
+    "static_fact/3": 4,
+    "static_fact/4_plus": 4,
+    "temporal_ordering/1": 4,
+    "temporal_ordering/2": 4,
+    "temporal_ordering/3": 4,
+    "temporal_ordering/4_plus": 4
+  },
+  "cross_split_leakage": 0,
+  "duplicate_audit": {
+    "near_duplicates_above_threshold": 0,
+    "normalized_exact_duplicates": 0,
+    "same_scenario_cross_surface_exemptions": "paired worlds and prompt/context coupling only",
+    "surface_count": 2016,
+    "threshold": 0.7
+  },
+  "git_commit": "PENDING_UNTIL_COMMIT",
+  "isolation": {
+    "lexicon": "PASS",
+    "names": "PASS",
+    "source_pool": "PASS",
+    "template_family": "PASS",
+    "verbs": "PASS"
+  },
+  "paraphrase_counts": {
+    "abstract": 14,
+    "affidavit": 7,
+    "chronicle": 7,
+    "deposition": 7,
+    "dispatch": 7,
+    "fieldnote": 14,
+    "ledger": 7,
+    "memorandum": 7,
+    "recollection": 14,
+    "register": 7,
+    "telemetry": 14,
+    "testimony": 7
+  },
+  "proof_replay": {
+    "fact_removed_replay_failures": 112,
+    "intact_worlds_replayed": 224,
+    "status": "PASS"
+  },
+  "reasoning_depth_counts": {
+    "1": 28,
+    "2": 28,
+    "3": 28,
+    "4": 14,
+    "5": 14
+  },
+  "release_ready": true,
+  "scenario_count": 112,
+  "schema_validation": {
+    "implementation": "direct-frozen-schema-recursion",
+    "records": 112,
+    "status": "PASS"
+  },
+  "split_counts": {
+    "development": 28,
+    "generalization": 56,
+    "test": 28
+  },
+  "status": "PASS",
+  "template_signature_isolation": {
+    "status": "PASS",
+    "surface_counts": {
+      "development": {
+        "candidate": 56,
+        "context": 56,
+        "counterfactual_continuation": 56,
+        "fact_removed_context": 28,
+        "forbidden_proposition": 56,
+        "free_generation_prompt": 56,
+        "gold_continuation": 56,
+        "irrelevant_substituted_context": 28,
+        "required_proposition": 56,
+        "review_question": 56
+      },
+      "generalization": {
+        "candidate": 112,
+        "context": 112,
+        "counterfactual_continuation": 112,
+        "fact_removed_context": 56,
+        "forbidden_proposition": 112,
+        "free_generation_prompt": 112,
+        "gold_continuation": 112,
+        "irrelevant_substituted_context": 56,
+        "required_proposition": 112,
+        "review_question": 112
+      },
+      "test": {
+        "candidate": 56,
+        "context": 56,
+        "counterfactual_continuation": 56,
+        "fact_removed_context": 28,
+        "forbidden_proposition": 56,
+        "free_generation_prompt": 56,
+        "gold_continuation": 56,
+        "irrelevant_substituted_context": 28,
+        "required_proposition": 56,
+        "review_question": 56
+      }
+    },
+    "surfaces": [
+      "candidate",
+      "context",
+      "counterfactual_continuation",
+      "fact_removed_context",
+      "forbidden_proposition",
+      "free_generation_prompt",
+      "gold_continuation",
+      "irrelevant_substituted_context",
+      "required_proposition",
+      "review_question"
+    ],
+    "unique_signature_counts": {
+      "development": 24,
+      "generalization": 33,
+      "test": 27
+    }
+  },
+  "token_boundary": {
+    "candidates_checked": 224,
+    "status": "PASS",
+    "tokenizer_path": "data/tokenizer/tokenizer.json",
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+  },
+  "training_contamination": {
+    "actual_training_artifacts": {
+      "checked_artifacts": [
+        {
+          "path": "data/counterfactual_narrative_v1/train.jsonl",
+          "records": 5942,
+          "sha256": "7caa86cfcdd18bd33640c176c72bd6e408d41b13f6e1d41fac5491335db4734b"
+        },
+        {
+          "path": "data/state_transition_v1/train.jsonl",
+          "records": 45030,
+          "sha256": "bb4c1ae07c967b852defd45f6974468af09bff4800450a690f25a87a87e73b25"
+        },
+        {
+          "path": "data/dynamic_logit_v1/train.jsonl",
+          "records": 49912,
+          "sha256": "75ff2f53da0f13e1a0992c963c28b4758ab39213a55c63b74a1ead3679aca8ab"
+        },
+        {
+          "path": "data/contrastive_narrative_v1/train-pairs.jsonl",
+          "records": 8684,
+          "sha256": "e40de7d7b82b67fb423b43464b582b0d0160218aee4d2ba70c4c8bebb4ae5407"
+        },
+        {
+          "path": "data/narrative_curriculum_v1/train.jsonl",
+          "records": 8684,
+          "sha256": "412d54eb48ba0a50263fa65b6ff95429f8930ce83bda0feadb2d29038b4f6421"
+        }
+      ],
+      "name_hits": [],
+      "normalized_eight_word_phrase_hits": [],
+      "normalized_template_shingle_hits": [],
+      "records_checked": 118252,
+      "status": "PASS",
+      "verb_hits": []
+    },
+    "source_config_provenance": {
+      "checked_sources": [
+        {
+          "path": "src/continuity_curriculum/generator.py",
+          "sha256": "7ca88fc563b84c08a82215c6c62ea1053d0d5f9a2c3778995701522b22eff3cf"
+        },
+        {
+          "path": "src/counterfactual_narrative/core.py",
+          "sha256": "9b1168d1f99fb70056d0f2a17732c143c293f349202986492b1475f230afef60"
+        },
+        {
+          "path": "src/state_transition_annotations.py",
+          "sha256": "98a601aa2e9d32cdbfe41aa49126fe232aa50c4cbaae8d8d56fad1c8f31b36bb"
+        },
+        {
+          "path": "src/dynamic_logit_annotations.py",
+          "sha256": "c19541b05df8c137191bde5513e58366af803f6b5a1ae71de2205f66349a8ea1"
+        },
+        {
+          "path": "src/contrastive_pairs.py",
+          "sha256": "e26a1241bffd9230a7ad6c17cad5edd0d82f0150720d3e59508b2201bba5f534"
+        },
+        {
+          "path": "src/narrative_state_localization.py",
+          "sha256": "0a7564efe8d712234f1e63a41476dcdd17125a266d32c66b5c296547d9c0f86f"
+        },
+        {
+          "path": "configs/continuity-curriculum-v1.yaml",
+          "sha256": "454971b4311e76139ca93ab2115ba30f83ff1b3a9f2dce9f24baf08402dcca11"
+        },
+        {
+          "path": "configs/counterfactual-narrative-v1.yaml",
+          "sha256": "96690b6893af204150255161ae52805e7eedc7acb8c1a90b3ed9986dce6ee94f"
+        },
+        {
+          "path": "configs/data30m-15m-counterfactual-v1.yaml",
+          "sha256": "a69936c7e9b9620d8626c2009f7f8e5f8f251c16949e0b8116ac864934dcde70"
+        },
+        {
+          "path": "configs/data30m-15m-state-transition-v1.yaml",
+          "sha256": "6007e3774368a4dae6e57df8a8ef47642e680ea11557ac6be1404c6e1ccf61a0"
+        },
+        {
+          "path": "configs/data30m-15m-dynamic-logit-v1.yaml",
+          "sha256": "4069e52072484c573abf70cba6272e8eca4f8a59f996f7d2ed7f6001722b1d94"
+        },
+        {
+          "path": "configs/data30m-15m-contrastive-v1.yaml",
+          "sha256": "ef298ce9c366aa28eb744e7e9864002e953b5684fb084a6f3f719e3e0e176104"
+        }
+      ],
+      "name_hits": [],
+      "normalized_eight_word_phrase_hits": [],
+      "status": "PASS",
+      "template_signature_hits": [],
+      "verb_hits": []
+    },
+    "status": "PASS"
+  },
+  "world_candidate_labels": {
+    "X": 112,
+    "Y": 112
+  }
+}

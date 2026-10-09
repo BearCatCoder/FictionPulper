@@ -26,6 +26,52 @@ or human scoring is claimed. The next step is authoring and independently
 reviewing the allocated scenarios without changing the v2 protocol; historical
 protocols remain immutable.
 
+Issue #2 adds deterministic authored scenarios without changing the frozen
+issue #1 artifacts. Generate all three split files and run the complete
+authoring audit in one command:
+
+```bash
+python -m src.narrative_v2_authoring \
+  --config configs/narrative-v2-authoring.yaml
+python -m unittest tests.test_narrative_v2_authoring
+```
+
+The command creates missing outputs, but never overwrites them. On a repeated
+run it reproduces every expected byte and verifies the existing files; partial
+or divergent outputs fail closed. The committed manifest locks the config,
+generator, frozen inputs, tracked tokenizer, authored split files, explicit
+candidate-only controls, computed validation summary, and audit report. Proofs
+are replayed from one world-specific initial fact through exactly the allocated
+number of family-specific mapping events. Three separate renderers provide
+normalized template-signature isolation across splits.
+
+Generation is build-time behavior and authors all files; it does not authorize
+evaluation access. The restricted loader defaults to development:
+
+```bash
+python -m src.narrative_v2_loader
+python -m src.narrative_v2_loader --controls
+python -m src.narrative_v2_loader \
+  --split test --controls --checkpoint-selection-complete
+python -m src.narrative_v2_loader \
+  --split generalization \
+  --checkpoint-selection-complete \
+  --test-evaluation-complete
+```
+
+Development is public for scorer implementation but not weight training. Test
+and generalization remain post-selection only, and hidden authored examples are
+never training data. This dataset build did not run model training, model
+evaluation, inference, checkpoint selection, or human review.
+
+Release generation requires the ignored, locally built synthetic training
+JSONL artifacts listed under `training_contamination.training_artifacts` in the
+authoring config. Their hashes are locked, and recursively extracted rendered
+strings are scanned for benchmark names, verbs, normalized eight-word phrases,
+and template signatures. Rebuild an absent dataset with its documented project
+command; hash drift fails closed and requires explicit config review. These
+training artifacts remain ignored and must not be committed.
+
 ## Environment
 
 Activate the existing CUDA-enabled environment from the repository root:

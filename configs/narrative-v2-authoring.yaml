@@ -1,0 +1,75 @@
+version: 1
+seed: 260209
+benchmark_root: benchmarks/narrative-v2
+allocation_path: benchmarks/narrative-v2/scenario-allocation.jsonl
+manifest_config_path: configs/narrative-v2-authoring.yaml
+near_duplicate_threshold: 0.70
+authoring_revision: issue-2-v1
+tokenizer:
+  path: data/tokenizer/tokenizer.json
+  sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+renderers:
+  development: development_prose
+  test: test_transcript
+  generalization: generalization_symbolic
+training_contamination:
+  source_provenance:
+    - src/continuity_curriculum/generator.py
+    - src/counterfactual_narrative/core.py
+    - src/state_transition_annotations.py
+    - src/dynamic_logit_annotations.py
+    - src/contrastive_pairs.py
+    - src/narrative_state_localization.py
+    - configs/continuity-curriculum-v1.yaml
+    - configs/counterfactual-narrative-v1.yaml
+    - configs/data30m-15m-counterfactual-v1.yaml
+    - configs/data30m-15m-state-transition-v1.yaml
+    - configs/data30m-15m-dynamic-logit-v1.yaml
+    - configs/data30m-15m-contrastive-v1.yaml
+  training_artifacts:
+    - path: data/counterfactual_narrative_v1/train.jsonl
+      sha256: 7caa86cfcdd18bd33640c176c72bd6e408d41b13f6e1d41fac5491335db4734b
+    - path: data/state_transition_v1/train.jsonl
+      sha256: bb4c1ae07c967b852defd45f6974468af09bff4800450a690f25a87a87e73b25
+    - path: data/dynamic_logit_v1/train.jsonl
+      sha256: 75ff2f53da0f13e1a0992c963c28b4758ab39213a55c63b74a1ead3679aca8ab
+    - path: data/contrastive_narrative_v1/train-pairs.jsonl
+      sha256: e40de7d7b82b67fb423b43464b582b0d0160218aee4d2ba70c4c8bebb4ae5407
+    - path: data/narrative_curriculum_v1/train.jsonl
+      sha256: 412d54eb48ba0a50263fa65b6ff95429f8930ce83bda0feadb2d29038b4f6421
+locked_inputs:
+  protocol.json: 84e34abf414d81ddef6e8baef71d07d2adf65b0dcfe152607b239f83b1095c79
+  scenario-allocation.jsonl: 1b2323ec787de9ded066242fadf0333c657f8b5bc27b7cfb8a2df0a5404c7398
+  scenario.schema.json: 2b9a338e0fa20e768bb73ff05d5dff32d3950a524b117f717750816b95947b00
+  human-review-rubric.json: 7132055bd0019fe5c7a7f3df4cf3c40060fcb4e9353e6f92fcc521a328476c97
+
+# Every content-bearing pool is split-exclusive. Reuse is allowed only inside a
+# split; combinations are selected deterministically from scenario_id.
+splits:
+  development:
+    source_pool: source-dev-lantern
+    names: [Alden, Briony, Corwin, Delia, Emeric, Fenella, Garran, Honora]
+    verbs: [catalogued, relayed, entrusted, relocated, docketed, pursued, triggered, preceded]
+    lexicon: [amber, badger, copper, dogwood, ember, falcon, garnet, hemlock, ivory, juniper, kestrel, lilac]
+    paraphrases: [ledger, dispatch, memorandum, affidavit]
+  test:
+    source_pool: source-test-compass
+    names: [Mirelle, Norwyn, Orlena, Perrin, Quilla, Roscoe, Sabine, Tolland]
+    verbs: [inscribed, conveyed, bequeathed, transferred, divulged, sought, activated, antedated]
+    lexicon: [cobalt, dolphin, elmwood, flint, glacier, heron, indigo, jasmine, kelp, lapis, myrtle, nickel]
+    paraphrases: [chronicle, testimony, deposition, register]
+  generalization:
+    source_pool: source-generalization-astrolabe
+    names: [Ulyra, Vesper, Wystan, Xanthe, Ysella, Zephan, Caelia, Drustan]
+    verbs: [notarized, transmitted, consigned, repositioned, oracle-marked, endeavored, precipitated, predated]
+    lexicon: [umber, vicuna, willow, xenon, yarrow, zircon, acacia, birch, citrine, dahlia, ecru, foxglove]
+    paraphrases: [fieldnote, recollection, telemetry, abstract]
+
+families:
+  static_fact: {subject: seal, state_noun: annotation, transition_noun: inference, genre: mystery}
+  ownership: {subject: compass, state_noun: titleholder, transition_noun: endorsement, genre: adventure}
+  location: {subject: lantern, state_noun: destination, transition_noun: route, genre: noir}
+  knowledge: {subject: cipher, state_noun: recipient, transition_noun: relay, genre: crime}
+  goal: {subject: expedition, state_noun: objective, transition_noun: contingency, genre: fantasy}
+  causal_dependency: {subject: mechanism, state_noun: trigger, transition_noun: dependency, genre: science_fiction}
+  temporal_ordering: {subject: signal, state_noun: precedence, transition_noun: ordering, genre: weird}
