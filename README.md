@@ -4,6 +4,28 @@ FictionPulper is a from-scratch decoder-only language model project for short-fo
 
 The implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, training, evaluation, checkpointing, and generation. No pretrained tokenizer or model weights are used.
 
+## Narrative Benchmark v2
+
+The generation-based success criteria are frozen under
+`benchmarks/narrative-v2/`. The v2 allocation defines 112 paired scenarios
+balanced across seven state families and proof depths 1, 2, 3, and 4+, with
+split-exclusive names, verbs, lexical pools, and templates. It separately
+specifies forced-choice, teacher-forced, and free-generation evaluation,
+including decoding seeds, scorer provenance, blinded human review, paired
+bootstrap uncertainty, and post-selection access controls.
+
+Validate the specification, split isolation, and balance with:
+
+```bash
+python -m src.benchmark_v2 --root benchmarks/narrative-v2
+python -m unittest tests.test_benchmark_v2
+```
+
+This freezes the protocol and scenario allocation only. No benchmark model run
+or human scoring is claimed. The next step is authoring and independently
+reviewing the allocated scenarios without changing the v2 protocol; historical
+protocols remain immutable.
+
 ## Environment
 
 Activate the existing CUDA-enabled environment from the repository root:
