@@ -378,14 +378,27 @@ def load_evaluation_protocol(config: dict[str, Any]) -> dict[str, Any] | None:
     if sha256_file(protocol_path) != expected_hash:
         raise RuntimeError("Locked evaluation protocol hash changed")
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-    split_path = Path(protocol["data30m_split_path"])
-    if sha256_file(split_path) != protocol["data30m_split_sha256"]:
-        raise RuntimeError("Evaluation protocol Data30M split hash changed")
-    for benchmark in protocol["benchmarks"]:
-        if sha256_file(Path(benchmark["packed_path"])) != benchmark["packed_sha256"]:
-            raise RuntimeError(f"Packed hash changed for {benchmark['name']}")
-        if sha256_file(Path(benchmark["index_path"])) != benchmark["index_sha256"]:
-            raise RuntimeError(f"Index hash changed for {benchmark['name']}")
+    if "data30m_split_path" in protocol:
+        split_path = Path(protocol["data30m_split_path"])
+        if sha256_file(split_path) != protocol["data30m_split_sha256"]:
+            raise RuntimeError("Evaluation protocol Data30M split hash changed")
+        for benchmark in protocol["benchmarks"]:
+            if sha256_file(Path(benchmark["packed_path"])) != benchmark["packed_sha256"]:
+                raise RuntimeError(f"Packed hash changed for {benchmark['name']}")
+            if sha256_file(Path(benchmark["index_path"])) != benchmark["index_sha256"]:
+                raise RuntimeError(f"Index hash changed for {benchmark['name']}")
+    else:
+        narrative = protocol["narrative_benchmark_v2"]
+        for path_key, hash_key in (
+            ("protocol_path", "protocol_sha256"),
+            ("authored_manifest_path", "authored_manifest_sha256"),
+        ):
+            if sha256_file(Path(narrative[path_key])) != narrative[hash_key]:
+                raise RuntimeError(f"Evaluation protocol dependency changed: {path_key}")
+        baselines = protocol["historical_baselines"]
+        for prefix in ("compute5", "capacity50m"):
+            if sha256_file(Path(baselines[f"{prefix}_seal_path"])) != baselines[f"{prefix}_seal_sha256"]:
+                raise RuntimeError(f"Evaluation baseline seal changed: {prefix}")
     protocol["path"] = str(protocol_path)
     protocol["sha256"] = expected_hash
     return protocol
@@ -577,6 +590,10 @@ def write_comparison_artifacts(
 
 def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]:
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    if "corpus_seal_path" in config.get("data", {}):
+        from src.data100m_preflight import require_training_ready
+
+        require_training_ready(config_path)
     training = config["training"]
     seed = int(config["seed"])
     if training.get("require_clean_worktree") and git_worktree_dirty() is not False:
@@ -661,14 +678,15 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
         * epochs,
         "allocated_slot_presentations": packed_schedule["allocated_chunk_slots_per_epoch"]
         * epochs,
-        "data10m_best_valid_target_presentations": config["comparison"][
-            "baseline_best_valid_target_presentations"
-        ],
     }
-    exposure["data30m_to_data10m_best_exposure_ratio"] = (
-        exposure["valid_target_presentations"]
-        / exposure["data10m_best_valid_target_presentations"]
+    baseline_exposure = config.get("comparison", {}).get(
+        "baseline_best_valid_target_presentations"
     )
+    if baseline_exposure is not None:
+        exposure["data10m_best_valid_target_presentations"] = baseline_exposure
+        exposure["data30m_to_data10m_best_exposure_ratio"] = (
+            exposure["valid_target_presentations"] / baseline_exposure
+        )
     print("locked_data_and_exposure=" + json.dumps(exposure, sort_keys=True))
 
     configured_checkpoint_dir = training.get("checkpoint_dir")
@@ -997,7 +1015,7 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
         )
         selected_checkpoint_hash = sha256_file(checkpoint_dir / "best-validation.pt")
         historical_evaluations: dict[str, Any] = {}
-        if evaluation_protocol is not None:
+        if evaluation_protocol is not None and "benchmarks" in evaluation_protocol:
             split_payload = json.loads(
                 Path(evaluation_protocol["data30m_split_path"]).read_text(encoding="utf-8")
             )
@@ -1046,28 +1064,37 @@ def run_training(config_path: Path, run_id: str | None = None) -> dict[str, Any]
                 }
         sealed_evaluations = {
             "checkpoint_selection_complete_before_test_access": True,
-            "selection_metric": "Data30M validation loss only",
+            "selection_metric": (
+                evaluation_protocol["selection_metric"]
+                if evaluation_protocol
+                else "validation loss only"
+            ),
             "selected_checkpoint": str(checkpoint_dir / "best-validation.pt"),
             "selected_checkpoint_sha256": selected_checkpoint_hash,
             "selected_checkpoint_epoch": int(best_checkpoint["epoch"]),
             "selected_checkpoint_step": int(best_checkpoint["step"]),
-            "primary_data30m_test": {
-                "evaluation_count": 1,
-                "used_for_checkpoint_selection": False,
-                **verified_packed_artifacts["test"],
-                "metrics": test_metrics,
-            },
             "historical_post_selection_evaluations": historical_evaluations,
             "corpus_v2_correctness_exclusions": (
-                evaluation_protocol["corpus_v2_correctness_exclusions"]
+                evaluation_protocol.get("corpus_v2_correctness_exclusions", [])
                 if evaluation_protocol
                 else []
             ),
             "correctness_exclusion_effect": (
-                evaluation_protocol["correctness_exclusion_effect"]
+                evaluation_protocol.get("correctness_exclusion_effect")
                 if evaluation_protocol
                 else None
             ),
+        }
+        primary_test_key = (
+            "primary_data30m_test"
+            if evaluation_protocol and "data30m_split_path" in evaluation_protocol
+            else "primary_test"
+        )
+        sealed_evaluations[primary_test_key] = {
+            "evaluation_count": 1,
+            "used_for_checkpoint_selection": False,
+            **verified_packed_artifacts["test"],
+            "metrics": test_metrics,
         }
         write_json_atomic(run_dir / "sealed-evaluations.json", sealed_evaluations)
         final_generation_prompts = FIXED_PROMPTS + list(GENRE_PROMPTS.values())

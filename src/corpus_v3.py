@@ -347,6 +347,17 @@ def deterministic_splits(
     }
 
 
+def split_payload(
+    assignments: dict[str, str], audit: dict[str, Any], *, seed: int
+) -> dict[str, Any]:
+    return {
+        "version": CORPUS_VERSION,
+        "seed": seed,
+        "assignments": assignments,
+        "audit": audit,
+    }
+
+
 def _concentration(records: list[dict[str, Any]], field: str) -> dict[str, Any]:
     tokens: Counter[str] = Counter()
     stories: Counter[str] = Counter()
@@ -569,7 +580,10 @@ def build_corpus_v3(config_path: Path) -> dict[str, Any]:
     write_jsonl(output_dir / "source-artifacts.jsonl", [ledger[key] for key in sorted(ledger)])
     write_jsonl(output_dir / "near-duplicate-candidates.jsonl", edges)
     write_jsonl(output_dir / "near-duplicate-clusters.jsonl", clusters)
-    write_json_atomic(output_dir / "splits.json", {"assignments": assignments, "audit": split_audit})
+    write_json_atomic(
+        output_dir / "splits.json",
+        split_payload(assignments, split_audit, seed=int(config["seed"])),
+    )
     stages = []
     running = 0
     stage_values = sorted(int(value) for value in config["selection"]["stage_tokens"])
@@ -633,6 +647,7 @@ def build_corpus_v3(config_path: Path) -> dict[str, Any]:
         "source_inputs": source_inputs,
         "source_artifacts_sha256": sha256_file(output_dir / "source-artifacts.jsonl"),
         "corpus_sha256": stats["corpus_sha256"],
+        "split_sha256": sha256_file(output_dir / "splits.json"),
         "canonical_content_sha256": canonical_hash(selected),
         "determinism_note": "Canonical rows, selection, audits, splits, and stage reports are deterministic; retrieval timestamps and HTTP validators are not.",
     }
@@ -651,6 +666,7 @@ def build_corpus_v3(config_path: Path) -> dict[str, Any]:
             "unresolved_near_duplicate_clusters": 0,
             "cross_split_leakage": 0,
             "corpus_sha256": stats["corpus_sha256"],
+            "split_sha256": sha256_file(output_dir / "splits.json"),
             "manifest_sha256": sha256_file(output_dir / "manifest.json"),
             "audits_sha256": sha256_file(output_dir / "audits.json"),
         }

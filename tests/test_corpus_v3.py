@@ -13,6 +13,7 @@ from src.corpus_v3 import (
     load_ledger,
     record_rejection,
     save_ledger,
+    split_payload,
 )
 
 
@@ -138,6 +139,14 @@ class CorpusV3Tests(unittest.TestCase):
             deterministic_splits(
                 records, [], 1337, {"train": 0.8, "validation": 0.1, "test": 0.05}
             )
+
+    def test_split_payload_contract_includes_seed_for_packing(self):
+        payload = split_payload(
+            {"a": "train"}, {"passed": True}, seed=1337
+        )
+        self.assertEqual(payload["version"], 3)
+        self.assertEqual(payload["seed"], 1337)
+        self.assertEqual(payload["assignments"], {"a": "train"})
 
     def test_review_sample_is_deterministic_and_stratified(self):
         records = [story("a"), story("b", collection="b", author="author-b")]

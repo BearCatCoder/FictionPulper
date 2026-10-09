@@ -1,0 +1,59 @@
+{
+  "experiment_id": "fictionpulper-50m-data100m-v1",
+  "status": "blocked",
+  "training_started": false,
+  "full_training_claimed": false,
+  "checks": {
+    "locked_model_contract": true,
+    "trainable_parameter_count": 50348544,
+    "locked_training_contract": true,
+    "allocated_token_slots_per_optimizer_step": 65536,
+    "locked_hardware_contract": true,
+    "tokenizer_v1_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+    "unset_hash_locks": [
+      "expected_corpus_sha256",
+      "expected_split_sha256",
+      "expected_packed_metadata_sha256"
+    ]
+  },
+  "schedule": null,
+  "blockers": [
+    "corpus_v3_hash_locks_unset",
+    "corpus_v3_packed_metadata_missing",
+    "corpus_v3_seal_missing",
+    "hardware_gate_report_hash_unset"
+  ],
+  "hardware_gate": {
+    "scope": "synthetic_model_only_no_corpus_access",
+    "device": "NVIDIA GeForce RTX 5080",
+    "precision": "bf16",
+    "batch_size": 16,
+    "sequence_length": 1024,
+    "optimizer": "fused_adamw",
+    "optimizer_updates": 8,
+    "model_parameter_count": 50348544,
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012",
+    "losses": [
+      8.420970916748047,
+      8.268606185913086,
+      8.13134765625,
+      8.002141952514648,
+      7.876157760620117,
+      7.762744903564453,
+      7.649202346801758,
+      7.550710678100586
+    ],
+    "initial_loss": 8.420970916748047,
+    "final_loss": 7.550710678100586,
+    "loss_decreased": true,
+    "all_gradients_present": true,
+    "all_gradients_finite": true,
+    "checkpoint_reload_max_absolute_logit_difference": 0.0,
+    "elapsed_seconds": 1.309406434000266,
+    "peak_allocated_gib": 9.310701847076416,
+    "peak_reserved_gib": 9.65234375,
+    "maximum_peak_reserved_gib": 16.0,
+    "fits_vram_gate": true,
+    "used_for_hyperparameter_tuning": false
+  }
+}
