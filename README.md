@@ -73,6 +73,15 @@ model provenance. Automated checks for entities, current/stale/counterfactual
 facts, causal markers, contradictions, premise state, and repetition are
 diagnostic only; they are never substituted for the primary human score.
 
+Issue #4 adds seal-bound forced-choice and teacher-forced baseline execution
+for the selected Compute5 and 50M checkpoints. It reports modes separately,
+scores exact authored spans, runs all three candidate controls, couples A/B
+world preferences, and writes hash-manifested raw outputs under ignored
+`runs/`. Exact stage ordering, checkpoint/seal identities, all split commands,
+and the deterministic blinded audit workflow are documented in
+[`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md). Human primary
+free-generation scoring remains pending until real independent reviews exist.
+
 Run development generation for a hash-locked selected checkpoint:
 
 ```bash
@@ -80,6 +89,8 @@ python -m src.narrative_v2_free_generation generate \
   --split development \
   --checkpoint checkpoints/<run>/best-validation.pt \
   --checkpoint-sha256 <checkpoint-sha256> \
+  --seal experiments/<run>/seal.json \
+  --seal-sha256 <seal-sha256> \
   --tokenizer data/tokenizer/tokenizer.json \
   --tokenizer-sha256 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012 \
   --model-id <sealed-model-id> \

@@ -366,6 +366,17 @@ def _validated_run(
     manifest = json.loads(args.generation_manifest.read_text(encoding="utf-8"))
     for field, expected in benchmark_hashes.items():
         require(manifest.get(field) == expected, f"generation manifest {field} mismatch")
+    seal_path = Path(str(manifest.get("seal_path", "")))
+    require(seal_path.is_file(), "generation manifest seal is missing")
+    require(sha256_file(seal_path) == manifest.get("seal_sha256"), "generation manifest seal hash mismatch")
+    seal = json.loads(seal_path.read_text(encoding="utf-8"))
+    require(seal.get("status") == "sealed", "generation experiment is not sealed")
+    require(seal.get("run_id") == manifest.get("model_id"), "generation seal model identity mismatch")
+    require(seal.get("tokenizer_sha256") == manifest.get("tokenizer_sha256"), "generation seal tokenizer mismatch")
+    require(
+        seal.get("checkpoint_sha256", {}).get("best_validation") == manifest.get("checkpoint_sha256"),
+        "generation seal checkpoint mismatch",
+    )
     scenarios = load_authored_split(
         args.benchmark_root, str(manifest["split"]),
         checkpoint_selection_complete=args.checkpoint_selection_complete,
@@ -411,6 +422,15 @@ def run_generation(args: argparse.Namespace) -> None:
     )
     tokenizer_hash = sha256_file(args.tokenizer)
     require(tokenizer_hash == args.tokenizer_sha256, "tokenizer hash mismatch")
+    require(sha256_file(args.seal) == args.seal_sha256, "experiment seal hash mismatch")
+    seal = json.loads(args.seal.read_text(encoding="utf-8"))
+    require(seal.get("status") == "sealed", "experiment is not sealed")
+    require(seal.get("run_id") == args.model_id, "seal model identity mismatch")
+    require(seal.get("tokenizer_sha256") == tokenizer_hash, "seal tokenizer hash mismatch")
+    require(
+        seal.get("checkpoint_sha256", {}).get("best_validation") == args.checkpoint_sha256,
+        "seal selected-checkpoint hash mismatch",
+    )
     tokenizer = Tokenizer.from_file(str(args.tokenizer))
     device = torch.device(args.device)
     use_bf16 = args.precision == "bf16"
@@ -450,6 +470,8 @@ def run_generation(args: argparse.Namespace) -> None:
         "tokenizer_sha256": tokenizer_hash,
         "checkpoint_path": str(args.checkpoint),
         "checkpoint_sha256": args.checkpoint_sha256,
+        "seal_path": str(args.seal),
+        "seal_sha256": args.seal_sha256,
         "model_config_sha256": model_config_sha256,
         "precision": args.precision,
         "device": str(device),
@@ -601,6 +623,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     generate_parser.add_argument("--test-evaluation-complete", action="store_true")
     generate_parser.add_argument("--checkpoint", type=Path, required=True)
     generate_parser.add_argument("--checkpoint-sha256", required=True)
+    generate_parser.add_argument("--seal", type=Path, required=True)
+    generate_parser.add_argument("--seal-sha256", required=True)
     generate_parser.add_argument("--tokenizer", type=Path, required=True)
     generate_parser.add_argument("--tokenizer-sha256", required=True)
     generate_parser.add_argument("--model-id", required=True)

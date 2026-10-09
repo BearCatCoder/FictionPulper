@@ -347,6 +347,7 @@ class NarrativeV2FreeGenerationTests(unittest.TestCase):
         self.assertEqual(first, paired_bootstrap_interval(pairs, replicates=100, seed=260209))
         args = parse_args([
             "generate", "--checkpoint", "model.pt", "--checkpoint-sha256", "a" * 64,
+            "--seal", "seal.json", "--seal-sha256", "c" * 64,
             "--tokenizer", "tokenizer.json", "--tokenizer-sha256", "b" * 64,
             "--model-id", "model", "--blinded-model-id", "model-a",
             "--output-dir", "runs/test", "--split", "generalization",
