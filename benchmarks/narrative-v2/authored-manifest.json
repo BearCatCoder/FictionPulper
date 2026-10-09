@@ -1,0 +1,56 @@
+{
+  "access_policy": {
+    "development": "default readable split; scorer development only; never weight training",
+    "generalization": "requires checkpoint_selection_complete and test_evaluation_complete attestations",
+    "test": "requires checkpoint_selection_complete attestation"
+  },
+  "authoring_revision": "issue-2-v1",
+  "benchmark_id": "fictionpulper-narrative-benchmark-v2",
+  "config": {
+    "path": "configs/narrative-v2-authoring.yaml",
+    "sha256": "8ad8db8ecfc48b772e8ece9a1402f2115976169a5407d8c5aeba4f9ba4fe9b54"
+  },
+  "generated_artifacts": {
+    "authoring-report.json": {
+      "sha256": "be1d3e7b35055eae93f66e3f4e8968bbd87450b87eef3c15d5e0093fdf6ca389"
+    },
+    "authoring-validation-results.md": {
+      "sha256": "6a68a5966d0c63eed16d9c08e1de9725c6f80be5b567365e0bb5b29bbf5bbbb8"
+    },
+    "development-candidate-controls.jsonl": {
+      "sha256": "306235b9963667c5b80de42433540eeff6d2791aaf7280c8a6014d32258e863b"
+    },
+    "development.jsonl": {
+      "sha256": "c38842d3bf98c52ebe8d46df30b89122177a099d91a3166fa0b881fb1707f4e4"
+    },
+    "generalization-candidate-controls.jsonl": {
+      "sha256": "9b76ecb9fe3febcebbec138074d0ea70b04f36f3f995a7a1bccd767c347a0606"
+    },
+    "generalization.jsonl": {
+      "sha256": "9d40c81499cced1b786866846493258e331ad870be9f5fb6ba6133643ff3672d"
+    },
+    "test-candidate-controls.jsonl": {
+      "sha256": "f2f96923b6f90f952392e86a7269f31547da6209f2213b270a365ca1df06fb24"
+    },
+    "test.jsonl": {
+      "sha256": "b555c5dc145b4c83e36ce5d354767c2c73e9290187a166fa339de9366869f10c"
+    }
+  },
+  "generator": {
+    "path": "src/narrative_v2_authoring.py",
+    "sha256": "f63c05957619ea3bca32c82ca854328c00dbf7728d30816a2ebd2beefc3cdf57"
+  },
+  "git_commit": "PENDING_UNTIL_COMMIT",
+  "locked_inputs": {
+    "human-review-rubric.json": "7132055bd0019fe5c7a7f3df4cf3c40060fcb4e9353e6f92fcc521a328476c97",
+    "protocol.json": "84e34abf414d81ddef6e8baef71d07d2adf65b0dcfe152607b239f83b1095c79",
+    "scenario-allocation.jsonl": "1b2323ec787de9ded066242fadf0333c657f8b5bc27b7cfb8a2df0a5404c7398",
+    "scenario.schema.json": "2b9a338e0fa20e768bb73ff05d5dff32d3950a524b117f717750816b95947b00"
+  },
+  "scenario_count": 112,
+  "self_hash": "OMITTED_TO_AVOID_CIRCULARITY",
+  "tokenizer": {
+    "path": "data/tokenizer/tokenizer.json",
+    "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+  }
+}
