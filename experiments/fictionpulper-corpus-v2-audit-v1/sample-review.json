@@ -1,0 +1,30 @@
+{
+  "reviewer": "issue-5 implementation review",
+  "review_scope": "Deterministic bounded opening/ending excerpts plus automated metadata, dialogue, and OCR signals; concerns trigger full-source review for Corpus-v3 rather than changing sealed Corpus-v2.",
+  "reviews": [
+    {"id": "4a92cd112c24", "story_boundary": "fail", "ocr_quality": "concern", "prose_quality": "pass", "notes": "Story ending is followed by retained Project Gutenberg footer text."},
+    {"id": "7302cafde74d", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Opening and ending are coherent fairy-tale prose with a complete ending."},
+    {"id": "836ca7e3f929", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Opening and ending are coherent narrative prose without visible contamination."},
+    {"id": "a9b9b7eddd4f", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Complete fairy-tale opening and resolution; no visible OCR damage."},
+    {"id": "b01fa30d8164", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Complete fantasy tale framing and resolution."},
+    {"id": "pg-10391-f9e98f6a1669", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Coherent science-fiction satire with a complete ending."},
+    {"id": "pg-10556-38fff00e04b5", "story_boundary": "fail", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Accepted story ends with the next heading CHAPTER XXVII; digit signal is legitimate currency/chapter text."},
+    {"id": "pg-12281-21d2323ef9cd", "story_boundary": "concern", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Narrative resolves, but trailing standalone IX appears to be the next collection heading."},
+    {"id": "pg-13293-fc8844cd27e2", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Coherent ending followed only by a conventional scene/collection ornament."},
+    {"id": "pg-17375-7fa445dd51ee", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Opening and ending agree on framing phrase and form a complete story."},
+    {"id": "pg-17669-685c5cf613bb", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Self-contained satirical biographical sketch with a clear ending."},
+    {"id": "pg-1853-7b141f3619f8", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Front epigraph is retained but the story boundary and ending are coherent."},
+    {"id": "pg-21807-a8d419392c30", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "concern", "notes": "Boundary is coherent, but the shortest-decile item appears biographical rather than fiction and needs genre/admission review."},
+    {"id": "pg-23155-4d429fd8c5b4", "story_boundary": "concern", "ocr_quality": "pass", "prose_quality": "concern", "notes": "Trailing V suggests the next heading; excerpt reads as historical exposition rather than clearly short fiction."},
+    {"id": "pg-24836-d983a4f7ea7a", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Coherent narrative opening and emotional resolution."},
+    {"id": "pg-2179-28be070138eb", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Low dialogue-opening-paragraph sample has a coherent opening and complete tragic ending without visible contamination."},
+    {"id": "pg-28093-837e8c2f86fa", "story_boundary": "concern", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Story resolves, but trailing standalone X appears to be the next heading."},
+    {"id": "pg-2851-841bf0b48db8", "story_boundary": "concern", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Story resolves, but trailing standalone X. appears to be the next heading."},
+    {"id": "pg-30827-91db92b1ea64", "story_boundary": "fail", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Accepted text ends with the next heading CHAPTER II."},
+    {"id": "pg-36039-d00da83953a9", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Short fantasy story has a coherent opening and complete cautionary ending."},
+    {"id": "pg-3707-529f01a8fb4b", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Complete O. Henry story ending without visible contamination."},
+    {"id": "pg-5741-ea1e1f7897ba", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Longest-decile sample has coherent narrative closure and no visible OCR damage."},
+    {"id": "pg-5779-b4397a60d06f", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "Complete monologue with intentional emphatic style."},
+    {"id": "pg-9463-94474bf13486", "story_boundary": "pass", "ocr_quality": "pass", "prose_quality": "pass", "notes": "High-dialogue sample is coherent and ends cleanly."}
+  ]
+}

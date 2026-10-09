@@ -1,0 +1,746 @@
+{
+  "audit_id": "fictionpulper-corpus-v2-audit-v1",
+  "output_path": "experiments/fictionpulper-corpus-v2-audit-v1/audit-report.json",
+  "status": "complete",
+  "provenance": {
+    "analyzed_base_commit": "19a4a772ca2ac8b9ea79032077a074d7ce2bddcb",
+    "generation_worktree_dirty": true,
+    "dirty_state_caveat": "The audit was generated from the named base commit plus the uncommitted issue-5 implementation. File hashes, not a future commit ID, ground generated content.",
+    "python": "3.14.4",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "dependencies": {
+      "numpy": "2.5.3",
+      "tokenizers": "0.23.2",
+      "pyyaml": "6.0.3"
+    },
+    "reproduction_command": "python -m src.audit_corpus_v2 --config configs/corpus-v2-audit.yaml",
+    "recorded_validation": {
+      "focused_test_command": "python -m unittest tests.test_audit_corpus_v2 tests.test_dataset tests.test_corpus_v2 tests.test_prepare_data30m",
+      "actual_focused_test_result": "46 tests passed on 2026-10-09",
+      "full_test_command": "python -m unittest discover -s tests -p 'test_*.py'",
+      "actual_full_test_result": "305 tests passed in 100.560s on 2026-10-09",
+      "py_compile_command": "python -m py_compile src/audit_corpus_v2.py tests/test_audit_corpus_v2.py"
+    }
+  },
+  "scope": {
+    "acquisition_artifact": "sealed Corpus-v2; never modified",
+    "post_seal_artifacts": "Data30M split and packed bins/indexes are not part of the acquisition seal and are independently hash-locked by this audit config."
+  },
+  "inputs": {
+    "acquisition_seal": {
+      "path": "experiments/fictionpulper-corpus-v2-30m/seal.json",
+      "sha256": "b656d33652bdf3f1d82f30e0e89e7ce06e1df32b0c573c5aedc3139d45f99916"
+    },
+    "corpus": {
+      "path": "data/corpus_v2/corpus.jsonl",
+      "sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087"
+    },
+    "tokenizer": {
+      "path": "data/tokenizer/tokenizer.json",
+      "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+    },
+    "split": {
+      "path": "data/corpus_v2/data30m-v1/splits.json",
+      "sha256": "5b1ccfd0cf18d70ada13786772c8d343964c7f0a09d0321fd58d2c21cc519026"
+    },
+    "packed_metadata": {
+      "path": "data/packed/corpus-v2-data30m/metadata.json",
+      "sha256": "8e3faed0ca188dbdfa1138a0685ff2d8106178404bcbff85b4b12a0f9bbb1426"
+    },
+    "train_bin": {
+      "path": "data/packed/corpus-v2-data30m/train.bin",
+      "sha256": "1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9"
+    },
+    "train_index": {
+      "path": "data/packed/corpus-v2-data30m/train.index.json",
+      "sha256": "e6e4d2cb31f0e49660f05c553561f667fada6006362fe3dcbe04d8f869145799"
+    },
+    "validation_bin": {
+      "path": "data/packed/corpus-v2-data30m/validation.bin",
+      "sha256": "94402ee72eeed77da6779cea5e1743c0091346ebcfafe9945eb11feaad3dcaf8"
+    },
+    "validation_index": {
+      "path": "data/packed/corpus-v2-data30m/validation.index.json",
+      "sha256": "cced04f9da8e638c95e95989a004e38a1cf5c927f6d6a1d136f02e06c9bdda6e"
+    },
+    "test_bin": {
+      "path": "data/packed/corpus-v2-data30m/test.bin",
+      "sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d"
+    },
+    "test_index": {
+      "path": "data/packed/corpus-v2-data30m/test.index.json",
+      "sha256": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8"
+    }
+  },
+  "counts": {
+    "stories": 4362,
+    "packed_tokens": 30004706
+  },
+  "primary_author_concentration": {
+    "unique_count": 206,
+    "largest_story_share": 0.04428676290677759,
+    "largest_token_share": 0.05149278191096724,
+    "top_10_token_share": 0.2704553376585894,
+    "top_20_token_share": 0.38470637484149384,
+    "token_herfindahl_index": 0.012465421216587351,
+    "top_10": [
+      {
+        "key": "harte bret",
+        "label": "Harte, Bret, 1836-1902",
+        "stories": 125,
+        "tokens": 1459975,
+        "token_share": 0.05149278191096724
+      },
+      {
+        "key": "kipling rudyard",
+        "label": "Kipling, Rudyard, 1865-1936",
+        "stories": 127,
+        "tokens": 903844,
+        "token_share": 0.031878245842248173
+      },
+      {
+        "key": "henry o",
+        "label": "Henry, O., 1862-1910",
+        "stories": 167,
+        "tokens": 899933,
+        "token_share": 0.03174030630900014
+      },
+      {
+        "key": "maupassant guy de",
+        "label": "Maupassant, Guy de, 1850-1893",
+        "stories": 174,
+        "tokens": 805251,
+        "token_share": 0.028400906951549364
+      },
+      {
+        "key": "andersen h c hans christian",
+        "label": "Andersen, H. C. (Hans Christian)",
+        "stories": 168,
+        "tokens": 754916,
+        "token_share": 0.026625609992705183
+      },
+      {
+        "key": "london jack",
+        "label": "London, Jack, 1876-1916",
+        "stories": 72,
+        "tokens": 736332,
+        "token_share": 0.02597015913975673
+      },
+      {
+        "key": "chekhov anton pavlovich",
+        "label": "Chekhov, Anton Pavlovich",
+        "stories": 137,
+        "tokens": 635498,
+        "token_share": 0.022413781002315697
+      },
+      {
+        "key": "doyle arthur conan",
+        "label": "Doyle, Arthur Conan, 1859-1930",
+        "stories": 39,
+        "tokens": 527742,
+        "token_share": 0.018613266467752992
+      },
+      {
+        "key": "lang andrew",
+        "label": "Lang, Andrew",
+        "stories": 181,
+        "tokens": 491090,
+        "token_share": 0.017320563892297403
+      },
+      {
+        "key": "quiller couch arthur",
+        "label": "Quiller-Couch, Arthur, 1863-1944",
+        "stories": 42,
+        "tokens": 453640,
+        "token_share": 0.015999716149996526
+      }
+    ],
+    "definition": "First semicolon-delimited creator only when its bracketed role is absent or Author; normalized keys are alias candidates, not verified identities.",
+    "covered_story_count": 4087,
+    "covered_token_count": 28353003,
+    "unknown_or_non_author_primary_story_count": 275,
+    "raw_primary_author_form_count": 224,
+    "normalized_primary_author_key_count": 206,
+    "alias_group_count": 18,
+    "alias_candidate_groups": [
+      {
+        "canonical_key": "andersen h c hans christian",
+        "forms": [
+          "Andersen, H. C. (Hans Christian)",
+          "Andersen, H. C. (Hans Christian), 1805-1875"
+        ]
+      },
+      {
+        "canonical_key": "balzac honoré de",
+        "forms": [
+          "Balzac, Honoré de",
+          "Balzac, Honoré de, 1799-1850"
+        ]
+      },
+      {
+        "canonical_key": "baum l frank lyman frank",
+        "forms": [
+          "Baum, L. Frank (Lyman Frank)",
+          "Baum, L. Frank (Lyman Frank), 1856-1919"
+        ]
+      },
+      {
+        "canonical_key": "blackwood algernon",
+        "forms": [
+          "Blackwood, Algernon",
+          "Blackwood, Algernon, 1869-1951"
+        ]
+      },
+      {
+        "canonical_key": "chekhov anton pavlovich",
+        "forms": [
+          "Chekhov, Anton Pavlovich",
+          "Chekhov, Anton Pavlovich, 1860-1904"
+        ]
+      },
+      {
+        "canonical_key": "doyle arthur conan",
+        "forms": [
+          "Doyle, Arthur Conan",
+          "Doyle, Arthur Conan, 1859-1930"
+        ]
+      },
+      {
+        "canonical_key": "grimm jacob",
+        "forms": [
+          "Grimm, Jacob",
+          "Grimm, Jacob, 1785-1863"
+        ]
+      },
+      {
+        "canonical_key": "hawthorne nathaniel",
+        "forms": [
+          "Hawthorne, Nathaniel",
+          "Hawthorne, Nathaniel, 1804-1864"
+        ]
+      },
+      {
+        "canonical_key": "kipling rudyard",
+        "forms": [
+          "Kipling, Rudyard",
+          "Kipling, Rudyard, 1865-1936"
+        ]
+      },
+      {
+        "canonical_key": "lang andrew",
+        "forms": [
+          "Lang, Andrew",
+          "Lang, Andrew, 1844-1912"
+        ]
+      },
+      {
+        "canonical_key": "london jack",
+        "forms": [
+          "London, Jack",
+          "London, Jack, 1876-1916"
+        ]
+      },
+      {
+        "canonical_key": "maupassant guy de",
+        "forms": [
+          "Maupassant, Guy de",
+          "Maupassant, Guy de, 1850-1893"
+        ]
+      },
+      {
+        "canonical_key": "nesbit e edith",
+        "forms": [
+          "Nesbit, E. (Edith)",
+          "Nesbit, E. (Edith), 1858-1924"
+        ]
+      },
+      {
+        "canonical_key": "poe edgar allan",
+        "forms": [
+          "Poe, Edgar Allan",
+          "Poe, Edgar Allan, 1809-1849"
+        ]
+      },
+      {
+        "canonical_key": "tolstoy leo graf",
+        "forms": [
+          "Tolstoy, Leo, graf",
+          "Tolstoy, Leo, graf, 1828-1910"
+        ]
+      },
+      {
+        "canonical_key": "twain mark",
+        "forms": [
+          "Twain, Mark",
+          "Twain, Mark, 1835-1910"
+        ]
+      },
+      {
+        "canonical_key": "wells h g herbert george",
+        "forms": [
+          "Wells, H. G. (Herbert George)",
+          "Wells, H. G. (Herbert George), 1866-1946"
+        ]
+      },
+      {
+        "canonical_key": "wilde oscar",
+        "forms": [
+          "Wilde, Oscar",
+          "Wilde, Oscar, 1854-1900"
+        ]
+      }
+    ],
+    "normalization_limit": "Case/punctuation normalization plus terminal lifespan stripping only; no identity resolution."
+  },
+  "creator_string_metadata": {
+    "schema_note": "The corpus author field is a Project Gutenberg-style creator string, often semicolon-delimited and role-annotated; it is not an individual-author ID.",
+    "raw_creator_string_count": 247,
+    "normalized_whole_creator_string_count": 231,
+    "records_with_additional_contributors": 589,
+    "creator_role_occurrences": {
+      "author of introduction, etc.": 10,
+      "commentator": 6,
+      "compiler": 54,
+      "contributor": 238,
+      "editor": 233,
+      "engraver": 52,
+      "illustrator": 323,
+      "translator": 136,
+      "unspecified": 4146
+    }
+  },
+  "collection_concentration": {
+    "unique_count": 469,
+    "largest_story_share": 0.014901421366345712,
+    "largest_token_share": 0.01477754856188226,
+    "top_10_token_share": 0.07604923707634396,
+    "top_20_token_share": 0.12939666864257893,
+    "token_herfindahl_index": 0.003485588319109842,
+    "top_10": [
+      {
+        "key": "project_gutenberg:pg-27200",
+        "label": "Fairy Tales of Hans Christian Andersen",
+        "stories": 56,
+        "tokens": 443396,
+        "token_share": 0.01477754856188226
+      },
+      {
+        "key": "project_gutenberg:pg-15560",
+        "label": "Young Folks Treasury, Volume 3 (of 12) Classic Tales and Old-Fashioned Stories",
+        "stories": 61,
+        "tokens": 289454,
+        "token_share": 0.009646953381246262
+      },
+      {
+        "key": "project_gutenberg:pg-108",
+        "label": "The Return of Sherlock Holmes",
+        "stories": 13,
+        "tokens": 239514,
+        "token_share": 0.007982547804334427
+      },
+      {
+        "key": "project_gutenberg:pg-1312",
+        "label": "Selected Stories of Bret Harte",
+        "stories": 21,
+        "tokens": 211123,
+        "token_share": 0.007036329567768469
+      },
+      {
+        "key": "project_gutenberg:pg-11870",
+        "label": "The Country of the Blind, and Other Stories",
+        "stories": 24,
+        "tokens": 202094,
+        "token_share": 0.00673541010533481
+      },
+      {
+        "key": "project_gutenberg:pg-17669",
+        "label": "The Three Brides, Love in a Cottage, and Other Tales",
+        "stories": 45,
+        "tokens": 185255,
+        "token_share": 0.006174198140784982
+      },
+      {
+        "key": "project_gutenberg:pg-2148",
+        "label": "The Works of Edgar Allan Poe — Volume 2",
+        "stories": 16,
+        "tokens": 185192,
+        "token_share": 0.006172098470153316
+      },
+      {
+        "key": "project_gutenberg:pg-1646",
+        "label": "Roads of Destiny",
+        "stories": 22,
+        "tokens": 177745,
+        "token_share": 0.00592390407024818
+      },
+      {
+        "key": "project_gutenberg:pg-3251",
+        "label": "The Man That Corrupted Hadleyburg, and Other Stories",
+        "stories": 13,
+        "tokens": 174310,
+        "token_share": 0.005809422028664437
+      },
+      {
+        "key": "project_gutenberg:pg-12995",
+        "label": "The Matador of the Five Towns and Other Stories",
+        "stories": 19,
+        "tokens": 173752,
+        "token_share": 0.005790824945926816
+      }
+    ],
+    "stable_key_method": "source-scoped Gutenberg source_id; source-scoped normalized source_collection title for seed records whose source_id is story-level"
+  },
+  "genre": {
+    "accounting": "Multilabel: each label receives the full story/token weight; shares may sum above 100%.",
+    "membership_count": 4995,
+    "labels": {
+      "adventure": {
+        "stories": 434,
+        "story_share": 0.09949564419990829,
+        "tokens": 2989157,
+        "token_share": 0.09962293914827894
+      },
+      "crime": {
+        "stories": 205,
+        "story_share": 0.04699679046309033,
+        "tokens": 1846381,
+        "token_share": 0.06153638032647279
+      },
+      "fantasy": {
+        "stories": 1162,
+        "story_share": 0.26639156350298027,
+        "tokens": 5973784,
+        "token_share": 0.19909490197970944
+      },
+      "horror": {
+        "stories": 265,
+        "story_share": 0.060751948647409446,
+        "tokens": 2027139,
+        "token_share": 0.06756070197788307
+      },
+      "mystery": {
+        "stories": 260,
+        "story_share": 0.05960568546538285,
+        "tokens": 2487256,
+        "token_share": 0.08289552978789394
+      },
+      "science_fiction": {
+        "stories": 97,
+        "story_share": 0.022237505731315912,
+        "tokens": 645493,
+        "token_share": 0.021513058651532864
+      },
+      "unclassified": {
+        "stories": 2337,
+        "story_share": 0.5357634112792297,
+        "tokens": 16816702,
+        "token_share": 0.5604688144586386
+      },
+      "western": {
+        "stories": 235,
+        "story_share": 0.053874369555249886,
+        "tokens": 2214439,
+        "token_share": 0.07380305609393406
+      }
+    }
+  },
+  "historical_period": {
+    "reliably_known_publication_year_count": 0,
+    "unknown_publication_year_count": 4362,
+    "unknown_publication_year_percentage": 100.0,
+    "publication_year_range": null,
+    "catalog_ebook_issue_date_count_reported_separately": 2521,
+    "catalog_ebook_issue_date_note": "Project Gutenberg ebook issue dates are not original publication dates and are excluded from period estimates."
+  },
+  "story_lengths": {
+    "words": {
+      "minimum": 334,
+      "p10": 1106,
+      "median": 2979.0,
+      "mean": 4005.3035304906007,
+      "p90": 8205,
+      "p95": 10524,
+      "p99": 16297,
+      "maximum": 19991
+    },
+    "packed_tokens": {
+      "minimum": 439,
+      "p10": 1814,
+      "median": 5100.5,
+      "mean": 6878.657955066483,
+      "p90": 14195,
+      "p95": 18638,
+      "p99": 27905,
+      "maximum": 39137
+    },
+    "word_bands": {
+      "under_500": 8,
+      "500_1999": 1348,
+      "2000_4999": 1811,
+      "5000_9999": 944,
+      "10000_plus": 251
+    },
+    "documents_requiring_continuation_chunks": 4283
+  },
+  "dialogue": {
+    "definition": "Independent style proxies: paragraph openings with quote marks; quote-mark density; and words in fully closed straight/curly spans. Reopened multi-paragraph quotations remain open, nested curly quotes are stacked, and unclosed outer spans are excluded. None is semantic speaker attribution.",
+    "corpus_dialogue_opening_paragraph_share": 0.5147964826192148,
+    "story_dialogue_opening_paragraph_share_distribution": {
+      "minimum": 0.0,
+      "p10": 0.06756756756756757,
+      "median": 0.47368421052631576,
+      "mean": 0.4512711828129882,
+      "p90": 0.7651006711409396,
+      "p95": 0.8676470588235294,
+      "p99": 0.9758064516129032,
+      "maximum": 1.0
+    },
+    "corpus_quote_marks_per_1000_words": 36.07478407177821,
+    "story_quote_marks_per_1000_words_distribution": {
+      "minimum": 0.0,
+      "p10": 6.619776582540339,
+      "median": 32.905824243478094,
+      "mean": 36.25923576017737,
+      "p90": 67.56206756206757,
+      "p95": 79.90506329113924,
+      "p99": 113.50293542074364,
+      "maximum": 291.62011173184356
+    },
+    "corpus_closed_quote_span_word_share": 0.3188455844864483,
+    "story_closed_quote_span_word_share_distribution": {
+      "minimum": 0.0,
+      "p10": 0.0235239852398524,
+      "median": 0.2663990413624314,
+      "mean": 0.31088713844454474,
+      "p90": 0.6690324449594438,
+      "p95": 0.8664772727272727,
+      "p99": 0.9843937575030012,
+      "maximum": 1.0
+    },
+    "stories_with_no_dialogue_opening_paragraph": 279,
+    "stories_with_unclosed_quote_span": 53,
+    "paragraph_reopen_count": 19961
+  },
+  "ocr": {
+    "method": "Conservative accepted-text pattern signals; counts are review leads, not confirmed OCR errors.",
+    "records_with_any_signal": 642,
+    "records_with_any_signal_percentage": 14.718019257221458,
+    "signal_occurrences": {
+      "broken_line_hyphenation": 388,
+      "digit_intrusion": 1493,
+      "gutenberg_boilerplate": 109,
+      "replacement_character": 0,
+      "suspicious_markup_glyph": 644,
+      "transcriber_or_editor_note": 38
+    },
+    "documents_by_signal": {
+      "broken_line_hyphenation": 130,
+      "digit_intrusion": 384,
+      "gutenberg_boilerplate": 109,
+      "replacement_character": 0,
+      "suspicious_markup_glyph": 59,
+      "transcriber_or_editor_note": 38
+    }
+  },
+  "rights": {
+    "status_counts": {
+      "public_domain": 1841,
+      "public_domain_us": 2521
+    },
+    "allowed_status_count": 4362,
+    "explicit_rights_basis_count": 2521,
+    "explicit_rights_basis_percentage": 57.79458963778083,
+    "raw_source_hash_count": 2521,
+    "source_url_count": 3655,
+    "evidence_complete_count": 2521
+  },
+  "duplicates": {
+    "exact_text_hash_duplicate_groups": 0,
+    "normalized_alphanumeric_text_duplicate_groups": 0,
+    "normalized_title_primary_author_or_creator_groups_with_multiple_records": 44,
+    "forty_word_opening_groups_with_multiple_records": 9,
+    "forty_word_opening_records_in_groups": 18,
+    "limitation": "Title/opening collisions are candidate patterns only. This audit does not rerun all-pairs fuzzy duplicate review; the acquisition seal records the completed 155-cluster review and 162 exclusions.",
+    "sealed_review": {
+      "unresolved_near_duplicate_clusters": 0,
+      "documented_seed_correctness_exclusions": 3
+    }
+  },
+  "chunk_boundaries_1024": {
+    "method": "Every internal loader cut at relative token offsets 1024*n was read from the existing uint16 bins after exact canonical encode_document comparison. Structural features use canonical text and tokenizer offsets; no partial token side is decoded. Exact ByteLevel vocabulary bytes identify byte fragments and UTF-8 codepoint cuts. Primary precedence is utf8_codepoint>paragraph>line>sentence>dialogue>subword>token.",
+    "sequence_length": 1024,
+    "internal_boundary_count": 27133,
+    "primary_counts": {
+      "dialogue": 7822,
+      "line": 1446,
+      "paragraph": 395,
+      "sentence": 1040,
+      "subword": 4266,
+      "token": 12158,
+      "utf8_codepoint": 6
+    },
+    "primary_percentages": {
+      "dialogue": 28.82836398481554,
+      "line": 5.3293037998009805,
+      "paragraph": 1.455791840194597,
+      "sentence": 3.8329709210186858,
+      "subword": 15.722551874101647,
+      "token": 44.80890428629344,
+      "utf8_codepoint": 0.022113293775107803
+    },
+    "overlapping_feature_counts": {
+      "dialogue": 9015,
+      "line": 1446,
+      "paragraph": 395,
+      "sentence": 1743,
+      "subword": 5950,
+      "utf8_codepoint": 6
+    },
+    "byte_sequence_cut_count": 6,
+    "utf8_codepoint_cut_count": 6,
+    "boundaries_adjacent_to_individually_invalid_utf8_token_fragments": 14,
+    "exact_canonical_reencoded_document_count": 4362,
+    "continuation_chunks_without_repeated_control_context": 27133,
+    "continuation_chunks_without_repeated_control_context_percentage": 100.0,
+    "confidence": {
+      "utf8_codepoint_and_byte_sequence": "exact from reversible ByteLevel token bytes",
+      "paragraph_line_sentence": "high from canonical text at tokenizer-provided offsets",
+      "subword": "medium; inferred from ByteLevel word-start markers and canonical adjacent text",
+      "dialogue": "medium; quote-state heuristic, not semantic speech attribution"
+    },
+    "splits": {
+      "train": {
+        "documents": 3707,
+        "tokens": 27180978,
+        "sequences": 28412,
+        "internal_boundaries": 24705
+      },
+      "validation": {
+        "documents": 327,
+        "tokens": 1276683,
+        "sequences": 1411,
+        "internal_boundaries": 1084
+      },
+      "test": {
+        "documents": 328,
+        "tokens": 1547045,
+        "sequences": 1672,
+        "internal_boundaries": 1344
+      }
+    }
+  },
+  "representative_sample": {
+    "selection": "Deterministic hash-ranked mandatory coverage of every observed genre, source, boundary method, dialogue-opening extreme, OCR-signal/clean stratum, and shortest/longest decile, then deterministic fill. The audit fails if sample_count cannot cover all mandatory selections.",
+    "path": "experiments/fictionpulper-corpus-v2-audit-v1/representative-samples.json",
+    "sha256": "a85b7bc867a76dd412a95e4e74aa1b291b64852d6ad8715abf342ceefae4f728",
+    "count": 24,
+    "coverage": {
+      "mandatory_strata": [
+        "boundary_method:seed_corpus",
+        "boundary_method:toc_heading_match",
+        "dialogue:high",
+        "dialogue:low",
+        "genre:adventure",
+        "genre:crime",
+        "genre:fantasy",
+        "genre:horror",
+        "genre:mystery",
+        "genre:science_fiction",
+        "genre:unclassified",
+        "genre:western",
+        "length:longest_decile",
+        "length:shortest_decile",
+        "ocr:clean",
+        "ocr:signal",
+        "source:Travis-ML/ShortStory-SFT-jsonl",
+        "source:project_gutenberg"
+      ],
+      "covered_strata": [
+        "boundary_method:seed_corpus",
+        "boundary_method:toc_heading_match",
+        "dialogue:high",
+        "dialogue:low",
+        "genre:adventure",
+        "genre:crime",
+        "genre:fantasy",
+        "genre:horror",
+        "genre:mystery",
+        "genre:science_fiction",
+        "genre:unclassified",
+        "genre:western",
+        "length:longest_decile",
+        "length:shortest_decile",
+        "ocr:clean",
+        "ocr:signal",
+        "source:Travis-ML/ShortStory-SFT-jsonl",
+        "source:project_gutenberg"
+      ],
+      "uncovered_strata": []
+    },
+    "manual_review": {
+      "status": "complete",
+      "reviewed": 24,
+      "required": 24,
+      "counts": {
+        "story_boundary": {
+          "concern": 4,
+          "fail": 3,
+          "pass": 17
+        },
+        "ocr_quality": {
+          "concern": 1,
+          "pass": 23
+        },
+        "prose_quality": {
+          "concern": 2,
+          "pass": 22
+        }
+      },
+      "review_sha256": "2501d03d0996f2fa346c7c0fb22ae885af5279a3abac8dda11fda671739637db",
+      "review_path": "experiments/fictionpulper-corpus-v2-audit-v1/sample-review.json"
+    }
+  },
+  "priority_ranked_issues": [
+    {
+      "priority": "P0",
+      "issue": "Historical-period metadata is absent",
+      "evidence": "100.0% of publication years are unknown."
+    },
+    {
+      "priority": "P0",
+      "issue": "Genre metadata leaves most token mass unclassified",
+      "evidence": "Unclassified token share is 56.0%."
+    },
+    {
+      "priority": "P1",
+      "issue": "Continuation chunks lose document control context",
+      "evidence": "100.0% of internal 1024-token chunks start without repeated controls."
+    },
+    {
+      "priority": "P1",
+      "issue": "Rights assertions are stronger than row-level evidence for inherited seed records",
+      "evidence": "Explicit rights basis exists for 57.8% of records."
+    },
+    {
+      "priority": "P1",
+      "issue": "Accepted text retains OCR/editorial review signals",
+      "evidence": "14.7% of stories trigger at least one conservative signal, including 109 with Gutenberg boilerplate."
+    },
+    {
+      "priority": "P2",
+      "issue": "Residual duplicate-pattern candidates need review on admission",
+      "evidence": "18 records share a normalized 40-word opening with another record."
+    }
+  ],
+  "corpus_v3_admission_rules": [
+    "Require source-scoped stable creator IDs, explicit creator roles, a defensible primary-author field, and stable collection IDs; calculate story- and token-weighted caps before admission.",
+    "Require evidence-backed original publication year or explicit unknown; never substitute ebook issue date. Report unknown token share.",
+    "Require provenance-backed multilabel genre or explicit unclassified; cap unclassified tokens and audit each genre by stories and tokens.",
+    "Require row-level rights status, rights basis, source URL, and immutable raw-source hash; quarantine incomplete inherited evidence.",
+    "Reject exact normalized text duplicates and human-review title/author, opening, and fuzzy near-duplicate clusters before splitting.",
+    "Reject replacement characters and Gutenberg boilerplate; review transcriber notes, digit intrusions, markup glyphs, and line-hyphen signals in accepted text.",
+    "Require high-confidence story boundaries and review shortest/longest, OCR-signal, dialogue-extreme, genre, source, and collection strata deterministically.",
+    "Audit actual packed cuts at the configured context. Prefer paragraph/sentence-aware packing or repeat explicit continuation/document controls, then lock packed hashes.",
+    "Split only after collection and duplicate clustering; keep every cluster in one split and re-run leakage checks."
+  ]
+}

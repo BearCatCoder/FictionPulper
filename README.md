@@ -263,6 +263,22 @@ Outputs are isolated under `data/packed/corpus-v2-data30m/`; existing Data10M fi
 
 The three Corpus-v2 seed exclusions were all historical train duplicates. Enforcing the stricter collection boundary also changes 108 of 1,841 retained historical assignments, so Data30M validation/test are a new benchmark and must not be presented as the unchanged Data10M evaluation sets. Sealed historical artifacts and metrics remain untouched.
 
+## Audit Corpus v2
+
+Run the read-only, hash-grounded diversity and 1,024-token boundary audit with:
+
+```bash
+python -m src.audit_corpus_v2 --config configs/corpus-v2-audit.yaml
+python -m unittest tests.test_audit_corpus_v2
+```
+
+The audit verifies the acquisition seal and independently locks the later
+Data30M split, tokenizer, packed metadata, and every bin/index artifact. It
+never rewrites or repacks Corpus-v2. The completed report, deterministic
+24-story review, priorities, limitations, and Corpus-v3 admission rules are
+documented in [`docs/corpus-v2-audit.md`](docs/corpus-v2-audit.md) and tracked
+under `experiments/fictionpulper-corpus-v2-audit-v1/`.
+
 Epoch 3 was selected at Data30M validation loss 3.2461. The primary Data30M test measured loss 3.3224, perplexity 27.73, and next-token accuracy 34.89%. On a common 95-record Data10M test subset disjoint from both training sets, Data30M improved loss from 3.4802 to 3.3170 and perplexity from 32.47 to 27.58. Validation was still improving but flattening at the locked endpoint; training was not extended. Complete results are under `experiments/fictionpulper-15m-data30m-v1/`.
 
 ## Data10M Experiment

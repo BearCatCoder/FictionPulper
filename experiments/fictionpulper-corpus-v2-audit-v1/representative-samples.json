@@ -1,0 +1,922 @@
+{
+  "seed": 1337,
+  "coverage": {
+    "mandatory_strata": [
+      "boundary_method:seed_corpus",
+      "boundary_method:toc_heading_match",
+      "dialogue:high",
+      "dialogue:low",
+      "genre:adventure",
+      "genre:crime",
+      "genre:fantasy",
+      "genre:horror",
+      "genre:mystery",
+      "genre:science_fiction",
+      "genre:unclassified",
+      "genre:western",
+      "length:longest_decile",
+      "length:shortest_decile",
+      "ocr:clean",
+      "ocr:signal",
+      "source:Travis-ML/ShortStory-SFT-jsonl",
+      "source:project_gutenberg"
+    ],
+    "covered_strata": [
+      "boundary_method:seed_corpus",
+      "boundary_method:toc_heading_match",
+      "dialogue:high",
+      "dialogue:low",
+      "genre:adventure",
+      "genre:crime",
+      "genre:fantasy",
+      "genre:horror",
+      "genre:mystery",
+      "genre:science_fiction",
+      "genre:unclassified",
+      "genre:western",
+      "length:longest_decile",
+      "length:shortest_decile",
+      "ocr:clean",
+      "ocr:signal",
+      "source:Travis-ML/ShortStory-SFT-jsonl",
+      "source:project_gutenberg"
+    ],
+    "uncovered_strata": []
+  },
+  "samples": [
+    {
+      "id": "4a92cd112c24",
+      "strata": [
+        "genre:horror"
+      ],
+      "title": "The Oval Portrait",
+      "author": "Poe, Edgar Allan",
+      "source": "Travis-ML/ShortStory-SFT-jsonl",
+      "collection_key": "Travis-ML/ShortStory-SFT-jsonl:the works of edgar allan poe volume 1",
+      "words": 1293,
+      "genres": [
+        "horror"
+      ],
+      "opening_excerpt": "THE chateau into which my valet had ventured to make forcible entrance, rather than permit me, in my desperately wounded condition, to pass a night in the open air, was one of those piles of commingled gloom and grandeur which have so long ",
+      "ending_excerpt": ", he grew tremulous and very pallid, and aghast, and crying with a loud voice, ‘This is indeed Life itself!’ turned suddenly to regard his beloved:--She was dead!”\n\nEnd of Project Gutenberg’s The Works of Edgar Allan Poe, by Edgar Allan Poe",
+      "automated_dialogue": {
+        "words": 1294,
+        "paragraphs": 7,
+        "dialogue_opening_paragraphs": 1,
+        "dialogue_opening_paragraph_share": 0.14285714285714285,
+        "quote_mark_count": 5,
+        "quote_marks_per_1000_words": 3.8639876352395675,
+        "closed_quote_span_words": 482,
+        "closed_quote_span_word_share": 0.37248840803709427,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 1,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "7302cafde74d",
+      "strata": [
+        "source:Travis-ML/ShortStory-SFT-jsonl"
+      ],
+      "title": "THE SALAD",
+      "author": "Grimm, Jacob",
+      "source": "Travis-ML/ShortStory-SFT-jsonl",
+      "collection_key": "Travis-ML/ShortStory-SFT-jsonl:grimms fairy tales",
+      "words": 2189,
+      "genres": [
+        "adventure",
+        "fantasy"
+      ],
+      "opening_excerpt": "As a merry young huntsman was once going briskly along through a wood, there came up a little old woman, and said to him, ‘Good day, good day; you seem merry enough, but I am hungry and thirsty; do pray give me something to eat.’ The huntsm",
+      "ending_excerpt": "loak hangs up in the closet, and as for the bird’s heart, I will give it you too.’ But he said, ‘Keep it, it will be just the same thing, for I mean to make you my wife.’ So they were married, and lived together very happily till they died.",
+      "automated_dialogue": {
+        "words": 2189,
+        "paragraphs": 11,
+        "dialogue_opening_paragraphs": 1,
+        "dialogue_opening_paragraph_share": 0.09090909090909091,
+        "quote_mark_count": 122,
+        "quote_marks_per_1000_words": 55.73321151210598,
+        "closed_quote_span_words": 755,
+        "closed_quote_span_word_share": 0.34490634993147556,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 11
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "836ca7e3f929",
+      "strata": [
+        "deterministic_fill"
+      ],
+      "title": "WATCHES OF THE NIGHT",
+      "author": "Kipling, Rudyard",
+      "source": "Travis-ML/ShortStory-SFT-jsonl",
+      "collection_key": "Travis-ML/ShortStory-SFT-jsonl:plain tales from the hills",
+      "words": 1884,
+      "genres": [],
+      "opening_excerpt": "What is in the Brahmin's books that is in the Brahmin's heart. Neither you nor I knew there was so much evil in the world.\n\nHindu Proverb.\n\nThis began in a practical joke; but it has gone far enough now, and is getting serious.\n\nPlatte, the",
+      "ending_excerpt": "rite about what they do not understand. Any one could have told him that Sappers and Gunners are perfectly different branches of the Service. But, if you correct the sentence, and substitute Gunner for Sapper, the moral comes just the same.",
+      "automated_dialogue": {
+        "words": 1887,
+        "paragraphs": 26,
+        "dialogue_opening_paragraphs": 0,
+        "dialogue_opening_paragraph_share": 0.0,
+        "quote_mark_count": 20,
+        "quote_marks_per_1000_words": 10.598834128245892,
+        "closed_quote_span_words": 84,
+        "closed_quote_span_word_share": 0.04451510333863275,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "a9b9b7eddd4f",
+      "strata": [
+        "ocr:clean"
+      ],
+      "title": "THE THREE LUCK-CHILDREN",
+      "author": "Grimm, Jacob",
+      "source": "Travis-ML/ShortStory-SFT-jsonl",
+      "collection_key": "Travis-ML/ShortStory-SFT-jsonl:grimm s fairy tales",
+      "words": 969,
+      "genres": [
+        "adventure",
+        "fantasy"
+      ],
+      "opening_excerpt": "A father once called his three sons before him. He gave to the first a cock, to the second a scythe, and to the third a cat.\n\n“I am old,” said he, “my death is nigh, and I have wished to take thought for you before my end. Money I have not,",
+      "ending_excerpt": "non were brought out, and the palace was soon in flames. When the fire reached the room where the cat was sitting, she sprang safely out of the window. But the besiegers did not leave off, until the whole palace was shot down to the ground.",
+      "automated_dialogue": {
+        "words": 969,
+        "paragraphs": 22,
+        "dialogue_opening_paragraphs": 5,
+        "dialogue_opening_paragraph_share": 0.22727272727272727,
+        "quote_mark_count": 30,
+        "quote_marks_per_1000_words": 30.959752321981423,
+        "closed_quote_span_words": 202,
+        "closed_quote_span_word_share": 0.2084623323013416,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "b01fa30d8164",
+      "strata": [
+        "boundary_method:seed_corpus"
+      ],
+      "title": "The Punishment of the Purple Dragon",
+      "author": "Baum, L. Frank (Lyman Frank)",
+      "source": "Travis-ML/ShortStory-SFT-jsonl",
+      "collection_key": "Travis-ML/ShortStory-SFT-jsonl:the surprising adventures of the magical monarch of mo and his people",
+      "words": 1452,
+      "genres": [
+        "fantasy"
+      ],
+      "opening_excerpt": "Scarcely had the King spoken when some of his soldiers came running with news that they had seen the Purple Dragon eating plum-pudding in the royal garden.\n\n\"What did you do about it?\" asked the monarch.\n\n\"We did nothing,\" they answered; \"f",
+      "ending_excerpt": "ened to a post of the castle.\n\nThat same day the Monarch of Mo gave a magnificent feast to all his people to celebrate the destruction of their greatest foe; and ever afterward the gardens of the Beautiful Valley were free from molestation.",
+      "automated_dialogue": {
+        "words": 1452,
+        "paragraphs": 46,
+        "dialogue_opening_paragraphs": 26,
+        "dialogue_opening_paragraph_share": 0.5652173913043478,
+        "quote_mark_count": 84,
+        "quote_marks_per_1000_words": 57.85123966942149,
+        "closed_quote_span_words": 583,
+        "closed_quote_span_word_share": 0.4015151515151515,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-10391-f9e98f6a1669",
+      "strata": [
+        "genre:science_fiction"
+      ],
+      "title": "PROFESSOR MORGAN'S MOON",
+      "author": "Waterloo, Stanley, 1846-1913",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-10391",
+      "words": 1952,
+      "genres": [
+        "science_fiction"
+      ],
+      "opening_excerpt": "I am aware that attention has already been called in the daily\nnewspapers to certain curious features of the astronomical discussion\nbetween Professor Macadam of Joplin University and Professor Morgan of\nthe same institution; but newspaper ",
+      "ending_excerpt": "hat was of no moment. She and Professor\nMorgan, just then, had grace enough for an entire family--in their\nhearts.\n\nAnd so they were married. And so, too, you know the origin of one of the\nmost exciting scientific discussions of the period.",
+      "automated_dialogue": {
+        "words": 1952,
+        "paragraphs": 29,
+        "dialogue_opening_paragraphs": 8,
+        "dialogue_opening_paragraph_share": 0.27586206896551724,
+        "quote_mark_count": 38,
+        "quote_marks_per_1000_words": 19.4672131147541,
+        "closed_quote_span_words": 481,
+        "closed_quote_span_word_share": 0.2464139344262295,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-10556-38fff00e04b5",
+      "strata": [
+        "ocr:signal"
+      ],
+      "title": "A SENSATION",
+      "author": "Orczy, Emmuska Orczy, Baroness, 1865-1947",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-10556",
+      "words": 698,
+      "genres": [
+        "crime",
+        "mystery"
+      ],
+      "opening_excerpt": "\"I can assure you that the situation was quite dramatic,\" continued the\nman in the corner, whilst his funny, claw-like hands took up a bit of\nstring with renewed feverishness.\n\n\"In answer to further questions from the magistrate, she declar",
+      "ending_excerpt": "le weight of his own evidence in Mr. Edward\nSkinner's favour, that gentleman was once more remanded by the\nmagistrate, pending further investigation by the police, bail being\nallowed this time in two sureties of £50 each.\"\n\n\n\n\nCHAPTER XXVII",
+      "automated_dialogue": {
+        "words": 700,
+        "paragraphs": 19,
+        "dialogue_opening_paragraphs": 18,
+        "dialogue_opening_paragraph_share": 0.9473684210526315,
+        "quote_mark_count": 20,
+        "quote_marks_per_1000_words": 28.571428571428573,
+        "closed_quote_span_words": 678,
+        "closed_quote_span_word_share": 0.9685714285714285,
+        "paragraph_reopen_count": 16,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 1
+      }
+    },
+    {
+      "id": "pg-12281-21d2323ef9cd",
+      "strata": [
+        "deterministic_fill"
+      ],
+      "title": "AT COMANCHE FORD",
+      "author": "Adams, Andy, 1859-1935",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-12281",
+      "words": 6188,
+      "genres": [
+        "western",
+        "adventure"
+      ],
+      "opening_excerpt": "“There’s our ford,” said Juan,—our half-blood trailer,—pointing to the\nslightest sag in a low range of hills distant twenty miles.\n\nWe were Texas Rangers. It was nearly noon of a spring day, and we had\nhalted on sighting our destination,—Co",
+      "ending_excerpt": "ch we had come. They had similar\norders to ours, but were advised that they would meet our detachment at\nthis ford. In less than an hour every man was asleep again, and quiet\nreigned in the Ranger camp at Comanche Ford on the Concho.\n\n\n\n\nIX",
+      "automated_dialogue": {
+        "words": 6195,
+        "paragraphs": 64,
+        "dialogue_opening_paragraphs": 46,
+        "dialogue_opening_paragraph_share": 0.71875,
+        "quote_mark_count": 143,
+        "quote_marks_per_1000_words": 23.08313155770783,
+        "closed_quote_span_words": 4672,
+        "closed_quote_span_word_share": 0.7541565778853915,
+        "paragraph_reopen_count": 27,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-13293-fc8844cd27e2",
+      "strata": [
+        "boundary_method:toc_heading_match"
+      ],
+      "title": "A FEUD",
+      "author": "Bennett, Arnold, 1867-1931",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-13293",
+      "words": 6329,
+      "genres": [],
+      "opening_excerpt": "When Clive Timmis paused at the side-door of Ezra Brunt's great shop in\nMachin Street, and the door was opened to him by Ezra Brunt's daughter\nbefore he had had time to pull the bell, not only all Machin Street knew\nit within the hour, but ",
+      "ending_excerpt": "nt, the chemist retiring\nfrom business, he has never rebuilt it to accord with the rest of his\npremises. In all its shabbiness it stands between the other big dazzling\nshops as a reminding monument.\n\n       *       *       *       *       *",
+      "automated_dialogue": {
+        "words": 6315,
+        "paragraphs": 139,
+        "dialogue_opening_paragraphs": 86,
+        "dialogue_opening_paragraph_share": 0.6187050359712231,
+        "quote_mark_count": 6,
+        "quote_marks_per_1000_words": 0.9501187648456056,
+        "closed_quote_span_words": 36,
+        "closed_quote_span_word_share": 0.005700712589073635,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-17375-7fa445dd51ee",
+      "strata": [
+        "genre:unclassified"
+      ],
+      "title": "THAT PIG OF A MORIN",
+      "author": "Maupassant, Guy de, 1850-1893",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-17375",
+      "words": 4340,
+      "genres": [],
+      "opening_excerpt": "I\n\n\"There, my friend,\" I said to Labarbe, \"you have just repeated those\nfive words, _that pig of a Morin_. Why on earth do I never hear Morin's\nname mentioned without his being called _a pig_?\"\n\nLabarbe, who is a Deputy, looked at me with e",
+      "ending_excerpt": "perfectly you behaved, how full of delicacy, tact and devotion you\nshowed yourself in the affair....\" He hesitated, and then said in a\nlower tone, as if he had been saying something low and coarse.... \"In\nthe affair of that pig of a Morin.\"",
+      "automated_dialogue": {
+        "words": 4328,
+        "paragraphs": 52,
+        "dialogue_opening_paragraphs": 6,
+        "dialogue_opening_paragraph_share": 0.11538461538461539,
+        "quote_mark_count": 153,
+        "quote_marks_per_1000_words": 35.35120147874307,
+        "closed_quote_span_words": 1569,
+        "closed_quote_span_word_share": 0.36252310536044363,
+        "paragraph_reopen_count": 1,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-17669-685c5cf613bb",
+      "strata": [
+        "deterministic_fill"
+      ],
+      "title": "PHILETUS POTTS",
+      "author": "Durivage, Francis A. (Francis Alexander), 1814-1881",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-17669",
+      "words": 1289,
+      "genres": [],
+      "opening_excerpt": "A BIOGRAPHICAL SKETCH.\n\n\nPhiletus Potts is dead. Like Grimes, he was a \"good old man!\" A true\ngentleman of the old school, he clung to many of the fashions of a\nby-gone period with a pertinacity, which, to the eyes of the\nthoughtless, savor",
+      "ending_excerpt": "shedless cow, the unwhitewashed African, the\ncondemned felon, the unhappy prisoner, actually treated as if he were\nno gentleman, in him have lost a friend. When shall we see his like\nagain? Echo answers, Probably not for a very long period.",
+      "automated_dialogue": {
+        "words": 1292,
+        "paragraphs": 19,
+        "dialogue_opening_paragraphs": 4,
+        "dialogue_opening_paragraph_share": 0.21052631578947367,
+        "quote_mark_count": 20,
+        "quote_marks_per_1000_words": 15.479876160990711,
+        "closed_quote_span_words": 122,
+        "closed_quote_span_word_share": 0.09442724458204334,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-1853-7b141f3619f8",
+      "strata": [
+        "genre:fantasy"
+      ],
+      "title": "THE BUILDING OF THE TAJ MAHAL",
+      "author": "Beck, L. Adams (Lily Adams), 1862-1931",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-1853",
+      "words": 3309,
+      "genres": [
+        "fantasy"
+      ],
+      "opening_excerpt": "In the Name of God, the Compassionate, the Merciful--the Smiting!\n   A day when the soul shall know what it has sent on or kept back.\n   A day when no soul shall control aught for another.\n   And the bidding belongs to God.\n\n\nTHE KORAN.\n\nI\n",
+      "ending_excerpt": "and there in the\nwhite perfection of beauty, smiling as one who hath attained unto the\nPeace. For she is its soul.\n\nAnd kneeling before the dais, he shall see Ustad Isa, who made this body\nof her beauty; and his face is hidden in his hands.",
+      "automated_dialogue": {
+        "words": 3318,
+        "paragraphs": 58,
+        "dialogue_opening_paragraphs": 9,
+        "dialogue_opening_paragraph_share": 0.15517241379310345,
+        "quote_mark_count": 54,
+        "quote_marks_per_1000_words": 16.2748643761302,
+        "closed_quote_span_words": 724,
+        "closed_quote_span_word_share": 0.21820373719107897,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-2179-28be070138eb",
+      "strata": [
+        "dialogue:low"
+      ],
+      "title": "\"JINNY\"",
+      "author": "Harte, Bret, 1836-1902",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-2179",
+      "words": 3222,
+      "genres": [],
+      "opening_excerpt": "I think that the few who were permitted to know and love the object of\nthis sketch spent the rest of their days not only in an attitude of\napology for having at first failed to recognize her higher nature, but\nof remorse that they should ha",
+      "ending_excerpt": "nd her feet.  For an instant she was passive, and, as it\nseemed, saved.  But the next moment her dominant instinct returned, and\nwith one stroke of her powerful heel she snapped the rope in twain and\nso drifted with her mistress to the sea.",
+      "automated_dialogue": {
+        "words": 3225,
+        "paragraphs": 10,
+        "dialogue_opening_paragraphs": 0,
+        "dialogue_opening_paragraph_share": 0.0,
+        "quote_mark_count": 34,
+        "quote_marks_per_1000_words": 10.542635658914728,
+        "closed_quote_span_words": 320,
+        "closed_quote_span_word_share": 0.09922480620155039,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-21807-a8d419392c30",
+      "strata": [
+        "length:shortest_decile"
+      ],
+      "title": "FRANZ ABT",
+      "author": "Field, Eugene, 1850-1895",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-21807",
+      "words": 1065,
+      "genres": [],
+      "opening_excerpt": "Many years ago a young composer was sitting in a garden.  All around\nbloomed beautiful roses, and through the gentle evening air the\nswallows flitted, twittering cheerily.  The young composer neither saw\nthe roses nor heard the evening musi",
+      "ending_excerpt": "ses?\"\n\nWhere are the roses?  Heaped over thee, dear singing heart; blooming on\nthy quiet grave in the Fatherland, and clustered and entwined all in\nand about thy memory, which with thy songs shall go down from heart to\nheart to immortality.",
+      "automated_dialogue": {
+        "words": 1077,
+        "paragraphs": 22,
+        "dialogue_opening_paragraphs": 9,
+        "dialogue_opening_paragraph_share": 0.4090909090909091,
+        "quote_mark_count": 46,
+        "quote_marks_per_1000_words": 42.71123491179201,
+        "closed_quote_span_words": 275,
+        "closed_quote_span_word_share": 0.255338904363974,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-23155-4d429fd8c5b4",
+      "strata": [
+        "genre:western"
+      ],
+      "title": "THE RANGER",
+      "author": "McConnel, John Ludlum, 1826-1862; Darley, Felix Octavius Carr, 1822-1888 [Illustrator]",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-23155",
+      "words": 2689,
+      "genres": [
+        "western"
+      ],
+      "opening_excerpt": "\"When purposed vengeance I forego,\n    Term me a wretch, nor deem me foe;\n    And when an insult I forgive,\n    Then brand me as a slave, and live.\"\n\n    SCOTT.\n\n\nIn elaborating the character of the pioneer, we have unavoidably\nanticipated,",
+      "ending_excerpt": "age by civilized men, with a severity exceeding his own, we\nshould remember that we can not justly estimate the motives and feelings\nof the ranger, without first having been exasperated by his sufferings\nand tried by his temptations.\n\n\n\n\nV.",
+      "automated_dialogue": {
+        "words": 2690,
+        "paragraphs": 25,
+        "dialogue_opening_paragraphs": 1,
+        "dialogue_opening_paragraph_share": 0.04,
+        "quote_mark_count": 26,
+        "quote_marks_per_1000_words": 9.66542750929368,
+        "closed_quote_span_words": 55,
+        "closed_quote_span_word_share": 0.020446096654275093,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-24836-d983a4f7ea7a",
+      "strata": [
+        "genre:adventure"
+      ],
+      "title": "NINA",
+      "author": "Becke, Louis, 1855-1913",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-24836",
+      "words": 2606,
+      "genres": [
+        "adventure"
+      ],
+      "opening_excerpt": "When Captain Henry Charlton--generally known as “Bully\nCharlton”--stepped on shore at Townsville in North Queensland with his\nnewly-wedded wife, his acquaintances stared at them both in profound\nastonishment. They had heard that he had marr",
+      "ending_excerpt": "oman with big blue eyes.\n\n“Is that she, Jack?” murmured Nina.\n\nLester nodded.\n\n“She's very lovely. And yet I felt once that I could have killed\nher--when you and I sat together watching the big tree fall. But I\ncouldn't hate _any one_ now.”",
+      "automated_dialogue": {
+        "words": 2603,
+        "paragraphs": 68,
+        "dialogue_opening_paragraphs": 25,
+        "dialogue_opening_paragraph_share": 0.36764705882352944,
+        "quote_mark_count": 110,
+        "quote_marks_per_1000_words": 42.258932001536685,
+        "closed_quote_span_words": 986,
+        "closed_quote_span_word_share": 0.37879369957741066,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-28093-837e8c2f86fa",
+      "strata": [
+        "genre:crime"
+      ],
+      "title": "THE INVISIBLE PRISONER",
+      "author": "Leblanc, Maurice, 1864-1941",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-28093",
+      "words": 5062,
+      "genres": [
+        "crime",
+        "mystery",
+        "adventure"
+      ],
+      "opening_excerpt": "One day, at about four o'clock, as evening was drawing in, Farmer\nGoussot, with his four sons, returned from a day's shooting. They were\nstalwart men, all five of them, long of limb, broad-chested, with faces\ntanned by sun and wind. And all",
+      "ending_excerpt": " them. As soon as he was released, he was secretly\ninformed that, every quarter, on a given date, at a given hour, under a\ngiven milestone on a given road, he would find three gold louis.\n\nTo a man like old Trainard that means wealth.\n\n\n\n\nX",
+      "automated_dialogue": {
+        "words": 5043,
+        "paragraphs": 230,
+        "dialogue_opening_paragraphs": 133,
+        "dialogue_opening_paragraph_share": 0.5782608695652174,
+        "quote_mark_count": 319,
+        "quote_marks_per_1000_words": 63.25599841364267,
+        "closed_quote_span_words": 1973,
+        "closed_quote_span_word_share": 0.39123537576839185,
+        "paragraph_reopen_count": 1,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-2851-841bf0b48db8",
+      "strata": [
+        "source:project_gutenberg"
+      ],
+      "title": "AT ARMS WITH MORPHEUS",
+      "author": "Henry, O., 1862-1910",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-2851",
+      "words": 1620,
+      "genres": [],
+      "opening_excerpt": "I never could quite understand how Tom Hopkins came to make that\nblunder, for he had been through a whole term at a medical\ncollege—before he inherited his aunt’s fortune—and had been considered\nstrong in therapeutics.\n\nWe had been making a",
+      "ending_excerpt": "hen Tom was ready to go he stopped, with the door open, and shook my\nhand.\n\n“Much obliged, old fellow,” he said, quietly, “for taking so much\ntrouble with me—and for what you said. I’m going down now to telegraph\nto the little girl.”\n\n\n\n\nX.",
+      "automated_dialogue": {
+        "words": 1636,
+        "paragraphs": 40,
+        "dialogue_opening_paragraphs": 17,
+        "dialogue_opening_paragraph_share": 0.425,
+        "quote_mark_count": 132,
+        "quote_marks_per_1000_words": 80.68459657701712,
+        "closed_quote_span_words": 655,
+        "closed_quote_span_word_share": 0.40036674816625917,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 3
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-30827-91db92b1ea64",
+      "strata": [
+        "genre:mystery"
+      ],
+      "title": "A MOVE ON THE \"FORTY\"",
+      "author": "Le Queux, William, 1864-1927",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-30827",
+      "words": 4794,
+      "genres": [
+        "crime",
+        "mystery",
+        "adventure"
+      ],
+      "opening_excerpt": "In Paris, in Rome, in Florence, in Berlin, in Vienna--in fact, over half\nthe face of Europe, from the Pyrenees to the Russian frontier--I am now\nknown as \"The Count's Chauffeur.\"\n\nAn Englishman, as my name George Ewart denotes, I am of cosm",
+      "ending_excerpt": "bout them now. All you've got to look after is your driving. Let's\nget across to Winchester as quickly as possible. Just here!--sharp to\nthe right and the first to the left takes us into the Guildford road.\nThen we can move.\"\n\n\n\n\nCHAPTER II",
+      "automated_dialogue": {
+        "words": 4795,
+        "paragraphs": 130,
+        "dialogue_opening_paragraphs": 48,
+        "dialogue_opening_paragraph_share": 0.36923076923076925,
+        "quote_mark_count": 160,
+        "quote_marks_per_1000_words": 33.36809176225235,
+        "closed_quote_span_words": 1080,
+        "closed_quote_span_word_share": 0.22523461939520334,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-36039-d00da83953a9",
+      "strata": [
+        "deterministic_fill"
+      ],
+      "title": "The Goblin City",
+      "author": "Rouse, W. H. D. (William Henry Denham), 1863-1950; Robinson, W. Heath (William Heath), 1872-1944 [Illustrator]",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-36039",
+      "words": 698,
+      "genres": [
+        "fantasy"
+      ],
+      "opening_excerpt": "Long, long ago, in the island of Ceylon, there was a large city full\nof nothing but Goblins. They were all She-goblins, too; and if they\nwanted husbands, they used to get hold of travellers and force them\nto marry; and afterwards, when they",
+      "ending_excerpt": "or all. When all who wanted to go had got up\non his back, away flew the beautiful horse and took them safely home.\n\nAs for those who remained behind, that very night the Goblins set\nupon them and mangled them, and munched them to mincemeat.",
+      "automated_dialogue": {
+        "words": 698,
+        "paragraphs": 13,
+        "dialogue_opening_paragraphs": 4,
+        "dialogue_opening_paragraph_share": 0.3076923076923077,
+        "quote_mark_count": 8,
+        "quote_marks_per_1000_words": 11.461318051575931,
+        "closed_quote_span_words": 32,
+        "closed_quote_span_word_share": 0.045845272206303724,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-3707-529f01a8fb4b",
+      "strata": [
+        "deterministic_fill"
+      ],
+      "title": "THE PENDULUM",
+      "author": "Henry, O., 1862-1910",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-3707",
+      "words": 1717,
+      "genres": [],
+      "opening_excerpt": "“Eighty-first street—let ’em out, please,” yelled the shepherd in blue.\n\nA flock of citizen sheep scrambled out and another flock scrambled\naboard. Ding-ding! The cattle cars of the Manhattan Elevated rattled\naway, and John Perkins drifted ",
+      "ending_excerpt": "e reached for his hat\nand walked to the door.\n\n“Now, where are you going, I’d like to know, John Perkins?” asked Katy,\nin a querulous tone.\n\n“Thought I’d drop up to McCloskey’s,” said John, “and play a game or\ntwo of pool with the fellows.”",
+      "automated_dialogue": {
+        "words": 1726,
+        "paragraphs": 27,
+        "dialogue_opening_paragraphs": 8,
+        "dialogue_opening_paragraph_share": 0.2962962962962963,
+        "quote_mark_count": 54,
+        "quote_marks_per_1000_words": 31.286210892236383,
+        "closed_quote_span_words": 279,
+        "closed_quote_span_word_share": 0.16164542294322132,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 1
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-5741-ea1e1f7897ba",
+      "strata": [
+        "length:longest_decile"
+      ],
+      "title": "MUMU",
+      "author": "Turgenev, Ivan Sergeevich, 1818-1883 [Contributor]; Gogol, Nikolai Vasilevich, 1809-1852 [Contributor]; Pushkin, Aleksandr Sergeevich, 1799-1837 [Contributor]; Tolstoy, Leo, graf, 1828-1910 [Contributor]",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-5741",
+      "words": 11671,
+      "genres": [],
+      "opening_excerpt": "BY\n\nIVAN TURGENEV\n\nFrom \"Torrents of Spring.\"  Translated by Constance Garnett.\n\n\nIn one of the outlying streets of Moscow, in a gray house with white\ncolumns and a balcony, warped all askew, there was once living a lady,\na widow, surrounde",
+      "ending_excerpt": "ood luck, though,\" the peasants reason, \"that he can get on\nwithout female folk; and as for a dog--what need has he of a dog? you\nwouldn't get a thief to go into his yard for any money!\"  Such is the\nfame of the dumb man's Titanic strength.",
+      "automated_dialogue": {
+        "words": 11502,
+        "paragraphs": 172,
+        "dialogue_opening_paragraphs": 95,
+        "dialogue_opening_paragraph_share": 0.5523255813953488,
+        "quote_mark_count": 342,
+        "quote_marks_per_1000_words": 29.7339593114241,
+        "closed_quote_span_words": 2041,
+        "closed_quote_span_word_share": 0.17744740045209528,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-5779-b4397a60d06f",
+      "strata": [
+        "deterministic_fill"
+      ],
+      "title": "The Serpent’s Story",
+      "author": "Andreyev, Leonid, 1871-1919; Bernstein, Herman, 1876-1935 [Translator]",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-5779",
+      "words": 1677,
+      "genres": [],
+      "opening_excerpt": "Hush! Hush! Hush! Come closer to me. Look into my eyes!\n\nI always was a fascinating creature, tender, sensitive, and grateful.\nI was wise and I was noble. And I am so flexible in the writhing of my\ngraceful body that it will afford you joy ",
+      "ending_excerpt": "h my scales dimly, and I\nshall clasp my steel body in my gentle, cold embraces. Here I am!\nAccept my only kiss, my nuptial kiss--in it is the deadly grief of all\noppressed lives. One in many! One in many!\n\nBend down to me. I love you.\n\nDie!",
+      "automated_dialogue": {
+        "words": 1679,
+        "paragraphs": 28,
+        "dialogue_opening_paragraphs": 0,
+        "dialogue_opening_paragraph_share": 0.0,
+        "quote_mark_count": 0,
+        "quote_marks_per_1000_words": 0.0,
+        "closed_quote_span_words": 0,
+        "closed_quote_span_word_share": 0.0,
+        "paragraph_reopen_count": 0,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    },
+    {
+      "id": "pg-9463-94474bf13486",
+      "strata": [
+        "dialogue:high"
+      ],
+      "title": "Sammy",
+      "author": "Smith, Francis Hopkinson, 1838-1915",
+      "source": "project_gutenberg",
+      "collection_key": "project_gutenberg:pg-9463",
+      "words": 11446,
+      "genres": [],
+      "opening_excerpt": "It was on the Limited: 10.30 Night Express out of Louisville, bound\nsouth to Nashville and beyond.\n\nI had lower Four.\n\nWhen I entered the sleeper the porter was making up the berths, the\npassengers sitting about in each other's way until th",
+      "ending_excerpt": "hes from his coat-sleeve:\n\n\"So now, whenever I see a poor devil haunting a place like this, looking\naround out of the corner of his eye, hoping somebody will speak to him,\nI say that's a Diffendorfer, and more than half the time I'm right.\"",
+      "automated_dialogue": {
+        "words": 11452,
+        "paragraphs": 286,
+        "dialogue_opening_paragraphs": 237,
+        "dialogue_opening_paragraph_share": 0.8286713286713286,
+        "quote_mark_count": 316,
+        "quote_marks_per_1000_words": 27.59343346140412,
+        "closed_quote_span_words": 9518,
+        "closed_quote_span_word_share": 0.8311212015368494,
+        "paragraph_reopen_count": 190,
+        "unclosed_quote_span_count": 0,
+        "unmatched_closing_quote_count": 0
+      },
+      "automated_ocr_signals": {
+        "replacement_character": 0,
+        "transcriber_or_editor_note": 0,
+        "gutenberg_boilerplate": 0,
+        "broken_line_hyphenation": 0,
+        "suspicious_markup_glyph": 0,
+        "digit_intrusion": 0
+      }
+    }
+  ]
+}
