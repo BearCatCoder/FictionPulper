@@ -153,3 +153,13 @@ primary score.
 The six blinded review packets contain all 1,792 continuations and are ready
 for two independent reviewers. Human pair-consistency scoring and adjudication
 remain `pending`; no review rows or primary human result were fabricated.
+
+A limited manual quality-control audit inspected the first eight rows in each
+deterministically shuffled development review packet (16 continuations total,
+with checkpoint identities still represented only as `baseline-a` and
+`baseline-b`). None of the 16 continuations stated or preserved its required
+proposition, all 16 drifted away from the authored premise, and several entered
+obvious phrase loops. This spot audit confirms that the zero automated
+premise-retention signal is not merely a reporting accident, but it is not an
+independent two-reviewer assessment, does not estimate the primary metric, and
+must not be generalized as a scored sample.
