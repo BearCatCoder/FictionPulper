@@ -69,6 +69,23 @@ while its independent human review remains pending.
 Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
 the separate Benchmark v2 human reviews and may proceed alongside the #8 pilot.
 
+The issue #8 continuation-pilot workflow is implemented, but the pilot remains
+**STOP/pending** because no canonical examples, rights verification, or genuine
+independent human reviews have been supplied. It never fabricates those inputs:
+
+```bash
+python -m src.continuation_pilot prepare
+python -m unittest tests.test_continuation_pilot
+```
+
+Preparation enforces the frozen 200-example contract and writes a deterministic
+pending report when inputs are absent. Audit, review export, custodian gates,
+structured event-transition metadata, 100/100 stale-state control, eight-per-
+genre/state-cell shortcut control, 32/4/4 per-genre splits, continuation-only
+loss masking, and finalization are documented in
+[`docs/continuation-pilot-v1.md`](docs/continuation-pilot-v1.md). No issue #9
+training is included or authorized; prepared/review artifacts are audit-only.
+
 Data100M training [#25](https://github.com/BearCatCoder/FictionPulper/issues/25),
 additional dynamic-state research [#10](https://github.com/BearCatCoder/FictionPulper/issues/10),
 and a general registry [#11](https://github.com/BearCatCoder/FictionPulper/issues/11)

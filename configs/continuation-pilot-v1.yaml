@@ -1,0 +1,55 @@
+version: 1
+seed: 8008
+review_seed: 8018
+
+examples_path: data/continuation_pilot_v1/examples.jsonl
+reviews_path: data/continuation_pilot_v1/completed-reviews.jsonl
+custodian_verification_path: data/continuation_pilot_v1/custodian-verification.json
+output_dir: runs/continuation-pilot-v1
+schema_path: schemas/continuation-pilot-v1.schema.json
+
+tokenizer:
+  path: data/tokenizer/tokenizer.json
+  sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+expected_examples: 200
+expected_split_counts: {train: 160, validation: 20, test: 20}
+expected_genre_counts:
+  crime_noir: 40
+  horror_occult: 40
+  science_fiction: 40
+  western_adventure: 40
+  weird_fantasy: 40
+expected_state_family_counts:
+  possession: 40
+  location: 40
+  knowledge: 40
+  goal: 40
+  causal_update: 40
+expected_stale_state_distractor_counts: {present: 100, absent: 100}
+expected_genre_state_cell_count: 8
+expected_split_genre_counts:
+  train: {crime_noir: 32, horror_occult: 32, science_fiction: 32, western_adventure: 32, weird_fantasy: 32}
+  validation: {crime_noir: 4, horror_occult: 4, science_fiction: 4, western_adventure: 4, weird_fantasy: 4}
+  test: {crime_noir: 4, horror_occult: 4, science_fiction: 4, western_adventure: 4, weird_fantasy: 4}
+word_counts:
+  opening_minimum: 60
+  opening_maximum: 120
+  continuation_minimum: 150
+  continuation_maximum: 250
+serialization:
+  format: "<|story|><|bos|>{opening}{continuation}<|eos|>"
+  boundary: ""
+  maximum_tokens: 1024
+
+contamination:
+  benchmark_v2:
+    - {path: benchmarks/narrative-v2/development.jsonl, sha256: c38842d3bf98c52ebe8d46df30b89122177a099d91a3166fa0b881fb1707f4e4}
+    - {path: benchmarks/narrative-v2/test.jsonl, sha256: b555c5dc145b4c83e36ce5d354767c2c73e9290187a166fa339de9366869f10c}
+    - {path: benchmarks/narrative-v2/generalization.jsonl, sha256: 9d40c81499cced1b786866846493258e331ad870be9f5fb6ba6133643ff3672d}
+    - {path: benchmarks/narrative-v2/development-candidate-controls.jsonl, sha256: 306235b9963667c5b80de42433540eeff6d2791aaf7280c8a6014d32258e863b}
+    - {path: benchmarks/narrative-v2/test-candidate-controls.jsonl, sha256: f2f96923b6f90f952392e86a7269f31547da6209f2213b270a365ca1df06fb24}
+    - {path: benchmarks/narrative-v2/generalization-candidate-controls.jsonl, sha256: 9b76ecb9fe3febcebbec138074d0ea70b04f36f3f995a7a1bccd767c347a0606}
+  scene_scorecard:
+    path: benchmarks/scene-scorecard-v1/prompts.jsonl
+    sha256: fe828244fec8fda482452792451ecb86d34518ee5c5695646f76b3a43f04ff16
