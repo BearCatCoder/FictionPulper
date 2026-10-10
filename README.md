@@ -1,10 +1,83 @@
 # FictionPulper
 
-FictionPulper is a from-scratch decoder-only language model project for short-form pulp fiction. The 5M-parameter smoke pipeline is complete; the current controlled experiment measures the effect of expanding unique fiction data while holding the model and tokenizer fixed.
+FictionPulper is a custom decoder-only language model project for short-form
+pulp fiction. The pipeline and its from-scratch 5M, 15M, and 50M baselines are
+complete. The active product milestone is a reproducible, coherent approximately
+200-word scene, measured before further model or data scaling.
 
-The implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, training, evaluation, checkpointing, and generation. No pretrained tokenizer or model weights are used.
+The implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, training, evaluation, checkpointing, and generation. No third-party pretrained tokenizer or model weights are used. The planned first recovery experiment fine-tunes FictionPulper's own sealed, from-scratch 50M/Data30M checkpoint.
 
-## Narrative Benchmark v2
+## Current Status And Next Commands
+
+The [coherent-scene recovery board](https://github.com/users/BearCatCoder/projects/6/views/1)
+is the source of truth for current work and dependencies.
+
+- **Completed implementation:** corpus preparation, the custom tokenizer/model,
+  document-safe packing, training, checkpointing, generation, evaluation,
+  Benchmark v2 tooling, Corpus-v3 tooling, and Data100M preflight are built and
+  tested.
+- **Completed training:** the from-random-initialization 5M smoke, 15M, and
+  sealed 50M/Data30M runs are complete. The 50M baseline achieved test loss
+  `3.1018` and perplexity `22.24`, but its controlled report found no material
+  storytelling improvement and `0/13` retained diagnostic facts.
+- **Completed evaluation execution, pending primary review:** Benchmark v2
+  forced-choice, teacher-forced, and free-generation baseline runs are complete.
+  The 1,792 continuations still require independent human scoring and
+  adjudication. Automated diagnostics and a 16-output spot audit are not a
+  primary human score.
+- **Prepared but blocked:** Corpus-v3 contains 14,923,683 unsealed tokens. Its
+  genre-distribution gate failed and deterministic review is pending. Data100M
+  training has not occurred and remains deferred.
+- **Next action:** [issue #27](https://github.com/BearCatCoder/FictionPulper/issues/27)
+  freezes a small scene scorecard and measures the existing sealed 50M/Data30M
+  baseline. It must complete before the [small continuation-data pilot (#8)](https://github.com/BearCatCoder/FictionPulper/issues/8)
+  is approved or the [single bounded SFT run (#9)](https://github.com/BearCatCoder/FictionPulper/issues/9)
+  begins.
+
+Activate the existing environment and validate the evidence/tooling used by the
+next issue without rerunning training:
+
+```bash
+source .venv/bin/activate
+python -m src.benchmark_v2 --root benchmarks/narrative-v2
+python -m unittest tests.test_benchmark_v2 \
+  tests.test_narrative_v2_free_generation \
+  tests.test_narrative_v2_baseline
+```
+
+There is no authorized scene-scorecard generation command until #27 freezes and
+implements that protocol. Do not substitute the blocked Data100M training
+command or rerun a historical model to create one.
+
+## Recovery Order
+
+1. [#27](https://github.com/BearCatCoder/FictionPulper/issues/27): freeze the
+   scene scorecard, thresholds, prompt/seed suite, review rules, and measure the
+   existing 50M baseline.
+2. [#28](https://github.com/BearCatCoder/FictionPulper/issues/28): complete the
+   independent Benchmark v2 human reviews; coordination may proceed alongside
+   the small pilot.
+3. [#8](https://github.com/BearCatCoder/FictionPulper/issues/8) then
+   [#9](https://github.com/BearCatCoder/FictionPulper/issues/9): build a
+   100-300-example audited natural-continuation corpus, then run one
+   preregistered SFT experiment on the existing sealed 50M/Data30M checkpoint.
+4. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): promote only
+   on independent evidence under the frozen scorecard, not on lower perplexity,
+   completed training, or a cherry-picked generation.
+5. [#20](https://github.com/BearCatCoder/FictionPulper/issues/20) plus
+   [#22](https://github.com/BearCatCoder/FictionPulper/issues/22), then
+   [#21](https://github.com/BearCatCoder/FictionPulper/issues/21), then
+   [#24](https://github.com/BearCatCoder/FictionPulper/issues/24): diagnose
+   Corpus-v3 supply and blockers, pilot lawful source expansion, and seal only
+   an actually approved corpus.
+
+Data100M training [#25](https://github.com/BearCatCoder/FictionPulper/issues/25),
+additional dynamic-state research [#10](https://github.com/BearCatCoder/FictionPulper/issues/10),
+and a general registry [#11](https://github.com/BearCatCoder/FictionPulper/issues/11)
+are deferred. Corpus recovery is separate from, and does not block, the first
+small continuation-SFT pilot.
+
+## Completed Narrative Benchmark v2 Work
 
 The generation-based success criteria are frozen under
 `benchmarks/narrative-v2/`. The v2 allocation defines 112 paired scenarios
@@ -21,10 +94,9 @@ python -m src.benchmark_v2 --root benchmarks/narrative-v2
 python -m unittest tests.test_benchmark_v2
 ```
 
-This freezes the protocol and scenario allocation only. No benchmark model run
-or human scoring is claimed. The next step is authoring and independently
-reviewing the allocated scenarios without changing the v2 protocol; historical
-protocols remain immutable.
+This command validates the frozen protocol and scenario allocation. Scenario
+authoring and all baseline model runs are complete; independent primary human
+scoring remains pending. Historical protocols remain immutable.
 
 Issue #2 adds deterministic authored scenarios without changing the frozen
 issue #1 artifacts. Generate all three split files and run the complete
@@ -45,8 +117,9 @@ are replayed from one world-specific initial fact through exactly the allocated
 number of family-specific mapping events. Three separate renderers provide
 normalized template-signature isolation across splits.
 
-Generation is build-time behavior and authors all files; it does not authorize
-evaluation access. The restricted loader defaults to development:
+Scenario generation is build-time behavior and authored all files; it does not
+by itself authorize evaluation access. The restricted loader defaults to
+development:
 
 ```bash
 python -m src.narrative_v2_loader
@@ -61,8 +134,8 @@ python -m src.narrative_v2_loader \
 
 Development is public for scorer implementation but not weight training. Test
 and generalization remain post-selection only, and hidden authored examples are
-never training data. This dataset build did not run model training, model
-evaluation, inference, checkpoint selection, or human review.
+never training data. The authoring step did not run model work; the later sealed
+baseline evaluation did run inference on every split as documented below.
 
 Issue #3 adds the free-generation runner and manual-review workflow without
 changing any frozen benchmark or sealed experiment artifact. The runner reads
@@ -140,8 +213,9 @@ paired-bootstrap intervals overall and by family, depth, and family/depth. No
 checkpoint inference or human review was run while implementing this workflow;
 those model-specific results belong to the post-selection baseline evaluation.
 Implementation validation passed the benchmark specification, authored-data,
-and free-generation workflow suites (30 tests) and the full repository suite
-(280 tests) on 2026-10-09.
+and free-generation workflow suites (30 tests) and the then-current full
+repository suite (280 tests) on 2026-10-09. This is historical implementation
+evidence, not the pending independent human score.
 
 Release generation requires the ignored, locally built synthetic training
 JSONL artifacts listed under `training_contamination.training_artifacts` in the
