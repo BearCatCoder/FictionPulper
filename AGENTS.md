@@ -28,10 +28,13 @@ The following distinctions are mandatory in code, reports, and status updates:
   50M/Data30M runs are complete. The 50M/Data30M run reached test loss `3.1018`
   and perplexity `22.24`, but showed no material storytelling improvement and
   retained `0/13` facts in its narrative-state diagnostic.
+- **Completed Scene Scorecard implementation and baseline generation:** issue
+  #27 froze Scene Scorecard v1 and generated the complete 40-output sealed
+  50M/Data30M baseline matrix without retries, rerolls, or drops.
 - **Pending human review:** Benchmark v2 generation produced 1,792
-  continuations. Independent primary human scoring and adjudication have not
-  been completed. Automated lexical diagnostics and the 16-output spot audit
-  are not the primary score.
+  continuations, and Scene Scorecard v1 produced 40. Independent primary human
+  scoring and adjudication have not been completed for either evaluation.
+  Automated lexical diagnostics and spot audits are not primary human scores.
 - **Blocked future runs:** Corpus-v3 currently has 14,923,683 unsealed tokens,
   failed its genre-distribution gate, and awaits deterministic human review.
   Data100M training has not occurred and is not authorized.
@@ -41,6 +44,7 @@ Evidence is retained in:
 - [`experiments/fictionpulper-5m-smoke-v1/`](experiments/fictionpulper-5m-smoke-v1/README.md)
 - [`experiments/fictionpulper-50m-data30m-v1/`](experiments/fictionpulper-50m-data30m-v1/README.md)
 - [`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md)
+- [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md)
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
 - [`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md)
 
@@ -48,21 +52,23 @@ Evidence is retained in:
 
 Follow this order unless the project board records a newer decision:
 
-1. [#27] freezes a small scene-quality scorecard and measures the existing
-   sealed 50M/Data30M baseline. Do not tune against outputs before the protocol,
-   thresholds, prompts, decoding, seeds, and review rules are frozen.
-2. [#28] coordinates the outstanding independent Benchmark v2 human reviews.
-   This may proceed alongside the small scene pilot but remains required for
-   primary Benchmark v2 score claims.
-3. [#8] builds a 100-300 example, rights-cleared, human-reviewed natural
+Issue [#27] is the completed prerequisite: Scene Scorecard v1 is frozen and the
+sealed 50M/Data30M baseline generation is complete. Its independent human review
+remains pending and must not be represented as complete.
+
+1. [#8] builds a 100-300 example, rights-cleared, human-reviewed natural
    continuation pilot with reproducible split and contamination audits.
-4. [#9] runs one preregistered, bounded continuation-SFT experiment on the
+2. [#9] runs one preregistered, bounded continuation-SFT experiment on the
    sealed, validation-selected 50M/Data30M checkpoint. This is controlled
    fine-tuning of FictionPulper's own from-scratch checkpoint, not pretrained
    model use and not another random-initialization pretraining run.
-5. [#12] is promoted only if independent evidence meets the frozen scene
+3. [#12] is promoted only if independent evidence meets the frozen scene
    scorecard. Training completion, lower perplexity, or one cherry-picked output
    does not satisfy it.
+
+Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews.
+It may proceed alongside the #8 pilot but remains required for primary Benchmark
+v2 score claims.
 
 The evidence-backed corpus recovery path is [#20] plus [#22], then [#21], then
 [#24]. Diagnosis and lawful source discovery may overlap as allowed by those

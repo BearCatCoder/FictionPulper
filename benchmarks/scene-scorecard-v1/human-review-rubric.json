@@ -1,0 +1,41 @@
+{
+  "adjudication": {
+    "required_when": "Any scored field differs between the two original reviewers or either uses uncertain.",
+    "reviewer_requirement": "The adjudicator must be independent of both original reviewers and records a complete final row; original rows remain unchanged."
+  },
+  "dimensions": {
+    "atomic_fact_labels": {
+      "allowed": ["retained", "not_retained", "contradicted", "uncertain"],
+      "denominator": "Every listed atomic fact for every output; uncertain and contradicted count as not retained.",
+      "instruction": "Judge each entity-relation-value fact semantically. Pronouns and paraphrases count only when the relation is unambiguous."
+    },
+    "contradiction_present": {
+      "allowed": ["yes", "no", "uncertain"],
+      "instruction": "Yes if the continuation conflicts with an opening fact, its own established state, or an unambiguous event."
+    },
+    "genre_voice": {
+      "allowed": ["yes", "no", "uncertain"],
+      "instruction": "Yes only if diction, atmosphere, and action are recognizably appropriate to the named pulp genre."
+    },
+    "loop_or_repetition_present": {
+      "allowed": ["yes", "no", "uncertain"],
+      "instruction": "Yes for repeated sentences/events or a narrative loop that resets or restates instead of progressing; ordinary callbacks do not count."
+    },
+    "motive_preservation": {
+      "allowed": ["yes", "no", "uncertain"],
+      "instruction": "Yes only if the protagonist continues to act consistently with the explicit opening motive and does not abandon or reverse it without cause."
+    },
+    "plot_advancement": {
+      "allowed": ["yes", "no", "uncertain"],
+      "instruction": "Yes only if consequential action, discovery, or complication changes the situation beyond paraphrasing the opening."
+    },
+    "premise_adherence": {
+      "allowed": ["yes", "no", "uncertain"],
+      "instruction": "Yes only if the continuation remains about the supplied central situation; incidental name or noun overlap is insufficient."
+    }
+  },
+  "evidence": "For each dimension and fact, reviewers record a short verbatim quote or <ABSENT> plus a note. Empty output uses <EMPTY_OUTPUT>.",
+  "independence": "Two genuine independent reviewers must score every output without seeing model identity, decoding mode, seed, other reviews, diagnostics, or candidate outcomes.",
+  "length_compliance": "Computed mechanically from the frozen word rule and displayed to reviewers; reviewers do not override it.",
+  "review_version": 1
+}

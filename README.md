@@ -28,54 +28,67 @@ is the source of truth for current work and dependencies.
 - **Prepared but blocked:** Corpus-v3 contains 14,923,683 unsealed tokens. Its
   genre-distribution gate failed and deterministic review is pending. Data100M
   training has not occurred and remains deferred.
-- **Next action:** [issue #27](https://github.com/BearCatCoder/FictionPulper/issues/27)
-  freezes a small scene scorecard and measures the existing sealed 50M/Data30M
-  baseline. It must complete before the [small continuation-data pilot (#8)](https://github.com/BearCatCoder/FictionPulper/issues/8)
-  is approved or the [single bounded SFT run (#9)](https://github.com/BearCatCoder/FictionPulper/issues/9)
-  begins.
+- **Completed Scene Scorecard implementation and baseline generation:**
+  [issue #27](https://github.com/BearCatCoder/FictionPulper/issues/27) froze the
+  separate Scene Scorecard v1 and generated the complete sealed 50M/Data30M
+  baseline matrix. Independent human review remains pending; status is recorded in
+  [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md).
 
-Activate the existing environment and validate the evidence/tooling used by the
-next issue without rerunning training:
+Activate the existing environment and reproduce the write-once scene baseline
+without rerunning training:
 
 ```bash
 source .venv/bin/activate
-python -m src.benchmark_v2 --root benchmarks/narrative-v2
-python -m unittest tests.test_benchmark_v2 \
-  tests.test_narrative_v2_free_generation \
-  tests.test_narrative_v2_baseline
+python -m src.scene_scorecard baseline
 ```
 
-There is no authorized scene-scorecard generation command until #27 freezes and
-implements that protocol. Do not substitute the blocked Data100M training
-command or rerun a historical model to create one.
+The command locks the checkpoint, seal, tokenizer, prompts, decoding, and all 40
+prompt/trial cells before model load and refuses to overwrite an existing run.
+It does not perform training. Automated diagnostics are not human scores.
 
 ## Recovery Order
 
-1. [#27](https://github.com/BearCatCoder/FictionPulper/issues/27): freeze the
-   scene scorecard, thresholds, prompt/seed suite, review rules, and measure the
-   existing 50M baseline.
-2. [#28](https://github.com/BearCatCoder/FictionPulper/issues/28): complete the
-   independent Benchmark v2 human reviews; coordination may proceed alongside
-   the small pilot.
-3. [#8](https://github.com/BearCatCoder/FictionPulper/issues/8) then
+Issue [#27](https://github.com/BearCatCoder/FictionPulper/issues/27) is the
+completed prerequisite: the scorecard and baseline generation are complete,
+while its independent human review remains pending.
+
+1. [#8](https://github.com/BearCatCoder/FictionPulper/issues/8) then
    [#9](https://github.com/BearCatCoder/FictionPulper/issues/9): build a
    100-300-example audited natural-continuation corpus, then run one
    preregistered SFT experiment on the existing sealed 50M/Data30M checkpoint.
-4. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): promote only
+2. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): promote only
    on independent evidence under the frozen scorecard, not on lower perplexity,
    completed training, or a cherry-picked generation.
-5. [#20](https://github.com/BearCatCoder/FictionPulper/issues/20) plus
+3. [#20](https://github.com/BearCatCoder/FictionPulper/issues/20) plus
    [#22](https://github.com/BearCatCoder/FictionPulper/issues/22), then
    [#21](https://github.com/BearCatCoder/FictionPulper/issues/21), then
    [#24](https://github.com/BearCatCoder/FictionPulper/issues/24): diagnose
    Corpus-v3 supply and blockers, pilot lawful source expansion, and seal only
    an actually approved corpus.
 
+Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
+the separate Benchmark v2 human reviews and may proceed alongside the #8 pilot.
+
 Data100M training [#25](https://github.com/BearCatCoder/FictionPulper/issues/25),
 additional dynamic-state research [#10](https://github.com/BearCatCoder/FictionPulper/issues/10),
 and a general registry [#11](https://github.com/BearCatCoder/FictionPulper/issues/11)
 are deferred. Corpus recovery is separate from, and does not block, the first
 small continuation-SFT pilot.
+
+## Scene Scorecard v1
+
+The issue #27 protocol is frozen separately under
+`benchmarks/scene-scorecard-v1/`. It fixes five prior-exposed regression prompts,
+five reserved post-selection prompts, greedy plus sampled seeds `11337`,
+`21337`, and `31337`, a 150-250-word compliance range, blinded independent
+review, 70% fact-retention and 80% premise-adherence thresholds, coherent-suite
+gates, uncertainty reporting, and deterministic no-reroll showcase selection.
+
+Issue #8 must exclude all post-selection prompts while building the documented
+200-example pilot. Issue #9 must compare base and candidate on the identical
+protocol. Issue #12 can be promoted only under these same criteria. Full details,
+the concrete issue #8 pilot specification, run paths, and current review status
+are in [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md).
 
 ## Completed Narrative Benchmark v2 Work
 

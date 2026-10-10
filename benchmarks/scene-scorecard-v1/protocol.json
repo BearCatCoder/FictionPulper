@@ -1,0 +1,68 @@
+{
+  "artifacts": {
+    "human_review_rubric": {
+      "path": "human-review-rubric.json",
+      "sha256": "cee906f1b5b3d93acb92120e3403c40776bc0da30f143453d1b3e5108bbffb8b"
+    },
+    "prompts": {
+      "path": "prompts.jsonl",
+      "sha256": "fe828244fec8fda482452792451ecb86d34518ee5c5695646f76b3a43f04ff16"
+    }
+  },
+  "baseline": {
+    "checkpoint_path": "checkpoints/fictionpulper-50m-data30m-v1/best-validation.pt",
+    "checkpoint_sha256": "8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01",
+    "model_id": "fictionpulper-50m-data30m-v1",
+    "seal_path": "experiments/fictionpulper-50m-data30m-v1/seal.json",
+    "seal_sha256": "ac9f0abf9c3c1c60f0ee02485918e86c8407e051c578e34cf1bfa7ae15451fb3",
+    "tokenizer_path": "data/tokenizer/tokenizer.json",
+    "tokenizer_sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+  },
+  "decoding": {
+    "greedy": {
+      "max_new_tokens": 300
+    },
+    "sampled": {
+      "base_seeds": [11337, 21337, 31337],
+      "max_new_tokens": 300,
+      "temperature": 0.8,
+      "top_k": 50,
+      "top_p": 0.95
+    }
+  },
+  "matrix": {
+    "outputs_per_prompt": 4,
+    "prompt_count": 10,
+    "total_outputs": 40
+  },
+  "post_selection_policy": "scene-post-01 through scene-post-05 are post-selection evaluation only and must be excluded from issue #8 training, validation, test authoring, contamination-driven editing, and issue #9 checkpoint or hyperparameter selection.",
+  "protocol_id": "fictionpulper-scene-scorecard-v1",
+  "protocol_version": 1,
+  "review": {
+    "blinded_packet_seed": 270027,
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 270028,
+    "independent_original_reviewers": 2
+  },
+  "showcase_selection": {
+    "eligible_pool": "Post-selection outputs that meet the coherent-output gate, but only after the candidate suite meets every suite promotion gate.",
+    "no_qualifier": "Publish no showcase when the suite fails promotion or no post-selection output is coherent.",
+    "order": ["highest retained atomic-fact count", "smallest absolute word-count distance from 200", "prompt_id ascending", "greedy before sampled", "sample seed ascending"]
+  },
+  "success_gates": {
+    "coherent_output": "At least 70% of its atomic facts retained (3 of 4 here), premise adherence yes, motive preservation yes, contradiction present no, loop/repetition present no, plot advancement yes, genre voice yes, and length compliant.",
+    "suite_promotion": {
+      "coherent_output_rate_minimum": 0.8,
+      "fact_retention_rate_minimum": 0.7,
+      "per_prompt_coherent_output_rate_minimum": 0.5,
+      "premise_adherence_rate_minimum": 0.8
+    },
+    "uncertainty": "Report exact numerator/denominator and two-sided 95% Wilson intervals for suite proportions. With only 40 outputs and 160 atomic-fact judgments, intervals are descriptive and genre strata are underpowered."
+  },
+  "word_count": {
+    "compliant_maximum": 250,
+    "compliant_minimum": 150,
+    "rule": "Count case-insensitive ASCII letter/digit words with optional internal apostrophe using regex [a-z0-9]+(?:'[a-z]+)? over the decoded continuation only. The prompt and special tokens are excluded.",
+    "target": 200
+  }
+}
