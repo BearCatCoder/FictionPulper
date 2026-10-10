@@ -1,12 +1,32 @@
 version: 1
 seed: 8008
 review_seed: 8018
+approval_mode: single_owner_research_pilot
+owner_review:
+  target_sample_size: 50
+  selection_algorithm: deterministic_stratified_all_flags_v1
+risk_flag_vocabulary:
+  - ambiguous
+  - low_quality
+  - possible_contamination
+  - possible_duplicate
+  - rights_sensitive
+  - provenance_incomplete
+  - semantic_scorecard_collision
+  - heldout_prompt_risk
+  - other_problematic
 
 examples_path: data/continuation_pilot_v1/examples.jsonl
 reviews_path: data/continuation_pilot_v1/completed-reviews.jsonl
-custodian_verification_path: data/continuation_pilot_v1/custodian-verification.json
+owner_verification_path: data/continuation_pilot_v1/owner-verification.json
+strict_verification_path: data/continuation_pilot_v1/strict-verification.json
 output_dir: runs/continuation-pilot-v1
 schema_path: schemas/continuation-pilot-v1.schema.json
+retained_artifact_roots:
+  sources: data/continuation_pilot_v1/sources
+  rights_evidence: data/continuation_pilot_v1/rights_evidence
+  prompts: data/continuation_pilot_v1/prompts
+  raw_outputs: data/continuation_pilot_v1/raw_outputs
 
 tokenizer:
   path: data/tokenizer/tokenizer.json

@@ -4,7 +4,7 @@
   "title": "FictionPulper continuation pilot v1 canonical example",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "example_id", "opening", "continuation", "genre", "premise", "protagonist", "protagonist_motive", "character_names", "atomic_facts", "primary_state_family", "event_transitions", "stale_state_distractor_present", "action_summary", "consequence_summary", "duplicate_cluster_id", "authoring_inputs", "rights", "provenance"],
+  "required": ["schema_version", "example_id", "opening", "continuation", "genre", "premise", "protagonist", "protagonist_motive", "character_names", "atomic_facts", "primary_state_family", "event_transitions", "stale_state_distractor_present", "action_summary", "consequence_summary", "duplicate_cluster_id", "authoring_inputs", "rights", "provenance", "preliminary_assessment"],
   "properties": {
     "schema_version": {"const": 1},
     "example_id": {"type": "string", "pattern": "^cpv1-[a-z0-9][a-z0-9-]*$"},
@@ -47,25 +47,114 @@
     "authoring_inputs": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "rights": {
       "type": "object", "additionalProperties": false,
-      "required": ["basis", "license_or_status", "evidence_reference", "evidence_sha256", "rights_holder_or_author"],
+      "required": ["basis", "license_or_status", "evidence_reference", "evidence_path", "evidence_sha256", "rights_holder_or_author", "checked_at"],
       "properties": {
-        "basis": {"enum": ["original_commission", "author_permission", "public_domain", "cc0", "cc_by"]},
+        "basis": {"enum": ["public_domain", "original_author_owned"]},
         "license_or_status": {"type": "string", "minLength": 1},
         "evidence_reference": {"type": "string", "minLength": 1},
+        "evidence_path": {"type": "string", "minLength": 1},
         "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "rights_holder_or_author": {"type": "string", "minLength": 1}
+        "rights_holder_or_author": {"type": "string", "minLength": 1},
+        "checked_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
       }
     },
     "provenance": {
       "type": "object", "additionalProperties": false,
-      "required": ["source_id", "original_story_id", "source_reference", "source_sha256", "authoring_method", "baseline_training_exposure"],
+      "required": ["source_class", "source_id", "original_story_id", "pretraining_exposure"],
       "properties": {
+        "source_class": {"enum": ["public_domain_adaptation", "ai_assisted_original", "ai_assisted_public_domain_adaptation"]},
         "source_id": {"type": "string", "minLength": 1},
         "original_story_id": {"type": "string", "minLength": 1},
-        "source_reference": {"type": "string", "minLength": 1},
+        "public_domain_source": {"$ref": "#/$defs/publicDomainSource"},
+        "ai_assistance": {"$ref": "#/$defs/aiAssistance"},
+        "pretraining_exposure": {
+          "type": "object", "additionalProperties": false,
+          "required": ["classification", "audit_method", "disclosure"],
+          "properties": {
+            "classification": {"enum": ["not_identified", "identified", "uncertain"]},
+            "audit_method": {"type": "string", "minLength": 1},
+            "disclosure": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "preliminary_assessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["method", "assessor_identity", "prompt", "generation_configuration", "assessment_date", "raw_output_path", "raw_output_sha256", "risk_flags", "summary"],
+      "properties": {
+        "method": {"enum": ["automated", "ai_assisted"]},
+        "assessor_identity": {"type": "string", "minLength": 1},
+        "model_identity": {"type": "string", "minLength": 1},
+        "prompt": {"$ref": "#/$defs/prompt"},
+        "generation_configuration": {"type": "string", "minLength": 1},
+        "assessment_date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "raw_output_path": {"type": "string", "minLength": 1},
+        "raw_output_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "risk_flags": {
+          "type": "array",
+          "items": {"enum": ["ambiguous", "low_quality", "possible_contamination", "possible_duplicate", "rights_sensitive", "provenance_incomplete", "semantic_scorecard_collision", "heldout_prompt_risk", "other_problematic"]}
+        },
+        "summary": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "$defs": {
+    "prompt": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["text", "sha256"],
+          "properties": {
+            "text": {"type": "string", "minLength": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["reference", "sha256"],
+          "properties": {
+            "reference": {"type": "string", "minLength": 1},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "publicDomainSource": {
+      "type": "object", "additionalProperties": false,
+      "required": ["author", "title", "source_url", "source_edition", "source_path", "source_sha256", "rights_basis", "rights_evidence_reference", "rights_evidence_sha256", "rights_check_date", "acquisition_method", "acquisition_evidence_reference", "acquisition_evidence_path", "acquisition_evidence_sha256", "independently_acquired_from_documented_source", "copied_from_unsealed_corpus_v3_candidate", "corpus_v3_overlap", "corpus_v3_overlap_disclosure"],
+      "properties": {
+        "author": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "source_url": {"type": "string", "pattern": "^https://"},
+        "source_edition": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string", "minLength": 1},
         "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "authoring_method": {"enum": ["independently_authored", "rights_cleared_extract"]},
-        "baseline_training_exposure": {"enum": ["none", "identified_exposure"]}
+        "rights_basis": {"type": "string", "minLength": 1},
+        "rights_evidence_reference": {"type": "string", "minLength": 1},
+        "rights_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "rights_check_date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "acquisition_method": {"const": "independent_download_from_documented_source_url"},
+        "acquisition_evidence_reference": {"type": "string", "minLength": 1},
+        "acquisition_evidence_path": {"type": "string", "minLength": 1},
+        "acquisition_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "independently_acquired_from_documented_source": {"const": true},
+        "copied_from_unsealed_corpus_v3_candidate": {"const": false},
+        "corpus_v3_overlap": {"enum": ["not_identified", "identified", "uncertain"]},
+        "corpus_v3_overlap_disclosure": {"type": "string", "minLength": 1}
+      }
+    },
+    "aiAssistance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["model_identity", "prompt", "generation_configuration", "generation_date", "raw_output_path", "raw_output_sha256", "editing_history", "final_content_sha256"],
+      "properties": {
+        "model_identity": {"type": "string", "minLength": 1},
+        "prompt": {"$ref": "#/$defs/prompt"},
+        "generation_configuration": {"type": "string", "minLength": 1},
+        "generation_date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "raw_output_path": {"type": "string", "minLength": 1},
+        "raw_output_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "editing_history": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "final_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     }
   }

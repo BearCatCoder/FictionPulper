@@ -1,67 +1,161 @@
 # Continuation Pilot v1
 
-Issue #8 freezes a workflow for exactly 200 rights-cleared natural narrative
-continuations. It does not provide, generate, or approve those examples. The
-current status is **STOP: canonical prose, rights verification, and genuine
-independent human review are pending external inputs**.
+Issue #8 freezes a workflow for exactly 200 rights-documented natural narrative
+continuations. The active approval mode is `single_owner_research_pilot`. This is
+an exploratory single-owner artifact, not independent validation, adjudication,
+publication-grade certification, or evidence of general corpus fitness. The
+optional `strict_independent` mode preserves the two-reviewer and adjudicator
+workflow as a separate claim. Neither mode has real corpus or review inputs yet.
 
-## Frozen Contract
+## Frozen Corpus Contract
 
 - Exactly 200 examples: 160 train, 20 validation, and 20 post-selection test.
-- Exactly 40 examples in each genre and 40 in each primary state family defined
-  in `configs/continuation-pilot-v1.yaml`.
-- Exactly eight examples occupy every genre x primary-state-family cell. This
-  cross-balance prevents genre from becoming a one-to-one shortcut for the
-  state-update task.
-- Exactly 100 examples contain a stale-state distractor and 100 do not. The
-  required `stale_state_distractor_present` boolean is a frozen lexical/task-
-  shortcut control, not prose injected into the model input.
-- Openings contain 60-120 normalized words; continuations contain 150-250.
-- Premise, protagonist, motive, three to five atomic opening facts, primary
-  state family, and action/consequence summaries remain metadata. They are not
-  injected into prose or serialization.
-- Every example has one or more structured event transitions. Each transition
-  strictly records its frozen state family, before state, changing event, after
-  state, and opening/continuation evidence quotes. At least one transition must
-  audit the example's primary state family. Transition records and stale-state
-  flags remain metadata only.
-- Source IDs, original-story IDs, and duplicate clusters are transitive split
-  constraints. Every transitive group must contain exactly one genre; a mixed-
-  genre group stops preparation. Groups are assigned independently within each
-  genre and must reach exactly 32 train, 4 validation, and 4 test examples per
-  genre, as well as the overall 160/20/20 counts.
-- Every example carries rights and provenance references and hashes. Their
-  presence is only structural evidence, not proof of permission.
-- Normalized exact and normalized five-word-shingle checks cover pilot prose and
-  metadata: premise, protagonist motive, atomic facts, action/consequence
-  summaries, and transition before/event/after summaries. The same checks cover
-  all authored Benchmark v2 files and all ten Scene Scorecard prompts.
-  Scorecard names and declared post-selection authoring inputs are independently
-  rejected. These lexical checks cannot establish that a paraphrased premise or
-  distinctive fact combination is semantically novel; the custodian must perform
-  and attest to that human check.
-- Tokenizer-v1 is fixed at SHA-256
+- Exactly 40 examples per frozen genre and primary state family, eight in each
+  genre/state cell, and 100 examples with versus 100 without a stale-state
+  distractor. Each genre contributes exactly 32/4/4 train/validation/test rows.
+- Openings contain 60-120 normalized words and continuations contain 150-250.
+- Premise, protagonist and motive, three to five atomic opening facts, event
+  transitions, primary state family, stale-state status, meaningful action, and
+  consequence are audit metadata and are never serialized.
+- Source IDs, original-story IDs, and duplicate clusters form transitive split
+  groups. Groups cannot cross splits or genres.
+- Normalized exact and five-word-shingle checks cover prose, semantic audit
+  metadata, authoring inputs, AI authoring prompts and configurations, retained
+  AI raw outputs, preliminary-assessment prompts/configurations/raw outputs, and
+  other candidate-selection metadata against every authored Benchmark v2
+  surface and all ten Scene Scorecard prompts. Referenced prompt bytes are
+  resolved and scanned. Scorecard-name collisions and any declared
+  `scene-post-*` authoring input fail. A risk flag never converts an exact,
+  shingle, held-out prompt, schema, grouping, serialization, or other hard-gate
+  failure into a pass.
+- Retained public-domain source works have a separate input-exclusion gate. It
+  rejects a normalized exact reference, containment of any complete Benchmark
+  v2 or Scene Scorecard prompt/premise/fact, and any shared normalized 12-word
+  shingle. The ordinary five-word rule is not applied across whole source books
+  because common literary phrases would make that gate unusably noisy. Complete
+  reserved-prompt reuse is always a hard failure.
+- Tokenizer-v1 remains fixed at SHA-256
   `14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012`.
-- Serialization is exactly `<|story|><|bos|>` + opening + continuation +
-  `<|eos|>`, with no inserted separator bytes. Canonical opening text must end in
-  exactly two LF bytes and continuation text must begin with a non-whitespace
-  byte. Thus the two LFs are part of the opening, not an inserted separator.
-  This convention resolves the previously unspecified byte boundary and locks
-  the exact bytes and token target boundary for issue #9. Separate and combined
-  tokenization must agree or preparation fails. No genre, transition,
-  stale-state, or other metadata is serialized.
-- The opening and padding labels are `-100`. The first continuation token
-  through EOS are targets. Every record must fit at most 1,024 tokens without
-  truncation.
+- Serialization is `<|story|><|bos|>` + opening + continuation + `<|eos|>`.
+  The canonical opening supplies exactly two trailing LF bytes; no separator is
+  inserted. Separate and combined tokenization must agree. Opening and padding
+  labels are `-100`; continuation through EOS are targets. The maximum is 1,024
+  tokens and truncation is forbidden.
 
-The JSON schema is `schemas/continuation-pilot-v1.schema.json`. Unknown fields
-are rejected at every defined object level. Canonical prose and private rights
-evidence belong under ignored `data/continuation_pilot_v1/`; derived packets and
-reports belong under ignored `runs/continuation-pilot-v1/`.
+The production config and in-code contract freeze all counts, vocabulary,
+seeds, hashes, contamination surfaces, serialization, and owner sample size.
+Only ignored input/review/verification/output paths can move. A CLI approval-mode
+override can select `strict_independent`; it cannot substitute any other
+production setting. Helper configs cannot finalize or write approval.
+
+## Provenance Contract
+
+The strict schema is `schemas/continuation-pilot-v1.schema.json`, SHA-256
+`2057ea5c6f540ac68a54acd629551f9d3a44066bae81013be1bfac5e1dbb0634`.
+Unknown fields are rejected. Manual checks additionally enforce source-class
+conditions and hash linkage.
+
+Public-domain adaptations record author, title, HTTPS source URL, edition, exact
+source path/hash, rights basis, retained rights-evidence path/reference/hash,
+rights check date, source ID, original-story ID, acquisition method, and retained
+hash-verified acquisition evidence,
+and explicit declarations that bytes were independently downloaded from the
+documented source and were not copied from an unsealed Corpus-v3 candidate.
+Missing or false acquisition declarations fail. Authoring inputs that reference
+Corpus-v3 candidate IDs or paths also fail. AI-assisted originals and
+adaptations record the exact model identity, complete prompt and hash or a
+hash-bound retained prompt file, complete generation configuration, generation
+date, retained raw-output path/hash, editing history, and a final-content hash
+equal to the canonical opening plus continuation bytes. Preliminary assessments
+also retain and hash their exact raw outputs. Every source records a pretraining
+exposure classification (`not_identified`, `identified`, or `uncertain`), audit
+method, and disclosure. Adaptations from one original story stay grouped.
+Independent acquisition is distinct from exposure: a lawfully downloaded work
+is not prohibited merely because the same source appears in pretraining or
+Corpus-v3. Identified or uncertain Corpus-v3 overlap requires matching
+`identified`/`uncertain` pretraining exposure plus explicit overlap disclosure.
+
+Record paths are relative to one of the approved roots in
+`retained_artifact_roots`; absolute paths, traversal components, symlink escapes,
+missing files, and byte-hash mismatches fail. The production roots are under
+ignored `data/continuation_pilot_v1/sources/`, `rights_evidence/`, `prompts/`,
+and `raw_outputs/`. Downloaded public-domain source bytes, evidence snapshots,
+prompt files, and raw model/assessment outputs stay ignored and must never be
+committed. Tracked records therefore contain no machine-local path.
+
+Every example also carries a preliminary `automated` or `ai_assisted`
+assessment with assessor identity, prompt provenance, configuration, date,
+raw-output hash, summary, and only these risk flags:
+
+`ambiguous`, `low_quality`, `possible_contamination`, `possible_duplicate`,
+`rights_sensitive`, `provenance_incomplete`, `semantic_scorecard_collision`,
+`heldout_prompt_risk`, and `other_problematic`.
+
+The retained assessment output is canonical JSON with no unknown or missing
+fields. It binds the example ID and exact opening/continuation content hash and
+must exactly repeat method, assessor identity, conditional model identity,
+prompt hash, generation configuration, date, risk flags, and summary. Its bytes
+must be canonical and match the declared output hash. Metadata/output mismatch
+fails before packet selection, ensuring every output flag reaches owner review.
+These assessments are diagnostics only. They are never labeled human review.
+
+## Owner Mode
+
+`single_owner_research_pilot` deterministically exports a target sample of 50.
+The `deterministic_stratified_all_flags_v1` selection covers every genre,
+primary state family, split, represented source class, represented pretraining
+exposure class, clear/flagged risk stratum, and shortest/longest corpus length.
+It then hash-ranks fill rows. Every flagged row is included even when this makes
+the packet exceed 50. Selection reasons are recorded per row; an unavailable
+required frozen stratum stops export.
+
+One identified genuine human owner reviews every packet row and every atomic
+fact. Required yes/no/uncertain decisions cover rights/provenance, premise,
+motive, opening facts, contradictions, loops, plot advancement, genre voice,
+meaningful action and consequence, readability, and exploratory-SFT suitability.
+Any `no`, `uncertain`, contradicted fact, missing row, changed packet hash, or
+changed content blocks finalization.
+
+`<PROVENANCE_RECORD>` is valid evidence only for the rights/provenance decision.
+That decision must use exactly this sentinel. All prose and atomic-fact
+dimensions require a verbatim opening/continuation quote containing at least
+three normalized words; `<ABSENT>` is allowed only with a non-positive or
+non-retained judgment. These structural checks remove trivial evidence bypasses,
+but software cannot prove that a quoted passage is semantically relevant. The
+review remains a genuine-human attestation.
+
+Final `owner-verification.json` binds the prepared and packet hashes and records
+source-rights/provenance examination, example identity and final-content linkage,
+the semantic scorecard collision check, held-out prompt exclusion, no use of
+unsealed Corpus-v3 candidate bytes/artifacts for authoring, editing, or selection,
+and completed Corpus-v3/pretraining overlap audit/disclosure. It also records all
+reviewed IDs, the unreviewed count, genuine-human status, and explicit acknowledgement
+that unreviewed unflagged examples have diagnostics but no direct human quality
+judgment. `approval.json` reports `single_owner_research_pilot`, false independent
+validation, false publication certification, false adjudication, reviewed IDs
+and counts, unreviewed count, limitations, all artifact hashes, token totals,
+`unsealed_corpus_v3_candidate_bytes_or_artifacts_used: false`, and the completed
+overlap-audit/disclosure claim.
+Before accepting reviews, finalization freshly reconstructs the complete packet
+and key from prepared records, config, and approval mode. It compares packet
+content, order, sample/flag selection reasons, strict all-example coverage, key
+mapping, and contract metadata exactly; coordinated packet/key tampering fails.
+
+## Strict Mode
+
+`strict_independent` exports all 200 examples to a separate write-once packet.
+Exactly two distinct genuine human reviewers independently review each row.
+Every disagreement or uncertainty requires one distinct adjudicator; consensus
+failures remain failures. Strict verification binds reviewer/adjudicator identity,
+independence, rights/provenance, scorecard collision, held-out prompt checks,
+no unsealed Corpus-v3 candidate-artifact use, and exposure-overlap disclosure.
+Its manifest claims independent human validation but still does not claim
+publication-grade certification. Owner-mode reviews cannot satisfy strict mode,
+and strict claims never appear in an owner manifest.
 
 ## Commands
 
-Run each command from the repository root:
+Run from the repository root:
 
 ```bash
 source .venv/bin/activate
@@ -69,55 +163,28 @@ python -m src.continuation_pilot prepare
 python -m src.continuation_pilot audit
 python -m src.continuation_pilot export-review
 python -m src.continuation_pilot finalize
+
+python -m src.continuation_pilot export-review --approval-mode strict_independent
+python -m src.continuation_pilot finalize --approval-mode strict_independent
 ```
 
-`prepare` and `audit` produce a deterministic STOP report when canonical input
-is absent. Once input exists, they validate strict schema, counts, grouping,
-the 25-cell genre/state shortcut control, 100/100 stale-distractor balance,
-per-genre split representation, contamination, tokenizer identity,
-serialization, masking, EOS, and no truncation. `export-review` runs only after
-every automated gate passes and binds its packet to prepared-content hashes.
-The audit and final approval reports include exact tokenizer-v1 token totals
-overall and by train, validation, and test split.
-The CLI validates all critical settings against an in-code production contract:
-counts, distributions, seeds, word ranges, schema identity, tokenizer identity,
-serialization, and every contamination reference path/hash. Only private input,
-review, custodian, and generated-output paths may be relocated. Scaled fixture
-configs are helper-only and can never write `approval.json`.
+Owner artifacts use `review-packet.jsonl` and `review-key.json`; strict artifacts
+use `review-packet-strict-independent.jsonl` and
+`review-key-strict-independent.json`. Review exports are write-once: identical
+reruns are accepted, but changed content requires a new output location rather
+than overwriting evidence. All review rows bind the exact packet hash.
 
-Two distinct original reviewers must independently review every example for
-premise and motive preservation, opening-fact consistency, no loop, plot
-advancement, genre voice, meaningful action and consequence, and natural
-readability. Any disagreement or uncertainty requires one distinct independent
-adjudicator. Edited prose changes content and packet hashes, invalidating prior
-reviews.
+Canonical prose, retained source/evidence/prompt/raw-output bytes, rights records,
+completed reviews, and verification belong under ignored
+`data/continuation_pilot_v1/`. Derived audit artifacts belong under ignored
+`runs/continuation-pilot-v1/`.
 
-`finalize` also requires `custodian-verification.json`. The custodian must
-explicitly record that underlying rights/provenance evidence was examined, all
-rights were cleared, reviewer identities and genuine-human status were checked,
-review independence was checked, adjudicators were verified, and reserved
-post-selection prompts were excluded from authoring, editing, and candidate
-selection. The custodian must also attest that distinctive scorecard fact
-combinations were checked and that none collide. IDs, lexical scans, and self-
-attestations do not establish those real-world facts; software only verifies the
-custodian's hash-bound record. An adjudicator resolves only disputed or uncertain
-judgments; original-reviewer consensus, including a consensus failure, is
-preserved. Finalization writes `approval.json` only when every automated, human-
-review, adjudication, and custodian gate passes. Prepare/audit STOP and every
-anticipated finalization failure remove stale approval.
+## Authorization
 
-## Artifact Access
-
-`prepared.jsonl`, its token arrays, and review artifacts are audit evidence only.
-They are not an issue #9 SFT dataset API and do not authorize training. The pure
-`load_prepared_records` inspection helper defaults to train plus validation and
-refuses test unless `post_selection_complete=True` is explicitly supplied.
-Issue #9 must define and freeze its own hash-bound training export or loader;
-until then, no workflow command exposes these artifacts as training data.
-
-## Current Result
-
-No examples, rights approvals, reviews, or adjudications were created during
-workflow implementation. The tracked report in
-`experiments/fictionpulper-continuation-pilot-v1/README.md` records the pending
-state. No model training is implemented or authorized by this workflow.
+The production command currently returns STOP requesting canonical examples and
+real owner review/verification. No prose, rights decision, owner review, strict
+review, or approval was fabricated. Prepared JSONL, token arrays, diagnostics,
+and packets are audit-only. `load_prepared_records` hides test by default and
+requires explicit post-selection completion to inspect it. Issue #9 must define
+a separate hash-bound training export and protocol. SFT remains unauthorized
+until a genuine valid approval exists; this issue performs no training.
