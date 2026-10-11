@@ -31,6 +31,11 @@ The following distinctions are mandatory in code, reports, and status updates:
 - **Completed Scene Scorecard implementation and baseline generation:** issue
   #27 froze Scene Scorecard v1 and generated the complete 40-output sealed
   50M/Data30M baseline matrix without retries, rerolls, or drops.
+- **Completed continuation pilot:** issue #8 produced 200 audited examples and a
+  passing `single_owner_research_pilot` approval. The owner directly reviewed 50
+  selected/flagged examples; the other 150 have diagnostics but no direct human
+  quality review. This is not independent validation or publication-grade
+  certification.
 - **Pending human review:** Benchmark v2 generation produced 1,792
   continuations, and Scene Scorecard v1 produced 40. Independent primary human
   scoring and adjudication have not been completed for either evaluation.
@@ -45,6 +50,7 @@ Evidence is retained in:
 - [`experiments/fictionpulper-50m-data30m-v1/`](experiments/fictionpulper-50m-data30m-v1/README.md)
 - [`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md)
 - [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md)
+- [`experiments/fictionpulper-continuation-pilot-v1/`](experiments/fictionpulper-continuation-pilot-v1/README.md)
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
 - [`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md)
 
@@ -52,23 +58,21 @@ Evidence is retained in:
 
 Follow this order unless the project board records a newer decision:
 
-Issue [#27] is the completed prerequisite: Scene Scorecard v1 is frozen and the
-sealed 50M/Data30M baseline generation is complete. Its independent human review
-remains pending and must not be represented as complete.
+Issues [#27] and [#8] are completed prerequisites. Scene Scorecard v1 and its
+sealed 50M/Data30M baseline generation are complete, but its independent human
+review remains pending. The continuation corpus has limited single-owner pilot
+approval, not independent validation.
 
-1. [#8] builds a 100-300 example, rights-cleared, human-reviewed natural
-   continuation pilot with reproducible split and contamination audits.
-2. [#9] runs one preregistered, bounded continuation-SFT experiment on the
+1. [#9] runs one preregistered, bounded continuation-SFT experiment on the
    sealed, validation-selected 50M/Data30M checkpoint. This is controlled
    fine-tuning of FictionPulper's own from-scratch checkpoint, not pretrained
    model use and not another random-initialization pretraining run.
-3. [#12] is promoted only if independent evidence meets the frozen scene
+2. [#12] is promoted only if independent evidence meets the frozen scene
    scorecard. Training completion, lower perplexity, or one cherry-picked output
    does not satisfy it.
 
-Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews.
-It may proceed alongside the #8 pilot but remains required for primary Benchmark
-v2 score claims.
+Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews
+and remains required for primary Benchmark v2 score claims.
 
 The evidence-backed corpus recovery path is [#20] plus [#22], then [#21], then
 [#24]. Diagnosis and lawful source discovery may overlap as allowed by those

@@ -574,9 +574,9 @@ def _source_input_exclusion_audit(
             detail: dict[str, Any] = {}
             if source_normalized == reference_normalized:
                 match = "normalized_exact"
-            elif reference_words and len(reference_words) <= len(source_words) and any(
-                source_words[index:index + len(reference_words)] == reference_words
-                for index in range(len(source_words) - len(reference_words) + 1)
+            elif (
+                reference_normalized
+                and f" {reference_normalized} " in f" {source_normalized} "
             ):
                 match = "full_reference_containment"
             elif len(reference_words) >= distinctive_width:

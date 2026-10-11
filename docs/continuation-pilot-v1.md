@@ -5,7 +5,8 @@ continuations. The active approval mode is `single_owner_research_pilot`. This i
 an exploratory single-owner artifact, not independent validation, adjudication,
 publication-grade certification, or evidence of general corpus fitness. The
 optional `strict_independent` mode preserves the two-reviewer and adjudicator
-workflow as a separate claim. Neither mode has real corpus or review inputs yet.
+workflow as a separate claim. The owner-mode corpus and review are complete;
+strict-mode independent review has not occurred.
 
 ## Frozen Corpus Contract
 
@@ -179,12 +180,28 @@ completed reviews, and verification belong under ignored
 `data/continuation_pilot_v1/`. Derived audit artifacts belong under ignored
 `runs/continuation-pilot-v1/`.
 
-## Authorization
+## Completed Pilot
 
-The production command currently returns STOP requesting canonical examples and
-real owner review/verification. No prose, rights decision, owner review, strict
-review, or approval was fabricated. Prepared JSONL, token arrays, diagnostics,
-and packets are audit-only. `load_prepared_records` hides test by default and
-requires explicit post-selection completion to inspect it. Issue #9 must define
-a separate hash-bound training export and protocol. SFT remains unauthorized
-until a genuine valid approval exists; this issue performs no training.
+The production corpus contains 200 examples and passed every automated gate.
+Its canonical examples hash is
+`e3e17d0e0e2c8249158b215965ab5f4b15456db7248a198767b35721fd3f176b`;
+the prepared artifact hash is
+`35253b224177781631bb224ef39e11b464a2aed4cef96cdafc85a2368da8b881`.
+Serialization produced 95,323 tokenizer-v1 tokens: 76,546 train, 9,280
+validation, and 9,497 test, with no truncation.
+
+The deterministic packet hash is
+`7fef84d4f8e1ce8b3720fa105ae038ff31bb973d11993bde7be8a92f773ac488`.
+The identified owner reviewed and approved all 50 packet rows, including every
+one of the 40 `rights_sensitive` AI-assisted originals, and completed the final
+rights/provenance verification. Finalization returned `APPROVED` in
+`single_owner_research_pilot` mode. The remaining 150 unflagged examples have
+automated/AI-assisted diagnostics but no direct human quality judgment. No
+independent validation, adjudication, publication-grade certification, or
+general corpus fitness is claimed.
+
+Prepared JSONL, token arrays, diagnostics, and packets remain audit-only.
+`load_prepared_records` hides test by default and requires explicit
+post-selection completion to inspect it. Issue #9 must define a separate
+hash-bound training export and frozen protocol before SFT; issue #8 performed no
+training.
