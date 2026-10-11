@@ -48,14 +48,14 @@ It does not perform training. Automated diagnostics are not human scores.
 
 ## Recovery Order
 
-Issue [#27](https://github.com/BearCatCoder/FictionPulper/issues/27) is the
-completed prerequisite: the scorecard and baseline generation are complete,
-while its independent human review remains pending.
+Issues [#27](https://github.com/BearCatCoder/FictionPulper/issues/27) and
+[#8](https://github.com/BearCatCoder/FictionPulper/issues/8) are completed
+prerequisites. Scorecard independent human review remains pending; continuation
+pilot approval is limited to the single-owner research mode described below.
 
-1. [#8](https://github.com/BearCatCoder/FictionPulper/issues/8) then
-   [#9](https://github.com/BearCatCoder/FictionPulper/issues/9): build a
-   100-300-example audited natural-continuation corpus, then run one
-   preregistered SFT experiment on the existing sealed 50M/Data30M checkpoint.
+1. [#9](https://github.com/BearCatCoder/FictionPulper/issues/9): use the
+   completed #8 continuation pilot to preregister and run one bounded SFT
+   experiment on the existing sealed 50M/Data30M checkpoint.
 2. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): promote only
    on independent evidence under the frozen scorecard, not on lower perplexity,
    completed training, or a cherry-picked generation.
@@ -67,29 +67,30 @@ while its independent human review remains pending.
    an actually approved corpus.
 
 Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
-the separate Benchmark v2 human reviews and may proceed alongside the #8 pilot.
+the separate Benchmark v2 human reviews.
 
-The issue #8 continuation-pilot workflow is implemented, but the pilot remains
-**STOP/pending** because no canonical examples or real owner review and final
-verification have been supplied. The active mode is explicitly
-`single_owner_research_pilot`, not independent validation or publication-grade
-certification. It never fabricates those inputs:
+Issue #8's 200-example continuation pilot passed its automated audit and its
+hash-bound `single_owner_research_pilot` approval. The owner directly reviewed
+the deterministic 50-row selected/flagged packet; the other 150 unflagged rows
+have diagnostics but no direct human quality review. This is not independent
+validation or publication-grade certification:
 
 ```bash
 python -m src.continuation_pilot prepare
 python -m unittest tests.test_continuation_pilot
 ```
 
-Preparation enforces the frozen 200-example contract and writes a deterministic
-pending report when inputs are absent. Source-class-conditional public-domain
-and AI-assistance provenance, safe retained source/evidence/prompt/raw-output
-paths with exact byte hashes, expanded metadata contamination checks,
+Preparation enforces the frozen 200-example contract. Source-class-conditional
+public-domain and AI-assistance provenance, safe retained
+source/evidence/prompt/raw-output paths with exact byte hashes, expanded
+metadata contamination checks,
 canonical content-bound preliminary diagnostic outputs and flags, deterministic
 50-row-plus-all-flags owner review, final owner verification, and the separately
 available `strict_independent` two-reviewer/adjudicator mode are documented with
 the existing split, contamination, serialization, and masking gates in
-[`docs/continuation-pilot-v1.md`](docs/continuation-pilot-v1.md). No issue #9
-training is included or authorized; prepared/review artifacts are audit-only.
+[`docs/continuation-pilot-v1.md`](docs/continuation-pilot-v1.md). Issue #9 must
+define and freeze its own training export and protocol before training;
+prepared/review artifacts remain audit-only.
 Public-domain bytes must be independently acquired from documented sources, not
 copied from unsealed Corpus-v3 candidates; disclosed source overlap remains
 allowed and does not erase pretraining exposure.
