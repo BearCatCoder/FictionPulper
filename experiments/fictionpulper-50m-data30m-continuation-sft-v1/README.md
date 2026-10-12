@@ -80,6 +80,9 @@ There is one setting and no resume or sweep.
 The canonical approved corpus is hash-bound directly. `prepared.jsonl` is never
 read. The write-once export contains token IDs and continuation-only labels for
 160 train and 20 validation examples; it cannot contain the 20 test examples.
+Its manifest hash is fixed in the loader after export review, so preflight and
+training verify the sealed artifact without reopening the canonical source or
+held-out rows.
 The training config has no continuation-test, Scene Scorecard, Benchmark v2, or
 clean-fiction test path. Those paths exist only in a separately hash-locked
 protocol that the post-selection command opens after its selection gate passes.

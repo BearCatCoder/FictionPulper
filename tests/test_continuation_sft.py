@@ -76,17 +76,15 @@ class ContinuationSFTTests(unittest.TestCase):
             manifest_path = root / "manifest.json"
             write_json_atomic(manifest_path, manifest)
             digest = sha256_file(manifest_path)
-            expected_rows = {
-                "train": [
-                    {"split": "train", "input_ids": [1, 2, 3], "labels": [-100, 3, 4], "continuation_target_count_including_eos": 2, "value": index}
-                    for index in range(160)
-                ],
-                "validation": [
-                    {"split": "validation", "input_ids": [1, 2, 3], "labels": [-100, 3, 4], "continuation_target_count_including_eos": 2, "value": index}
-                    for index in range(20)
-                ],
-            }
-            with patch("src.continuation_sft._derive_export_rows", return_value=expected_rows):
+            manifest.update({
+                "format": "fictionpulper-continuation-training-export-v1",
+                "tokenizer_sha256": config["tokenizer"]["sha256"],
+                "schema_sha256": "2057ea5c6f540ac68a54acd629551f9d3a44066bae81013be1bfac5e1dbb0634",
+                "split_seed": config["corpus"]["split_seed"],
+            })
+            write_json_atomic(manifest_path, manifest)
+            digest = sha256_file(manifest_path)
+            with patch("src.continuation_sft.FROZEN_EXPORT_MANIFEST_SHA256", digest):
                 self.assertEqual(set(load_export(config, manifest_path, digest)), {"train", "validation"})
             manifest["included_splits"].append("test")
             write_json_atomic(manifest_path, manifest)

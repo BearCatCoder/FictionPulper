@@ -51,6 +51,7 @@ FORMAT = "fictionpulper-continuation-sft-v1"
 EXPERIMENT_ID = "fictionpulper-50m-data30m-continuation-sft-v1"
 FROZEN_CONFIG_SHA256 = "07a4c2f93a285f32a865e04db0074d8aa7582c396662b2908f57ccd0baa92523"
 FROZEN_POST_SELECTION_PROTOCOL_SHA256 = "f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87"
+FROZEN_EXPORT_MANIFEST_SHA256 = "8d38726277615e43824d021d6a01154779905de0a93fdd2973fe15bcd97e38f4"
 SPLIT_COUNTS = {"train": 160, "validation": 20, "test": 20}
 SPLIT_GENRE_COUNTS = {
     split: {genre: count for genre in ("crime_noir", "horror_occult", "science_fiction", "western_adventure", "weird_fantasy")}
@@ -158,13 +159,18 @@ def export_training_corpus(config: Mapping[str, Any], output_dir: Path) -> dict[
 
 
 def load_export(config: Mapping[str, Any], manifest_path: Path, expected_sha256: str) -> dict[str, list[dict[str, Any]]]:
-    verify_file(manifest_path, expected_sha256, "training export manifest")
+    actual_manifest_sha256 = verify_file(manifest_path, expected_sha256, "training export manifest")
+    require(actual_manifest_sha256 == FROZEN_EXPORT_MANIFEST_SHA256, "training export differs from the reviewed canonical export")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    require(manifest.get("format") == "fictionpulper-continuation-training-export-v1", "training export format changed")
     require(manifest.get("status") == "sealed_train_validation_export", "training export is not sealed")
     require(manifest.get("included_splits") == ["train", "validation"] and manifest.get("excluded_split") == "test", "training export split policy changed")
     require(manifest.get("prepared_jsonl_used") is False, "audit prepared.jsonl is forbidden")
     require(manifest.get("canonical_examples_sha256") == config["corpus"]["examples_sha256"], "export corpus provenance changed")
     require(manifest.get("approval_sha256") == config["corpus"]["approval_sha256"], "export approval provenance changed")
+    require(manifest.get("tokenizer_sha256") == config["tokenizer"]["sha256"], "export tokenizer provenance changed")
+    require(manifest.get("schema_sha256") == PRODUCTION_SCHEMA_SHA256, "export schema provenance changed")
+    require(manifest.get("split_seed") == config["corpus"]["split_seed"], "export split seed changed")
     result = {}
     for split, expected_count in (("train", 160), ("validation", 20)):
         spec = manifest["artifacts"][split]
@@ -181,8 +187,6 @@ def load_export(config: Mapping[str, Any], manifest_path: Path, expected_sha256:
             require(labels == [-100] * (len(labels) - target_count) + labels[-target_count:], f"{split} export mask is not continuation-only")
             require(all(value != -100 for value in labels[-target_count:]), f"{split} export target mask has a gap")
         result[split] = rows
-    expected_rows = _derive_export_rows(config)
-    require(result == expected_rows, "training export does not exactly reproduce the approved canonical corpus")
     return result
 
 
