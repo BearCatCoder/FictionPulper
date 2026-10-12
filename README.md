@@ -56,21 +56,26 @@ It does not perform training. Automated diagnostics are not human scores.
 ## Recovery Order
 
 Issues [#27](https://github.com/BearCatCoder/FictionPulper/issues/27),
-[#8](https://github.com/BearCatCoder/FictionPulper/issues/8), and
-[#9](https://github.com/BearCatCoder/FictionPulper/issues/9) are completed
-prerequisites. Scorecard independent human review remains pending; continuation
-pilot approval is limited to the single-owner research mode described below.
+[#8](https://github.com/BearCatCoder/FictionPulper/issues/8),
+[#9](https://github.com/BearCatCoder/FictionPulper/issues/9), and
+[#20](https://github.com/BearCatCoder/FictionPulper/issues/20) are complete.
+Scorecard independent human review remains pending; continuation pilot approval
+is limited to the single-owner research mode described below.
 
 1. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): remain
    blocked until independent review of #9's corrected matched Scene packet;
    promote only on evidence under the frozen scorecard, not lower perplexity,
    completed training, or a cherry-picked generation.
-2. [#20](https://github.com/BearCatCoder/FictionPulper/issues/20) plus
-   [#22](https://github.com/BearCatCoder/FictionPulper/issues/22), then
+2. [#22](https://github.com/BearCatCoder/FictionPulper/issues/22), then
    [#21](https://github.com/BearCatCoder/FictionPulper/issues/21), then
-   [#24](https://github.com/BearCatCoder/FictionPulper/issues/24): diagnose
-   Corpus-v3 supply and blockers, pilot lawful source expansion, and seal only
-   an actually approved corpus.
+   [#24](https://github.com/BearCatCoder/FictionPulper/issues/24): resolve the
+   review, genre, and evidence-migration blockers identified by #20, pilot
+   lawful source expansion, and seal only an actually approved corpus.
+
+Issue #20 measured 14,923,683 individually eligible tokens and a 21,878,226
+token provenance-only scenario, not a full upper bound. Data50M/Data100M from
+the current pool is unsupported; external expansion remains unknown pending a
+measured #21 pilot. See [the shortfall diagnosis](docs/corpus-v3-shortfall.md).
 
 Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
 the separate Benchmark v2 human reviews.

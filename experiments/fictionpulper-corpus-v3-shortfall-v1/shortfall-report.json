@@ -1,0 +1,458 @@
+{
+  "report_id": "fictionpulper-corpus-v3-shortfall-v1",
+  "version": 1,
+  "status": "diagnosis_complete_not_training_ready",
+  "inputs": {
+    "corpus_v2": {
+      "path": "data/corpus_v2/corpus.jsonl",
+      "sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087"
+    },
+    "corpus_v2_source_manifest": {
+      "path": "data/corpus_v2/source-manifest.jsonl",
+      "sha256": "35063cc6ae2b342f965d4ca56d78e38dc12277cf6e52b6ff2555addd9e975f07"
+    },
+    "corpus_v2_source_summaries": {
+      "path": "data/corpus_v2/source-summaries.jsonl",
+      "sha256": "ef7536c39c5d17b6cd4591e3a7feee2e9d2c10c812810a6b670c921d1a64c3c3"
+    },
+    "corpus_v2_stats": {
+      "path": "data/corpus_v2/stats.json",
+      "sha256": "e1d85aa105a558f7a8dfa231cbd43a20583376eb5bcb87ccc5981d6bf1cbf399"
+    },
+    "corpus_v3": {
+      "path": "data/corpus_v3/corpus.jsonl",
+      "sha256": "3c98f3f67afe395225949868d13044e3a226e87607edfd132a72344a288b88d0"
+    },
+    "corpus_v3_acquisition_failures": {
+      "path": "data/corpus_v3/acquisition-failures.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corpus_v3_attainable_stage": {
+      "path": "data/corpus_v3/stages/attainable.json",
+      "sha256": "f3e339ab2df53cd50beb65209c75fde3a005691fb3e0cebfbef49c35f5378ee6"
+    },
+    "corpus_v3_audits": {
+      "path": "data/corpus_v3/audits.json",
+      "sha256": "7c89c2274e6755945b419ee486422dd460f6a9127d3902a09be76edf01d8b140"
+    },
+    "corpus_v3_config": {
+      "path": "configs/corpus-v3.yaml",
+      "sha256": "cd362802dbac656d6ed1b4532525f046d01ec6dd0a1f864ba455d583e7a90213"
+    },
+    "corpus_v3_manifest": {
+      "path": "data/corpus_v3/manifest.json",
+      "sha256": "fc3417541b42a837137ad7fe1c3dd6899574394509785803faf7075320bd35ff"
+    },
+    "corpus_v3_near_duplicate_candidates": {
+      "path": "data/corpus_v3/near-duplicate-candidates.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corpus_v3_near_duplicate_clusters": {
+      "path": "data/corpus_v3/near-duplicate-clusters.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corpus_v3_rejections": {
+      "path": "data/corpus_v3/rejections.jsonl",
+      "sha256": "275ce10f5eee226d8d9f0240243f2c1f7a991de30180fbb1bddfca275bcbab6f"
+    },
+    "corpus_v3_source_artifacts": {
+      "path": "data/corpus_v3/source-artifacts.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corpus_v3_stats": {
+      "path": "data/corpus_v3/stats.json",
+      "sha256": "e73c0a8679ded9d51add0d83ff6535b014c4e2e753b8d66dbd7705701f8b27e2"
+    },
+    "tokenizer": {
+      "path": "data/tokenizer/tokenizer.json",
+      "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+    }
+  },
+  "scope": {
+    "source_inventories_configured": 0,
+    "external_acquisition_attempts": 0,
+    "external_acquisition_failures": 0,
+    "sealed_artifacts_modified": false
+  },
+  "funnel": {
+    "candidate": {
+      "records": 4362,
+      "tokenizer_v1_tokens": 30004706
+    },
+    "retained": {
+      "records": 1947,
+      "tokenizer_v1_tokens": 14923683
+    },
+    "rejected": {
+      "records": 2415,
+      "tokenizer_v1_tokens": 15081023
+    },
+    "exclusive_first_rejection_reason": {
+      "incomplete_creator_evidence": {
+        "records": 214,
+        "tokenizer_v1_tokens": 1282487
+      },
+      "invalid_schema": {
+        "records": 1841,
+        "tokenizer_v1_tokens": 9900936
+      },
+      "prohibited_text_signal": {
+        "records": 46,
+        "tokenizer_v1_tokens": 560595
+      },
+      "quality_review_required": {
+        "records": 314,
+        "tokenizer_v1_tokens": 3337005
+      }
+    },
+    "categories_are_exclusive": true
+  },
+  "independent_token_accounting": {
+    "corpus_v2_stats_tokens": 30004706,
+    "corpus_v3_stats_tokens": 14923683,
+    "corpus_v3_audit_tokens": 14923683,
+    "attainable_stage_tokens": 14923683
+  },
+  "overlapping_quality_diagnostics": {
+    "population": "exclusive quality_review_required rows",
+    "categories_are_exclusive": false,
+    "signals": {
+      "transcriber_or_editor_note": {
+        "records": 17,
+        "tokenizer_v1_tokens": 142256
+      },
+      "suspicious_markup_glyph": {
+        "records": 45,
+        "tokenizer_v1_tokens": 483449
+      },
+      "digit_intrusion": {
+        "records": 271,
+        "tokenizer_v1_tokens": 2904711
+      }
+    }
+  },
+  "major_shortfall_categories": {
+    "external_candidate_availability": {
+      "records": null,
+      "tokenizer_v1_tokens": null,
+      "status": "unknown_no_external_inventory"
+    },
+    "acquisition_or_resumability_failures": {
+      "records": 0,
+      "tokenizer_v1_tokens": null
+    },
+    "exact_duplicate_losses": {
+      "records": 0,
+      "tokenizer_v1_tokens": 0
+    },
+    "near_duplicate_candidates": {
+      "edges": 0,
+      "clusters": 0,
+      "accepted_unresolved_clusters": 0
+    },
+    "genre_admission_filter_losses": {
+      "records": 0,
+      "tokenizer_v1_tokens": 0,
+      "note": "Genre is a corpus-level gate, not a current row rejection."
+    },
+    "length_filter_losses": {
+      "records": 0,
+      "tokenizer_v1_tokens": 0
+    },
+    "boundary_filter_losses": {
+      "records": 0,
+      "tokenizer_v1_tokens": 0
+    },
+    "creator_evidence_losses": {
+      "records": 214,
+      "tokenizer_v1_tokens": 1282487
+    },
+    "quality_review_losses": {
+      "records": 314,
+      "tokenizer_v1_tokens": 3337005
+    },
+    "prohibited_text_losses": {
+      "records": 46,
+      "tokenizer_v1_tokens": 560595
+    },
+    "schema_or_provenance_losses": {
+      "records": 1841,
+      "tokenizer_v1_tokens": 9900936
+    },
+    "selection_or_concentration_losses": {
+      "records": 0,
+      "tokenizer_v1_tokens": 0
+    }
+  },
+  "historical_upstream_extraction_losses": {
+    "categories": {
+      "damaged_ocr_suspicious_tokens": {
+        "records": 11,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "exact_duplicate": {
+        "records": 1281,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "insufficient_prose_paragraphs": {
+        "records": 16,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "low_confidence_collection": {
+        "records": 558,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "medium_confidence_collection": {
+        "records": 244,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "probable_novel_chapter_contamination": {
+        "records": 93,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "probable_poetry": {
+        "records": 2,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "reviewed_near_duplicate": {
+        "records": 161,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "source_title_match_possible_whole_book": {
+        "records": 21,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "too_long_possible_novel": {
+        "records": 88,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      },
+      "too_short_or_front_matter": {
+        "records": 336,
+        "tokenizer_v1_tokens": null,
+        "scope": "historical_corpus_v2_acquisition"
+      }
+    },
+    "record_unit_note": "Most rows are extracted story candidates; low- and medium-confidence reasons count whole collection records.",
+    "token_accounting": "unknown because rejected candidate document-token counts were not retained"
+  },
+  "schema_loss_by_source": {
+    "Travis-ML/ShortStory-SFT-jsonl": {
+      "records": 707,
+      "tokenizer_v1_tokens": 1730479
+    },
+    "project_gutenberg": {
+      "records": 1134,
+      "tokenizer_v1_tokens": 8170457
+    }
+  },
+  "current_rejection_recovery_disposition": {
+    "invalid_schema_project_gutenberg": {
+      "status": "conditional_provenance_recovery",
+      "records": 1134,
+      "tokenizer_v1_tokens": 8170457
+    },
+    "invalid_schema_seed_corpus": {
+      "status": "unavailable_without_original_source_bytes_rights_and_hashes",
+      "records": 707,
+      "tokenizer_v1_tokens": 1730479
+    },
+    "incomplete_creator_evidence": {
+      "status": "recoverability_unknown_pending_evidence",
+      "records": 214,
+      "tokenizer_v1_tokens": 1282487
+    },
+    "quality_review_required": {
+      "status": "recoverability_unknown_pending_human_review",
+      "records": 314,
+      "tokenizer_v1_tokens": 3337005
+    },
+    "prohibited_text_signal": {
+      "status": "intentional_safeguard_exclusion",
+      "records": 46,
+      "tokenizer_v1_tokens": 560595
+    }
+  },
+  "conditional_gutenberg_provenance_recovery": {
+    "status": "measured_conditional_not_admitted",
+    "source_records_with_hash_pinned_manifest_join": 1134,
+    "source_ids_with_hash_pinned_manifest_join": 126,
+    "assumption": "Join legacy Gutenberg rows to exact source bytes, verify deterministic text derivation, revalidate story boundaries, and independently validate rights evidence; no placeholder evidence is admissible.",
+    "post_repair_first_reason": {
+      "incomplete_creator_evidence": {
+        "records": 61,
+        "tokenizer_v1_tokens": 369216
+      },
+      "otherwise_eligible": {
+        "records": 979,
+        "tokenizer_v1_tokens": 6954543
+      },
+      "prohibited_text_signal": {
+        "records": 11,
+        "tokenizer_v1_tokens": 78851
+      },
+      "quality_review_required": {
+        "records": 83,
+        "tokenizer_v1_tokens": 767847
+      }
+    }
+  },
+  "source_yield_hypotheses": {
+    "existing_medium_confidence_gutenberg_collections": {
+      "collection_records": 244,
+      "gross_extracted_candidate_records": 2174,
+      "duplicate_adjusted_candidate_record_range": null,
+      "quality_adjusted_candidate_record_range": null,
+      "token_yield_range": null,
+      "token_yield_status": "unknown_unmeasured",
+      "top_catalogs_by_extracted_candidates": [
+        {
+          "source_id": "pg-25918",
+          "extracted_candidates": 93
+        },
+        {
+          "source_id": "pg-28",
+          "extracted_candidates": 81
+        },
+        {
+          "source_id": "pg-30635",
+          "extracted_candidates": 45
+        },
+        {
+          "source_id": "pg-13667",
+          "extracted_candidates": 38
+        },
+        {
+          "source_id": "pg-3815",
+          "extracted_candidates": 37
+        },
+        {
+          "source_id": "pg-1858",
+          "extracted_candidates": 32
+        },
+        {
+          "source_id": "pg-142",
+          "extracted_candidates": 29
+        },
+        {
+          "source_id": "pg-13514",
+          "extracted_candidates": 25
+        },
+        {
+          "source_id": "pg-1210",
+          "extracted_candidates": 24
+        },
+        {
+          "source_id": "pg-1477",
+          "extracted_candidates": 24
+        }
+      ]
+    },
+    "existing_low_confidence_gutenberg_collections": {
+      "collection_records": 558,
+      "gross_extracted_candidate_records": 46,
+      "duplicate_adjusted_candidate_record_range": null,
+      "quality_adjusted_candidate_record_range": null,
+      "token_yield_range": null,
+      "token_yield_status": "unknown_unmeasured",
+      "top_catalogs_by_extracted_candidates": [
+        {
+          "source_id": "pg-10483",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-1055",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-10756",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-10947",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-11032",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-12094",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-1289",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-1466",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-17732",
+          "extracted_candidates": 1
+        },
+        {
+          "source_id": "pg-17893",
+          "extracted_candidates": 1
+        }
+      ]
+    },
+    "new_external_catalogs": {
+      "gross_token_yield_range": null,
+      "duplicate_adjusted_token_yield_range": null,
+      "quality_adjusted_token_yield_range": null,
+      "status": "unknown_until_issue_21_bounded_source_pilot"
+    }
+  },
+  "attainable_size": {
+    "measured_individually_eligible_tokens": 14923683,
+    "measured_provenance_only_scenario_tokens": 21878226,
+    "bounded_evidence_scenario_range_tokens": [
+      14923683,
+      21878226
+    ],
+    "conditional_additional_tokens": 6954543,
+    "full_current_pool_upper_bound": "unknown_pending_creator_and_quality_review",
+    "gross_current_candidate_ceiling_tokens": 30004706,
+    "data50m_current_pool": "unsupported",
+    "data100m_current_pool": "unsupported",
+    "external_expansion": "unknown",
+    "gap_from_provenance_scenario_to_data50m": 28121774,
+    "uncertainty": "The scenario endpoint is not a full current-pool upper bound. It includes only the measured provenance-repair opportunity; creator-evidence and quality-review recovery remain unknown. Every recovered row must still pass duplicate, genre, concentration, quality, split-leakage, and human-review gates."
+  },
+  "current_blockers": {
+    "failed_required_gates": [
+      "deterministic_review",
+      "genre_distribution"
+    ],
+    "unclassified_token_share": 0.5704083234681412,
+    "maximum_unclassified_token_share": 0.35,
+    "pending_deterministic_review_records": 32
+  },
+  "decision": {
+    "recommended_next_action": "Run a bounded provenance-recovery pass for the 1,134 legacy Gutenberg rows, verifying source-byte/text linkage, boundaries, and rights before external expansion.",
+    "safeguards_retained": [
+      "rights evidence",
+      "source hashing",
+      "exact and near-duplicate review",
+      "split leakage",
+      "creator and collection concentration",
+      "quality and OCR review",
+      "high-confidence story boundaries",
+      "genre coverage",
+      "deterministic human review"
+    ],
+    "training_authorized": false,
+    "corpus_v3_training_ready": false
+  }
+}
