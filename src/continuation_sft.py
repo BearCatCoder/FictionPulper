@@ -556,10 +556,12 @@ def run_post_selection(
         {**row, "generation_id": f"candidate:{row['generation_id']}"}
         for row in scene_records
     ]
-    packet, key = build_review_packet(combined, seed=int(scene_protocol["review"]["blinded_packet_seed"]))
+    scene_packet, scene_key = build_review_packet(
+        combined, seed=int(scene_protocol["review"]["blinded_packet_seed"]),
+    )
     model_by_review = {
         review_id: str(metadata["generation_id"]).split(":", 1)[0]
-        for review_id, metadata in key.items()
+        for review_id, metadata in scene_key.items()
     }
     scene_dir = output_dir / "scene-scorecard"
 
@@ -602,10 +604,10 @@ def run_post_selection(
         raw_path = split_dir / "raw-generations.jsonl"
         packet_path = split_dir / "blinded-review-packet.jsonl"
         _write_once(raw_path, records, jsonl=True)
-        packet = build_benchmark_review_packet(
+        benchmark_packet = build_benchmark_review_packet(
             records, randomization_seed=int(rubric["randomization_seed"]),
         )
-        _write_once(packet_path, packet, jsonl=True)
+        _write_once(packet_path, benchmark_packet, jsonl=True)
         _write_once(split_dir / "private-review-key.json", {
             "blinded_model_id": "model-c",
             "model_identity": summary["selected_checkpoint_sha256"],
@@ -667,14 +669,79 @@ def run_post_selection(
     }
     scene_dir.mkdir()
     _write_once(scene_dir / "candidate-raw.jsonl", scene_records, jsonl=True)
-    _write_once(scene_dir / "blinded-review-packet.jsonl", packet, jsonl=True)
+    _write_once(scene_dir / "blinded-review-packet.jsonl", scene_packet, jsonl=True)
     _write_once(scene_dir / "private-review-key.json", {
         "model_identities": {"base": config["base"]["checkpoint_sha256"], "candidate": summary["selected_checkpoint_sha256"]},
-        "model_by_review_id": model_by_review, "review_metadata": key, "human_review_status": "pending",
+        "model_by_review_id": model_by_review, "review_metadata": scene_key, "human_review_status": "pending",
     })
     _write_once(output_dir / "report.json", report)
     output_dir.rename(final_output_dir)
     return report
+
+
+def correct_scene_review_packet(
+    config: Mapping[str, Any], source_dir: Path, source_report_sha256: str,
+    output_dir: Path, protocol_path: Path, protocol_sha256: str,
+) -> dict[str, Any]:
+    """Derive a corrected scene packet without changing the completed run."""
+    require(not output_dir.exists(), f"refusing to overwrite correction output: {output_dir}")
+    report_path = source_dir / "report.json"
+    verify_file(report_path, source_report_sha256, "source post-selection report")
+    source_report = json.loads(report_path.read_text(encoding="utf-8"))
+    verify_file(protocol_path, protocol_sha256, "frozen post-selection protocol")
+    require(protocol_sha256 == FROZEN_POST_SELECTION_PROTOCOL_SHA256, "post-selection protocol differs from the reviewed preregistration")
+    post = json.loads(protocol_path.read_text(encoding="utf-8"))
+    scene_protocol, prompts, scene_hashes = load_scene_protocol(Path(post["scene_protocol_root"]))
+    require(scene_hashes["protocol_sha256"] == post["scene_protocol_sha256"], "scene protocol lock changed")
+    base_spec = post["base_scene_raw"]
+    base_path = Path(base_spec["path"])
+    verify_file(base_path, base_spec["sha256"], "sealed base raw scene outputs")
+    base_records = load_jsonl(base_path)
+    candidate_path = source_dir / "scene-scorecard" / "candidate-raw.jsonl"
+    candidate_records = load_jsonl(candidate_path)
+    validate_matrix(base_records, prompts, scene_protocol)
+    validate_matrix(candidate_records, prompts, scene_protocol)
+    combined = [
+        {**row, "generation_id": f"base:{row['generation_id']}"}
+        for row in base_records
+    ] + [
+        {**row, "generation_id": f"candidate:{row['generation_id']}"}
+        for row in candidate_records
+    ]
+    packet, key = build_review_packet(
+        combined, seed=int(scene_protocol["review"]["blinded_packet_seed"]),
+    )
+    require(len(packet) == 80 and len(key) == 80, "corrected scene packet is incomplete")
+    packet_path = output_dir / "blinded-review-packet.jsonl"
+    key_path = output_dir / "private-review-key.json"
+    _write_once(packet_path, packet, jsonl=True)
+    _write_once(key_path, {
+        "model_identities": {
+            "base": config["base"]["checkpoint_sha256"],
+            "candidate": source_report["selected_checkpoint_sha256"],
+        },
+        "model_by_review_id": {
+            review_id: str(metadata["generation_id"]).split(":", 1)[0]
+            for review_id, metadata in key.items()
+        },
+        "review_metadata": key,
+        "human_review_status": "pending",
+    })
+    correction = {
+        "status": "corrected_scene_review_packet_human_review_pending",
+        "source_report_sha256": source_report_sha256,
+        "source_candidate_raw_sha256": sha256_file(candidate_path),
+        "source_flawed_packet_sha256": sha256_file(source_dir / "scene-scorecard" / "blinded-review-packet.jsonl"),
+        "defect": "The original scene packet path contained the Benchmark v2 generalization packet because a local variable was reused after scene packet construction.",
+        "raw_generations_changed": False,
+        "model_or_decoding_changed": False,
+        "corrected_output_count": len(packet),
+        "corrected_packet_sha256": sha256_file(packet_path),
+        "corrected_key_sha256": sha256_file(key_path),
+        "human_review": "pending",
+    }
+    _write_once(output_dir / "correction-report.json", correction)
+    return correction
 
 
 def parse_args() -> argparse.Namespace:
@@ -700,6 +767,12 @@ def parse_args() -> argparse.Namespace:
     post.add_argument("--protocol", type=Path, default=Path("experiments/fictionpulper-50m-data30m-continuation-sft-v1/post-selection-protocol.json"))
     post.add_argument("--protocol-sha256", required=True)
     post.add_argument("--output-dir", type=Path, default=Path("runs/fictionpulper-50m-data30m-continuation-sft-v1/post-selection"))
+    correction = sub.add_parser("correct-scene-packet")
+    correction.add_argument("--source-dir", type=Path, required=True)
+    correction.add_argument("--source-report-sha256", required=True)
+    correction.add_argument("--protocol", type=Path, default=Path("experiments/fictionpulper-50m-data30m-continuation-sft-v1/post-selection-protocol.json"))
+    correction.add_argument("--protocol-sha256", required=True)
+    correction.add_argument("--output-dir", type=Path, default=Path("runs/fictionpulper-50m-data30m-continuation-sft-v1/post-selection-correction"))
     return parser.parse_args()
 
 
@@ -719,9 +792,14 @@ def main() -> None:
             config, args.config_sha256, args.export_manifest, args.export_sha256,
             args.preflight, args.preflight_sha256,
         )
-    else:
+    elif args.command == "post-selection":
         result = run_post_selection(
             config, args.summary, args.checkpoint, args.summary_sha256, args.output_dir,
+            args.protocol, args.protocol_sha256,
+        )
+    else:
+        result = correct_scene_review_packet(
+            config, args.source_dir, args.source_report_sha256, args.output_dir,
             args.protocol, args.protocol_sha256,
         )
     print(json.dumps(result, indent=2, sort_keys=True))

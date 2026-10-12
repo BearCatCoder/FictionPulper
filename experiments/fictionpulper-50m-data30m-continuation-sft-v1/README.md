@@ -10,6 +10,12 @@ matched the sealed Data30M metadata and historical experiment seals. This
 clerical correction is committed and disclosed before a second invocation; no
 decoding, seed, model, data membership, or metric policy changed.
 
+The completed second invocation preserved all correct raw outputs, but its
+Scene Scorecard packet path received the final Benchmark v2 packet because of a
+local-variable reuse bug. The original run remains untouched. The tracked
+correction command rebuilds only that packet and private key from the preserved
+40 base plus 40 candidate scene records into a separate write-once directory.
+
 This issue #9 pilot starts only from the sealed validation-selected 50M/Data30M
 checkpoint. AdamW is initialized fresh. It uses seed 9009, LR `1e-5`, weight
 decay `0.1`, batch 8, accumulation 2, CUDA BF16, and gradient clipping at 1.0.
