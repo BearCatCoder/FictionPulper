@@ -46,14 +46,20 @@ The following distinctions are mandatory in code, reports, and status updates:
   eligible tokens plus a 21,878,226-token provenance-only scenario. That is not
   a full upper bound or training-ready corpus; Data50M/Data100M from the current
   pool is unsupported and external yield remains unknown.
+- **Completed Corpus-v3 blocker disposition:** issue #22 invalidated the
+  historical rights and token-accounting pass claims, corrected fail-open audit
+  defects, and reran the base-only funnel. The corrected build admits zero
+  records: 1,841 fail legacy schema/provenance and 2,521 fail attributable
+  rights evidence. No seal exists; final genre coverage and human review await
+  evidence-backed membership from issue #21.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
   continuations; Scene Scorecard produced 40 base and 40 issue #9 candidate
   outputs. Independent primary human scoring and adjudication have not been
   completed for either evaluation.
   Automated lexical diagnostics and spot audits are not primary human scores.
-- **Blocked future runs:** Corpus-v3 currently has 14,923,683 unsealed tokens,
-  failed its genre-distribution gate, and awaits deterministic human review.
-  Data100M training has not occurred and is not authorized.
+- **Blocked future runs:** Corpus-v3 currently has zero admitted tokens under
+  the corrected gates, no seal, and no packed data. Data100M training has not
+  occurred and is not authorized.
 
 Evidence is retained in:
 
@@ -64,6 +70,7 @@ Evidence is retained in:
 - [`experiments/fictionpulper-continuation-pilot-v1/`](experiments/fictionpulper-continuation-pilot-v1/README.md)
 - [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md)
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
+- [`experiments/fictionpulper-corpus-v3-blockers-v1/`](experiments/fictionpulper-corpus-v3-blockers-v1/README.md)
 - [`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md)
 
 ## Recovery Order
@@ -84,10 +91,10 @@ approval, not independent validation.
 Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews
 and remains required for primary Benchmark v2 score claims.
 
-Issue [#20] is complete. The evidence-backed corpus recovery path is [#22], then
-[#21], then [#24]. Lawful source discovery may overlap as allowed by those
-issues. Corpus recovery is not a prerequisite for the completed first
-continuation-SFT pilot.
+Issues [#20] and [#22] are complete. The evidence-backed corpus recovery path is
+now [#21], then [#24]. Issue #24 remains blocked until a nonempty approved corpus
+passes every corrected gate. Corpus recovery is not a prerequisite for the
+completed first continuation-SFT pilot.
 
 Deferred work:
 

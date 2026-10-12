@@ -1,5 +1,8 @@
 # Human decisions are build inputs and are hash-locked by corpus-v3.yaml.
-# A freeze requires excluding all but one accepted member of every fuzzy
-# duplicate cluster and approving exactly the generated deterministic sample.
-exclude_ids: []
-approved_sample_ids: []
+# Every exclusion and sample approval must name its reviewer, date, and basis.
+version: 1
+exclusion_decisions: []
+sample_review:
+  # Fill only after final candidate membership fixes the deterministic sample.
+  sample_records_sha256: null
+  decisions: []

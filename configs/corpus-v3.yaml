@@ -36,6 +36,7 @@ deduplication:
   minimum_length_ratio: 0.75
 
 audit:
+  evidence_cutoff_date: '2026-10-12'
   review_sample_count: 32
   maximum_unclassified_token_share: 0.35
   concentration_limits:
@@ -44,7 +45,7 @@ audit:
 
 review:
   path: configs/corpus-v3-review.yaml
-  expected_sha256: 5747d23419378878fdf15b396f4d55f5b878874b3b36108b9334b3be5b4146ad
+  expected_sha256: d1c27eeb54816eed98017b7b6eae68719fbe1027c627135b0e664b26e424cc46
 
 splits:
   train: 0.85
