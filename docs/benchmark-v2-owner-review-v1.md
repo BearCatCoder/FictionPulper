@@ -93,9 +93,28 @@ only absent Stage 1 files. They never replace an artifact.
 The terminal interface shows only public packet content and frozen rubric
 guidance. It saves after every row and resumes by skipping completed rows. A
 completed original judgment cannot be edited or replaced through this command.
-Every saved row records its packet and manifest hashes, normalized owner ID,
-owner role, false independence, genuine-human attestation, label, confidence,
-verbatim evidence, nonempty note, and UTC `reviewed_at` timestamp.
+Every newly saved row uses review-record schema version `2` and records its
+packet and manifest hashes, normalized owner ID, owner role, false independence,
+genuine-human attestation, label, confidence, explicit `evidence_type`, evidence,
+nonempty note, and UTC `reviewed_at` timestamp. Existing schema-v1 progress rows
+without `review_record_schema_version` or `evidence_type` remain readable and
+resume unchanged; they retain the original quotation/empty-output semantics.
+
+Evidence types distinguish three cases without changing the frozen rubric:
+
+- `verbatim_quote`: required for a specific supporting statement,
+  contradiction, or forbidden proposition. `evidence_quote` must occur exactly
+  in the generated continuation.
+- `required_proposition_absent`: permitted only with an `inconsistent` label on
+  nonempty output. `evidence_quote` stays empty and `reviewer_note` gives a
+  concise explanation of the omitted required fact; reviewers do not invent a
+  quotation for an absence.
+- `empty_output`: permitted only when the generated continuation is genuinely
+  empty and binds the exact marker `<EMPTY_OUTPUT>`.
+
+The terminal interface asks inconsistent reviews whether the evidence is a
+verbatim contradiction/forbidden statement or an absent required proposition.
+Consistent and uncertain reviews continue to require verbatim evidence.
 
 Preview without writing:
 

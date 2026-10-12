@@ -56,7 +56,19 @@ MUTABLE_REVIEW_FIELDS = {
     "reviewer_id", "genuine_human_attestation", "label", "confidence",
     "evidence_quote", "reviewer_note",
 }
-STAGE_REVIEW_FIELDS = {*PACKET_FIELDS, "packet_sha256", "stage_manifest_sha256", "reviewed_at"}
+LEGACY_STAGE_REVIEW_FIELDS = {
+    *PACKET_FIELDS, "packet_sha256", "stage_manifest_sha256", "reviewed_at",
+}
+STAGE_REVIEW_FIELDS = {
+    *LEGACY_STAGE_REVIEW_FIELDS, "review_record_schema_version", "evidence_type",
+}
+EVIDENCE_TYPES = ("verbatim_quote", "required_proposition_absent", "empty_output")
+REVIEW_RECORD_SCHEMA_VERSION = 2
+EVIDENCE_GUIDANCE = {
+    "verbatim_quote": "Quote generated text exactly for supporting facts, contradictions, or forbidden propositions.",
+    "required_proposition_absent": "For inconsistent nonempty output missing a required fact, leave the quote empty and explain the omission.",
+    "empty_output": "Use <EMPTY_OUTPUT> only when the generated continuation is genuinely empty.",
+}
 
 
 class OwnerReviewError(ValueError):
@@ -858,7 +870,13 @@ def _validate_stage_review_row(
     manifest_sha256: str,
 ) -> str:
     identifier = str(original["owner_review_id"])
-    require(set(row) == STAGE_REVIEW_FIELDS, f"{identifier}: Stage 1 review fields differ from contract")
+    fields = set(row)
+    legacy_record = fields == LEGACY_STAGE_REVIEW_FIELDS
+    require(legacy_record or fields == STAGE_REVIEW_FIELDS,
+            f"{identifier}: Stage 1 review fields differ from supported schemas")
+    if not legacy_record:
+        require(row["review_record_schema_version"] == REVIEW_RECORD_SCHEMA_VERSION,
+                f"{identifier}: unsupported review record schema version")
     for field in PACKET_FIELDS:
         if field not in MUTABLE_REVIEW_FIELDS:
             require(row[field] == original[field], f"{identifier}: immutable packet content changed")
@@ -875,8 +893,24 @@ def _validate_stage_review_row(
             f"{identifier}: confidence must be an integer from 1 to 5")
     evidence = str(row["evidence_quote"])
     generated = str(original["generated_text"])
-    require((not generated and evidence == "<EMPTY_OUTPUT>") or (bool(evidence) and evidence in generated),
-            f"{identifier}: evidence must be verbatim or <EMPTY_OUTPUT>")
+    evidence_type = (
+        "empty_output" if not generated and evidence == "<EMPTY_OUTPUT>" else "verbatim_quote"
+    ) if legacy_record else str(row["evidence_type"])
+    require(evidence_type in EVIDENCE_TYPES, f"{identifier}: invalid evidence_type")
+    if evidence_type == "empty_output":
+        require(not generated and evidence == "<EMPTY_OUTPUT>",
+                f"{identifier}: <EMPTY_OUTPUT> is valid only for empty generated text")
+    elif evidence_type == "required_proposition_absent":
+        require(bool(generated), f"{identifier}: empty output must use empty_output evidence")
+        require(bool(original["required_propositions"]),
+                f"{identifier}: no required proposition exists to mark absent")
+        require(row["label"] == "inconsistent",
+                f"{identifier}: absent required proposition evidence requires an inconsistent label")
+        require(not evidence,
+                f"{identifier}: absent required proposition evidence must not invent a quotation")
+    else:
+        require(bool(generated) and bool(evidence) and evidence in generated,
+                f"{identifier}: evidence_quote must occur verbatim in nonempty generated text")
     require(bool(str(row["reviewer_note"]).strip()), f"{identifier}: reviewer note required")
     timestamp = str(row["reviewed_at"])
     try:
@@ -950,16 +984,38 @@ def run_terminal_review(
         output_fn(f"Required: {canonical_json(original['required_propositions'])}")
         output_fn(f"Forbidden: {canonical_json(original['forbidden_propositions'])}")
         output_fn(f"Rubric: {manifest['rubric_guidance']['decision_rule']}")
+        output_fn(f"Evidence guidance: {canonical_json(EVIDENCE_GUIDANCE)}")
         label = input_fn("Label [consistent/inconsistent/uncertain]: ").strip()
         require(label in LABELS, "invalid label; no decision was saved")
         confidence_text = input_fn("Confidence [1-5]: ").strip()
         require(confidence_text.isdigit() and 1 <= int(confidence_text) <= 5,
                 "invalid confidence; no decision was saved")
-        evidence = input_fn("Verbatim evidence (or <EMPTY_OUTPUT>): ")
         generated = str(original["generated_text"])
-        require((not generated and evidence == "<EMPTY_OUTPUT>") or (bool(evidence) and evidence in generated),
-                "evidence is not verbatim; no decision was saved")
-        note = input_fn("Reviewer note: ").strip()
+        if not generated:
+            evidence_type = "empty_output"
+            evidence = "<EMPTY_OUTPUT>"
+            output_fn("Evidence: <EMPTY_OUTPUT> (generated continuation is empty)")
+        elif label == "inconsistent":
+            evidence_type = input_fn(
+                "Evidence type [verbatim_quote/required_proposition_absent]: "
+            ).strip()
+            require(evidence_type in {"verbatim_quote", "required_proposition_absent"},
+                    "invalid evidence type; no decision was saved")
+            evidence = (
+                input_fn("Verbatim contradictory/forbidden evidence: ")
+                if evidence_type == "verbatim_quote" else ""
+            )
+        else:
+            evidence_type = "verbatim_quote"
+            evidence = input_fn("Verbatim supporting evidence: ")
+        if evidence_type == "verbatim_quote":
+            require(bool(evidence) and evidence in generated,
+                    "evidence is not verbatim; no decision was saved")
+        note_prompt = (
+            "Concise omission explanation: "
+            if evidence_type == "required_proposition_absent" else "Reviewer note: "
+        )
+        note = input_fn(note_prompt).strip()
         require(bool(note), "reviewer note is required; no decision was saved")
         reviewed = dict(original)
         reviewed.update({
@@ -968,6 +1024,8 @@ def run_terminal_review(
             "label": label, "confidence": int(confidence_text), "evidence_quote": evidence,
             "reviewer_note": note, "packet_sha256": packet_hash,
             "stage_manifest_sha256": manifest_hash, "reviewed_at": _utc_timestamp(now_fn()),
+            "review_record_schema_version": REVIEW_RECORD_SCHEMA_VERSION,
+            "evidence_type": evidence_type,
         })
         completed[str(original["owner_review_id"])] = reviewed
         ordered = [completed[row["owner_review_id"]] for row in packet if row["owner_review_id"] in completed]
@@ -1240,6 +1298,9 @@ def score_owner_review(args: argparse.Namespace) -> dict[str, Any]:
         "version": STAGED_VERSION, "stage": 1,
         "status": "COMPLETE_PARTIAL_SINGLE_OWNER_EXPLORATORY_EVIDENCE",
         "owner_id": validated_owner_id, "reviewer_count": 1, "independent_review_confirmed": False,
+        "review_record_schema_versions": sorted({
+            int(row.get("review_record_schema_version", 1)) for row in completed.values()
+        }),
         "evidence_scope": "partial single-owner exploratory evidence",
         "coverage": _public_coverage(materials["stage1_blocks"]),
         "supported_comparisons": materials["staged"]["supported_comparisons"],

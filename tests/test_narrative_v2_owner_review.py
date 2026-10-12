@@ -110,15 +110,20 @@ def stage_fixture() -> dict:
 def completed_review(
     original: dict, packet_hash: str, manifest_hash: str, *, owner: str = "BearCatCoder",
     label: str = "consistent", reviewed_at: str = "2026-10-12T12:00:00Z",
+    evidence_type: str = "verbatim_quote", evidence_quote: str | None = None,
+    legacy_schema: bool = False,
 ) -> dict:
     row = copy.deepcopy(original)
     row.update({
         "reviewer_id": owner, "reviewer_role": "owner",
         "independent_review_confirmed": False, "genuine_human_attestation": True,
-        "label": label, "confidence": 5, "evidence_quote": row["generated_text"],
+        "label": label, "confidence": 5,
+        "evidence_quote": row["generated_text"] if evidence_quote is None else evidence_quote,
         "reviewer_note": "The state is explicit.", "packet_sha256": packet_hash,
         "stage_manifest_sha256": manifest_hash, "reviewed_at": reviewed_at,
     })
+    if not legacy_schema:
+        row.update({"review_record_schema_version": 2, "evidence_type": evidence_type})
     return row
 
 
@@ -220,7 +225,10 @@ class NarrativeV2OwnerReviewTests(unittest.TestCase):
             write_json_atomic(manifest_path, manifest)
             packet_hash = sha256_file(packet_path)
             manifest_hash = sha256_file(manifest_path)
-            progress = [completed_review(row, packet_hash, manifest_hash) for row in packet[:78]]
+            progress = [
+                completed_review(row, packet_hash, manifest_hash, legacy_schema=True)
+                for row in packet[:78]
+            ]
             write_jsonl(reviews_path, progress)
             answers = iter([
                 "consistent", "5", packet[78]["generated_text"], "Explicit state.",
@@ -260,6 +268,44 @@ class NarrativeV2OwnerReviewTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 run_terminal_review(args, input_fn=lambda _: "", output_fn=lambda _: None)
 
+    def test_terminal_review_persists_required_fact_omission_without_quote(self):
+        packet = self.materials["stage_packet"]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            packet_path = root / "packet.jsonl"
+            manifest_path = root / "manifest.json"
+            reviews_path = root / "reviews.jsonl"
+            write_jsonl(packet_path, packet)
+            manifest = _stage1_public_manifest(
+                STAGED_CONFIG, self.materials["staged"], self.materials["base"],
+                self.materials["stage1_blocks"], sha256_file(packet_path),
+            )
+            write_json_atomic(manifest_path, manifest)
+            packet_hash = sha256_file(packet_path)
+            manifest_hash = sha256_file(manifest_path)
+            write_jsonl(reviews_path, [
+                completed_review(row, packet_hash, manifest_hash) for row in packet[:79]
+            ])
+            answers = iter([
+                "inconsistent", "4", "required_proposition_absent",
+                "The required terminal fact is never stated.",
+            ])
+            result = run_terminal_review(
+                Namespace(
+                    packet=packet_path, manifest=manifest_path, reviews=reviews_path,
+                    reviewer_id="BearCatCoder", dry_run=False, final_attestation=False,
+                    owner_verification=None,
+                ),
+                input_fn=lambda _: next(answers), output_fn=lambda _: None,
+                now_fn=lambda: datetime(2026, 10, 12, 16, 0, tzinfo=timezone.utc),
+            )
+            self.assertEqual(result["status"], "STAGE_1_REVIEW_COMPLETE")
+            saved = load_jsonl(reviews_path)[-1]
+            self.assertEqual(saved["review_record_schema_version"], 2)
+            self.assertEqual(saved["evidence_type"], "required_proposition_absent")
+            self.assertEqual(saved["evidence_quote"], "")
+            self.assertEqual(saved["reviewer_note"], "The required terminal fact is never stated.")
+
     def test_review_validation_rejects_timestamps_tampering_and_wrong_bindings(self):
         packet = self.materials["stage_packet"]
         packet_hash = "a" * 64
@@ -286,6 +332,83 @@ class NarrativeV2OwnerReviewTests(unittest.TestCase):
         with self.assertRaisesRegex(OwnerReviewError, "manifest hash"):
             validate_stage_reviews(packet, changed, packet_sha256=packet_hash,
                                    manifest_sha256=manifest_hash, require_complete=True)
+
+    def test_evidence_types_distinguish_omission_contradiction_and_empty_output(self):
+        packet_hash = "a" * 64
+        manifest_hash = "b" * 64
+        nonempty = copy.deepcopy(self.materials["stage_packet"][0])
+
+        omission = completed_review(
+            nonempty, packet_hash, manifest_hash, label="inconsistent",
+            evidence_type="required_proposition_absent", evidence_quote="",
+        )
+        omission["reviewer_note"] = "The continuation never states the required terminal fact."
+        completed, _ = validate_stage_reviews(
+            [nonempty], [omission], packet_sha256=packet_hash,
+            manifest_sha256=manifest_hash, require_complete=True,
+        )
+        self.assertEqual(completed[nonempty["owner_review_id"]]["evidence_quote"], "")
+
+        contradictory_output = copy.deepcopy(nonempty)
+        contradictory_output["owner_review_id"] = "owner-review-contradiction"
+        contradictory_output["generated_text"] = "The counterfactual state is asserted."
+        contradictory_output["generated_text_sha256"] = sha256_bytes(
+            contradictory_output["generated_text"].encode()
+        )
+        contradiction = completed_review(
+            contradictory_output, packet_hash, manifest_hash, label="inconsistent",
+            evidence_type="verbatim_quote",
+            evidence_quote="The counterfactual state is asserted.",
+        )
+        validate_stage_reviews(
+            [contradictory_output], [contradiction], packet_sha256=packet_hash,
+            manifest_sha256=manifest_hash, require_complete=True,
+        )
+
+        empty = copy.deepcopy(nonempty)
+        empty["owner_review_id"] = "owner-review-empty"
+        empty["generated_text"] = ""
+        empty["generated_text_sha256"] = sha256_bytes(b"")
+        empty_review = completed_review(
+            empty, packet_hash, manifest_hash, label="inconsistent",
+            evidence_type="empty_output", evidence_quote="<EMPTY_OUTPUT>",
+        )
+        validate_stage_reviews(
+            [empty], [empty_review], packet_sha256=packet_hash,
+            manifest_sha256=manifest_hash, require_complete=True,
+        )
+
+        fabricated = copy.deepcopy(contradiction)
+        fabricated["evidence_quote"] = "This quotation was never generated."
+        with self.assertRaisesRegex(OwnerReviewError, "occur verbatim"):
+            validate_stage_reviews(
+                [contradictory_output], [fabricated], packet_sha256=packet_hash,
+                manifest_sha256=manifest_hash, require_complete=True,
+            )
+
+        false_empty = completed_review(
+            nonempty, packet_hash, manifest_hash, label="inconsistent",
+            evidence_type="empty_output", evidence_quote="<EMPTY_OUTPUT>",
+        )
+        with self.assertRaisesRegex(OwnerReviewError, "only for empty"):
+            validate_stage_reviews(
+                [nonempty], [false_empty], packet_sha256=packet_hash,
+                manifest_sha256=manifest_hash, require_complete=True,
+            )
+
+    def test_legacy_stage_review_records_remain_readable(self):
+        packet = self.materials["stage_packet"][:1]
+        packet_hash = "a" * 64
+        manifest_hash = "b" * 64
+        legacy = completed_review(
+            packet[0], packet_hash, manifest_hash, legacy_schema=True,
+        )
+        completed, owner = validate_stage_reviews(
+            packet, [legacy], packet_sha256=packet_hash,
+            manifest_sha256=manifest_hash, require_complete=True,
+        )
+        self.assertEqual(owner, "BearCatCoder")
+        self.assertNotIn("evidence_type", completed[packet[0]["owner_review_id"]])
 
     def test_paired_difference_and_trigger_rule_are_deterministic(self):
         pairs = []
