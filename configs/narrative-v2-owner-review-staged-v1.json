@@ -1,0 +1,73 @@
+{
+  "version": "narrative-v2-owner-review-staged-v1",
+  "base_config_path": "configs/narrative-v2-owner-review-v1.json",
+  "base_config_sha256": "3639ddd07e179126279625d72811012d32757f6aa7607b2f75be11fd3c6dded3",
+  "full_packet_path": "runs/benchmark-v2/owner-review-v1/owner-review-packet.jsonl",
+  "full_packet_sha256": "449261f23970e2228c8e9e039bf226d21c1821a73997943579febc499f0a58a9",
+  "full_private_key_path": "runs/benchmark-v2/owner-review-v1/owner-review-private-key.json",
+  "full_private_key_sha256": "4d63657e01d6f7cb5801a1a268a20dc4a86c6a69575137fa461ddf799cf3c278",
+  "selection_attempt_limit": 100000,
+  "stage_1": {
+    "selection_seed": 280101,
+    "packet_order": "preserve_full_packet_order",
+    "blocks": 20,
+    "rows": 80,
+    "trial_block_counts": {
+      "greedy": 5,
+      "sampled:11337": 5,
+      "sampled:21337": 5,
+      "sampled:31337": 5
+    },
+    "depth_block_counts": {
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4_plus": 5
+    },
+    "split_block_counts": {
+      "development": 6,
+      "test": 7,
+      "generalization": 7
+    },
+    "family_block_count_policy": "one hash-ranked family has 2 blocks; the other six have 3 blocks"
+  },
+  "stage_2": {
+    "selection_seed": 280102,
+    "blocks": 20,
+    "rows": 80,
+    "additional_trial_block_counts": {
+      "greedy": 5,
+      "sampled:11337": 5,
+      "sampled:21337": 5,
+      "sampled:31337": 5
+    },
+    "additional_depth_block_counts": {
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4_plus": 5
+    },
+    "additional_split_block_counts": {
+      "development": 7,
+      "test": 6,
+      "generalization": 7
+    },
+    "cumulative_family_block_count_policy": "two hash-ranked families have 5 blocks; the other five have 6 blocks"
+  },
+  "stage_2_trigger": {
+    "paired_difference_ci_width_greater_than": 0.30,
+    "ci_includes_zero_and_absolute_difference_at_least": 0.10,
+    "either_model_unresolved_uncertain_pair_rate_greater_than": 0.10
+  },
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 260209,
+  "supported_comparisons": [
+    "descriptive overall pair-consistency rate for each anonymous model arm from 20 pairs per arm",
+    "exploratory matched model-arm difference across the same 20 structural blocks"
+  ],
+  "unsupported_comparisons": [
+    "powered, representative, or confirmatory model comparison",
+    "confirmatory trial, seed, split, family, depth, reasoning-depth, or interaction estimates",
+    "inter-reviewer agreement, adjudication, independent validation, or full-population inference"
+  ]
+}

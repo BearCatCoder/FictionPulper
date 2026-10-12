@@ -22,8 +22,9 @@ is the source of truth for current work and dependencies.
   storytelling improvement and `0/13` retained diagnostic facts.
 - **Completed evaluation execution, pending human decisions:** Benchmark v2
   forced-choice, teacher-forced, and free-generation baseline runs are complete.
-  Issue #28's Level A 336-row blind owner packet has been generated, but actual
-  owner review and scoring remain pending. Strict independent review and
+  Issue #28 preserves its 336-row full packet and has generated the staged
+  80-row Stage 1 blind owner packet, but actual owner review and scoring remain
+  pending. Strict independent review and
   adjudication moved to issue #38. Automated diagnostics and a 16-output spot
   audit are not human scores.
 - **Completed Corpus-v3 seal disposition:** issue #22 invalidated the historical

@@ -66,8 +66,9 @@ The following distinctions are mandatory in code, reports, and status updates:
   Data100M pack, real-data preflight, or training handoff was produced. This is
   exact for evaluated supply, not an upper bound on all external sources.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
-  continuations and issue #28's deterministic 336-row Level A owner packet is
-  generated, but actual owner decisions and scoring remain pending. Strict
+  continuations. Issue #28 preserves its deterministic 336-row Level A packet
+  and has generated the staged 80-row Stage 1 packet, but actual owner decisions
+  and scoring remain pending. Strict
   independent Benchmark review is issue #38. Scene Scorecard produced 40 base
   and 40 issue #9 candidate outputs; its independent review is also pending.
   Automated lexical diagnostics and spot audits are not primary human scores.
@@ -105,9 +106,11 @@ approval, not independent validation.
    scorecard. Training completion, lower perplexity, or one cherry-picked output
    does not satisfy it.
 
-Issue [#28] owns the outstanding Level A single-owner Benchmark v2 sample. It is
-non-independent and cannot support agreement or adjudication claims. Strict
-independent Benchmark validation moved to [#38].
+Issue [#28] owns the staged Level A single-owner Benchmark v2 sample. Stage 1 is
+80 rows from 20 matched quartet blocks; its review is pending. It is
+non-independent, exploratory evidence and cannot support agreement,
+adjudication, representativeness, power, or confirmatory claims. Strict
+independent Benchmark validation remains in [#38].
 
 Issues [#20], [#22], [#21], and [#24] are complete. Issue #21 stopped its
 two-source pilot with zero admitted tokens rather than weakening evidence gates.
