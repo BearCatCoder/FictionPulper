@@ -50,8 +50,15 @@ The following distinctions are mandatory in code, reports, and status updates:
   historical rights and token-accounting pass claims, corrected fail-open audit
   defects, and reran the base-only funnel. The corrected build admits zero
   records: 1,841 fail legacy schema/provenance and 2,521 fail attributable
-  rights evidence. No seal exists; final genre coverage and human review await
-  evidence-backed membership from issue #21.
+  rights evidence. No seal exists.
+- **Completed bounded source-expansion pilot:** issue #21 verified the pinned
+  bytes for the two highest-ranked issue #20 catalogs and measured 174 extracted
+  candidates containing 204,805 tokenizer-v1 document tokens. No attributable
+  rights or high-confidence boundary review was completed, only 35 candidates
+  passed downstream quality diagnostics, and the final incremental unique yield
+  is zero. The frozen decision is `stop_selected_sources`; this is measured
+  negative evidence, not an approved inventory or proof that all external yield
+  is zero.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
   continuations; Scene Scorecard produced 40 base and 40 issue #9 candidate
   outputs. Independent primary human scoring and adjudication have not been
@@ -71,6 +78,7 @@ Evidence is retained in:
 - [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md)
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
 - [`experiments/fictionpulper-corpus-v3-blockers-v1/`](experiments/fictionpulper-corpus-v3-blockers-v1/README.md)
+- [`experiments/fictionpulper-corpus-v3-source-pilot-v1/`](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md)
 - [`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md)
 
 ## Recovery Order
@@ -91,10 +99,12 @@ approval, not independent validation.
 Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews
 and remains required for primary Benchmark v2 score claims.
 
-Issues [#20] and [#22] are complete. The evidence-backed corpus recovery path is
-now [#21], then [#24]. Issue #24 remains blocked until a nonempty approved corpus
-passes every corrected gate. Corpus recovery is not a prerequisite for the
-completed first continuation-SFT pilot.
+Issues [#20], [#22], and [#21] are complete. Issue #21 stopped its two-source
+pilot with zero admitted tokens rather than weakening evidence gates. Issue #24
+remains blocked until a future decision supplies a nonempty approved corpus that
+passes every corrected gate; the measured #21 result does not unblock sealing.
+Corpus recovery is not a prerequisite for the completed first continuation-SFT
+pilot.
 
 Deferred work:
 

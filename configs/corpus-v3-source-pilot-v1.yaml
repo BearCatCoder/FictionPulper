@@ -1,0 +1,66 @@
+version: 1
+report_id: fictionpulper-corpus-v3-source-pilot-v1
+output_path: experiments/fictionpulper-corpus-v3-source-pilot-v1/source-yield-report.json
+candidate_inventory_path: experiments/fictionpulper-corpus-v3-source-pilot-v1/candidate-inventory.jsonl
+
+inputs:
+  report_builder:
+    path: src/report_corpus_v3_source_pilot.py
+    sha256: 9f0d25998d5b90760b636f58c712e27f959f720080d3ba06059704f3d6b807f4
+  shortfall_report:
+    path: experiments/fictionpulper-corpus-v3-shortfall-v1/shortfall-report.json
+    sha256: c09e0a1c07182ac6a900b94566004cedcf6bba2e68271a8fd321d94952ce0424
+  corpus_v2_config:
+    path: configs/corpus-v2.yaml
+    sha256: d97b8ef0048ca98238d184c1bcc4d414a9722e695e9d026aefa5312b58d56d75
+  corpus_v2_manifest:
+    path: data/corpus_v2/manifest.json
+    sha256: e017072dee048866ed021d12ff15d8140c32577eaee95e00e468205b9e0c344d
+  source_manifest:
+    path: data/corpus_v2/source-manifest.jsonl
+    sha256: 35063cc6ae2b342f965d4ca56d78e38dc12277cf6e52b6ff2555addd9e975f07
+  source_summaries:
+    path: data/corpus_v2/source-summaries.jsonl
+    sha256: ef7536c39c5d17b6cd4591e3a7feee2e9d2c10c812810a6b670c921d1a64c3c3
+  corpus_v2:
+    path: data/corpus_v2/corpus.jsonl
+    sha256: 0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087
+  catalog:
+    path: data/raw/gutenberg/pg_catalog.csv
+    sha256: 25882f0e4d06d759369f8ff0676376b5f79fcc41ba5b8373037975026cf62580
+  tokenizer:
+    path: data/tokenizer/tokenizer.json
+    sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+sources:
+  - source_id: pg-25918
+  - source_id: pg-28
+
+acquisition:
+  cache_dir: data/raw/corpus-v3-source-pilot-v1
+  ledger_path: data/corpus_v3_source_pilot_v1/state/acquisition-ledger.json
+  timeout_seconds: 120
+
+selection:
+  minimum_story_words: 500
+  maximum_story_words: 20000
+  minimum_toc_matches: 3
+  high_confidence_match_ratio: 0.8
+
+deduplication:
+  simhash_max_hamming: 10
+  minimum_jaccard: 0.72
+  minimum_length_ratio: 0.75
+
+concentration_limits:
+  maximum_author_token_share: 0.08
+  maximum_collection_token_share: 0.05
+
+expected:
+  source_ids: [pg-25918, pg-28]
+  gross_records: 174
+  gross_tokens: 204805
+  exact_duplicate_records: 0
+  exact_duplicate_tokens: 0
+  final_incremental_unique_records: 0
+  final_incremental_unique_tokens: 0
