@@ -41,6 +41,11 @@ The following distinctions are mandatory in code, reports, and status updates:
   evaluation. Continuation test NLL improved, clean-fiction loss slightly
   regressed, automated scene diagnostics remained insufficient, and the frozen
   decision is `STOP_NO_PROMOTION`. Independent matched Scene review is pending.
+- **Completed Corpus-v3 shortfall diagnosis:** issue #20 reproduced the
+  4,362-record, 30,004,706-token funnel and identified 14,923,683 individually
+  eligible tokens plus a 21,878,226-token provenance-only scenario. That is not
+  a full upper bound or training-ready corpus; Data50M/Data100M from the current
+  pool is unsupported and external yield remains unknown.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
   continuations; Scene Scorecard produced 40 base and 40 issue #9 candidate
   outputs. Independent primary human scoring and adjudication have not been
@@ -79,10 +84,10 @@ approval, not independent validation.
 Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews
 and remains required for primary Benchmark v2 score claims.
 
-The evidence-backed corpus recovery path is [#20] plus [#22], then [#21], then
-[#24]. Diagnosis and lawful source discovery may overlap as allowed by those
-issues. Corpus recovery is not a prerequisite for the first continuation-SFT
-pilot.
+Issue [#20] is complete. The evidence-backed corpus recovery path is [#22], then
+[#21], then [#24]. Lawful source discovery may overlap as allowed by those
+issues. Corpus recovery is not a prerequisite for the completed first
+continuation-SFT pilot.
 
 Deferred work:
 
