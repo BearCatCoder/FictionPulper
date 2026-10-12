@@ -50,7 +50,7 @@ from src.train import evaluate, set_seed
 FORMAT = "fictionpulper-continuation-sft-v1"
 EXPERIMENT_ID = "fictionpulper-50m-data30m-continuation-sft-v1"
 FROZEN_CONFIG_SHA256 = "07a4c2f93a285f32a865e04db0074d8aa7582c396662b2908f57ccd0baa92523"
-FROZEN_POST_SELECTION_PROTOCOL_SHA256 = "a11fa71b5e8fe05eb84d5b9be725f9a8a7c149a28de8fde14da69f9dbf527691"
+FROZEN_POST_SELECTION_PROTOCOL_SHA256 = "f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87"
 SPLIT_COUNTS = {"train": 160, "validation": 20, "test": 20}
 SPLIT_GENRE_COUNTS = {
     split: {genre: count for genre in ("crime_noir", "horror_occult", "science_fiction", "western_adventure", "weird_fantasy")}

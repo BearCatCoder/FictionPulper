@@ -3,6 +3,13 @@
 Status: implementation complete; export, preflight, training, selection, held-out
 evaluation, generation, and human review have not been run.
 
+The first post-selection invocation stopped before scene or Benchmark v2
+generation because the protocol's Data30M test-binary hash had one extra trailing
+hex character. The intended artifact path was unchanged and its actual hash
+matched the sealed Data30M metadata and historical experiment seals. This
+clerical correction is committed and disclosed before a second invocation; no
+decoding, seed, model, data membership, or metric policy changed.
+
 This issue #9 pilot starts only from the sealed validation-selected 50M/Data30M
 checkpoint. AdamW is initialized fresh. It uses seed 9009, LR `1e-5`, weight
 decay `0.1`, batch 8, accumulation 2, CUDA BF16, and gradient clipping at 1.0.
@@ -48,7 +55,7 @@ claim is authorized from automated results.
 ## Frozen identities
 
 - Training config: `07a4c2f93a285f32a865e04db0074d8aa7582c396662b2908f57ccd0baa92523`
-- Post-selection protocol: `a11fa71b5e8fe05eb84d5b9be725f9a8a7c149a28de8fde14da69f9dbf527691`
+- Post-selection protocol: `f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87`
 - Canonical examples: `e3e17d0e...f176b`
 - Approval: `cc610034...fb5d78`
 - Tokenizer: `14d4abef...f7012`
@@ -84,5 +91,5 @@ python -m src.continuation_sft --config-sha256 "$CONFIG_SHA256" post-selection \
   --summary runs/fictionpulper-50m-data30m-continuation-sft-v1/summary.json \
   --summary-sha256 "$SUMMARY_SHA256" \
   --checkpoint checkpoints/fictionpulper-50m-data30m-continuation-sft-v1/epoch-SELECTED.pt \
-  --protocol-sha256 a11fa71b5e8fe05eb84d5b9be725f9a8a7c149a28de8fde14da69f9dbf527691
+  --protocol-sha256 f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87
 ```

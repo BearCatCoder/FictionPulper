@@ -22,7 +22,7 @@
   "benchmark_v2_root": "benchmarks/narrative-v2",
   "clean_fiction": {
     "bin_path": "data/packed/corpus-v2-data30m/test.bin",
-    "bin_sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d8",
+    "bin_sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d",
     "index_path": "data/packed/corpus-v2-data30m/test.index.json",
     "index_sha256": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8"
   },
