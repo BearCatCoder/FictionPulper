@@ -25,13 +25,14 @@ is the source of truth for current work and dependencies.
   The 1,792 continuations still require independent human scoring and
   adjudication. Automated diagnostics and a 16-output spot audit are not a
   primary human score.
-- **Prepared but blocked:** issue #22 invalidated the historical Corpus-v3
-  rights and token-accounting pass claims. The corrected base-only rerun admits
-  zero records: 1,841 fail legacy schema/provenance and 2,521 fail attributable
-  rights evidence. Issue #21 then measured the two highest-ranked external
-  catalogs: 174 extracted candidates and 204,805 gross tokenizer-v1 tokens, but
-  zero admitted tokens under the corrected evidence gates. No seal exists;
-  Data100M training remains deferred.
+- **Completed Corpus-v3 seal disposition:** issue #22 invalidated the historical
+  Corpus-v3 rights and token-accounting pass claims. The corrected base-only
+  rerun admits zero records: 1,841 fail legacy schema/provenance and 2,521 fail
+  attributable rights evidence. Issue #21 then measured the two highest-ranked
+  external catalogs: 174 extracted candidates and 204,805 gross tokenizer-v1
+  tokens, but zero admitted tokens under the corrected evidence gates. Issue
+  #24 therefore completed with `no_go_data_scaling`: no canonical seal or
+  configured Data100M pack was created, and Data100M training remains deferred.
 - **Completed Scene Scorecard implementation and baseline generation:**
   [issue #27](https://github.com/BearCatCoder/FictionPulper/issues/27) froze the
   separate Scene Scorecard v1 and generated the complete sealed 50M/Data30M
@@ -72,18 +73,21 @@ is limited to the single-owner research mode described below.
    blocked until independent review of #9's corrected matched Scene packet;
    promote only on evidence under the frozen scorecard, not lower perplexity,
    completed training, or a cherry-picked generation.
-2. [#24](https://github.com/BearCatCoder/FictionPulper/issues/24) remains
-   blocked. The completed #21 pilot stopped both selected catalogs with zero
-   admitted yield; sealing requires a future nonempty corpus that passes every
-   corrected gate.
+2. [#24](https://github.com/BearCatCoder/FictionPulper/issues/24) is complete
+   with `no_go_data_scaling`. The completed #21 pilot stopped both selected
+   catalogs with zero admitted yield, so #24 correctly created no canonical
+   seal or configured Data100M pack. A future bounded acquisition decision must
+   supply a nonempty corpus that passes every corrected gate before corpus
+   recovery can reopen.
 
 Issue #20 historically measured 14,923,683 retained tokens and a 21,878,226
 token provenance-only scenario, not a full upper bound. Issue #22 subsequently
 invalidated the retained set's rights eligibility and corrected the audit. The
 current admitted count is zero. Data50M/Data100M remains unsupported; #21's
 bounded result does not establish yield beyond its two selected catalogs. See
-[the blocker disposition](experiments/fictionpulper-corpus-v3-blockers-v1/README.md)
-and [source-pilot report](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md).
+[the blocker disposition](experiments/fictionpulper-corpus-v3-blockers-v1/README.md),
+[source-pilot report](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md),
+and [seal disposition](experiments/fictionpulper-corpus-v3-seal-disposition-v1/README.md).
 
 Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
 the separate Benchmark v2 human reviews.
