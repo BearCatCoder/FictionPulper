@@ -49,6 +49,12 @@ is the source of truth for current work and dependencies.
   `STOP_NO_PROMOTION`; independent review of the corrected matched packet is
   pending. See
   [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md).
+- **Completed authorized AI Scene review:** issue #41 reviewed all 80 corrected
+  matched outputs with GPT-6.1 Sol: each arm retained 0/160 facts and had 0/40
+  coherent scenes. Candidate length compliance is 29/40, with nine short and two
+  overlength outputs. The decision remains `STOP_NO_PROMOTION`. This is AI-only
+  exploratory evidence; independent human review remains pending. See
+  [the matched Scene AI report](docs/scene-scorecard-sol-ai-results-v1.md).
 
 Activate the existing environment and reproduce the write-once scene baseline
 without rerunning training:
@@ -74,8 +80,9 @@ Scorecard independent human review remains pending; continuation pilot approval
 is limited to the single-owner research mode described below.
 
 1. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): remain
-   blocked until independent review of #9's corrected matched Scene packet;
-   promote only on evidence under the frozen scorecard, not lower perplexity,
+   blocked: #9's candidate cannot meet the frozen coherence gate even under its
+   mechanical length upper bound. Promotion requires a qualifying candidate and
+   independent evidence under the frozen scorecard, not lower perplexity,
    completed training, or a cherry-picked generation.
 2. [#24](https://github.com/BearCatCoder/FictionPulper/issues/24) is complete
    with `no_go_data_scaling`. The completed #21 pilot stopped both selected
@@ -97,6 +104,14 @@ Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) records the
 authorized AI-only disposition of the existing Stage 1 Benchmark v2 sample;
 its historical human owner stage remains incomplete. Strict independent validation
 is separately pending in [#38](https://github.com/BearCatCoder/FictionPulper/issues/38).
+
+Issue [#41](https://github.com/BearCatCoder/FictionPulper/issues/41) completed its
+owner-authorized AI-only Scene review. Its dimension-level failures and exact
+length/stop breakdown inform [#42](https://github.com/BearCatCoder/FictionPulper/issues/42)'s
+bounded development-only conditioning diagnosis, followed by
+[#43](https://github.com/BearCatCoder/FictionPulper/issues/43)'s single-intervention
+GO/NO-GO. Historical independent Scene review remains pending; inspected
+post-selection outputs remain retrospective, excluded from training/selection.
 
 Issue #8's 200-example continuation pilot passed its automated audit and its
 hash-bound `single_owner_research_pilot` approval. The owner directly reviewed
@@ -144,6 +159,19 @@ Issue #8 must exclude all post-selection prompts while building the documented
 protocol. Issue #12 can be promoted only under these same criteria. Full details,
 the concrete issue #8 pilot specification, run paths, and current review status
 are in [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md).
+
+Reproduce the owner-authorized AI matched aggregation from retained, hash-locked
+judgments (the output path must be absent):
+
+```bash
+python -m src.scene_scorecard_ai_review \
+  --reviews runs/scene-sol-ai-review-v1/decisions.json \
+  --output runs/scene-sol-ai-review-v1/score-reproduction-v1.json
+```
+
+This validates and aggregates existing AI labels; it does not rerun a model or
+perform human review. Provenance, uncertainty, artifact hashes, and the bounded
+diagnosis handoff are in [the AI report](docs/scene-scorecard-sol-ai-results-v1.md).
 
 ## Completed Narrative Benchmark v2 Work
 
