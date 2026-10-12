@@ -1,7 +1,7 @@
-# Continuation-SFT v1 Preregistration
+# Continuation-SFT v1
 
-Status: implementation complete; export, preflight, training, selection, held-out
-evaluation, generation, and human review have not been run.
+Status: bounded pilot and automated post-selection evaluation complete;
+independent human review pending; decision `STOP_NO_PROMOTION`.
 
 The first post-selection invocation stopped before scene or Benchmark v2
 generation because the protocol's Data30M test-binary hash had one extra trailing
@@ -15,6 +15,62 @@ Scene Scorecard packet path received the final Benchmark v2 packet because of a
 local-variable reuse bug. The original run remains untouched. The tracked
 correction command rebuilds only that packet and private key from the preserved
 40 base plus 40 candidate scene records into a separate write-once directory.
+
+## Result and decision
+
+The preregistration was frozen at commit
+`d7a0eab5b59e5a9cc5e4109a6307f5b8bebd9604`. Preflight passed serialization,
+continuation/padding masks, finite gradients for every trainable parameter,
+exact base reload, real-model CUDA BF16 fit, and tiny-example plumbing. Tiny loss
+fell from `3.713713` to `0.000789`; this is not storytelling evidence.
+
+The run completed all 134 optimizer steps. Epoch 2 was selected using only
+continuation validation NLL, which fell from `4.026967` at the unchanged base to
+`3.783913`. The selected checkpoint saw 320 SFT examples / 112,418 continuation
+targets and 1,824 replay examples / 1,740,200 LM targets. No held-out row was
+used for checkpoint selection.
+
+Post-selection results were mixed and do not establish narrative improvement:
+
+| Metric | Base | Candidate | Candidate minus base |
+|---|---:|---:|---:|
+| Continuation test NLL, 6,969 targets | 4.061925 | 3.816288 | -0.245637 |
+| Continuation test perplexity | 58.0860 | 45.4352 | -12.6508 |
+| Clean Data30M test loss, 1,546,717 targets | 3.101755 | 3.107070 | +0.005315 |
+| Clean Data30M test perplexity | 22.2370 | 22.3555 | +0.1185 |
+| Scene length-compliant outputs | 40/40 | 29/40 | -11 |
+| Scene exact fact-phrase mentions | 0/160 | 0/160 | 0 |
+| Scene mean repeated 4-gram rate | 0.228872 | 0.211395 | -0.017478 |
+| Scene mean repeated-sentence rate | 0.118346 | 0.158970 | +0.040624 |
+
+Benchmark v2 forced-choice paired-reversal success was unchanged on development
+(`17.86%`), improved from `3.57%` to `7.14%` on test, and remained `0%` on
+generalization. Teacher-forced paired preference remained `100%`, `0%`, and
+`0%` respectively. Candidate free generation produced all 896 locked outputs;
+automated diagnostics found zero premise-retention and current-fact-only hits in
+every overall split/trial cell. These lexical diagnostics are not human scores.
+
+The frozen decision is `STOP_NO_PROMOTION`. Independent blinded review of the
+corrected 80-row matched Scene packet is still required before any narrative
+quality or #12 promotion claim. No second seed, ratio, data revision, decoding
+change, or hyperparameter sweep is authorized. The base received no matched
+LM-only updates, so this comparison does not isolate an SFT-specific causal
+effect. The next action is independent Scene review, not more training.
+
+## Run identities
+
+- Training export manifest: `8d38726277615e43824d021d6a01154779905de0a93fdd2973fe15bcd97e38f4`
+- Preflight: `622301620e10069e2cc8e3ceb8978c1f8459e31ca9594e9db2dcc4d1adeb8d6c`
+- Selection summary: `0cc0eb32f453280ddf8752d4ca3eaf15cf02624315c56a77800033576f9ef9f5`
+- Selected checkpoint: `7d4ef889435626304cac24a2ce651ffd20ea9d85a5f882b10d30033a6d2d3ad5`
+- Post-selection report: `8f84a415bfa200aba250db660638bf471222190bfa9c3e4d70cfa9f40fcb7cdd`
+- Candidate Scene raw matrix: `ee91eb1c1ddffa0795e672797731f72c4959062e76904cd11bebdc79386aa767`
+- Corrected matched Scene packet: `69ce3baf7efd378fcc3f7cfa94e6838287bfc89ab1c11918f4575d11c3b78a5b`
+- Candidate Benchmark raw development/test/generalization: `3806faf1...f1577` / `18af8e54...b2f6` / `f88e631c...f9ce`
+
+The ignored run/checkpoint outputs remain local and hash-bound. The tracked
+report does not commit checkpoints, generated scenes, review keys, or raw
+copyrighted data.
 
 This issue #9 pilot starts only from the sealed validation-selected 50M/Data30M
 checkpoint. AdamW is initialized fresh. It uses seed 9009, LR `1e-5`, weight
@@ -97,5 +153,10 @@ python -m src.continuation_sft --config-sha256 "$CONFIG_SHA256" post-selection \
   --summary runs/fictionpulper-50m-data30m-continuation-sft-v1/summary.json \
   --summary-sha256 "$SUMMARY_SHA256" \
   --checkpoint checkpoints/fictionpulper-50m-data30m-continuation-sft-v1/epoch-SELECTED.pt \
+  --protocol-sha256 f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87
+
+python -m src.continuation_sft --config-sha256 "$CONFIG_SHA256" correct-scene-packet \
+  --source-dir runs/fictionpulper-50m-data30m-continuation-sft-v1/post-selection \
+  --source-report-sha256 8f84a415bfa200aba250db660638bf471222190bfa9c3e4d70cfa9f40fcb7cdd \
   --protocol-sha256 f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87
 ```

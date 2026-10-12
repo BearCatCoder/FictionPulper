@@ -5,7 +5,7 @@ pulp fiction. The pipeline and its from-scratch 5M, 15M, and 50M baselines are
 complete. The active product milestone is a reproducible, coherent approximately
 200-word scene, measured before further model or data scaling.
 
-The implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, training, evaluation, checkpointing, and generation. No third-party pretrained tokenizer or model weights are used. The planned first recovery experiment fine-tunes FictionPulper's own sealed, from-scratch 50M/Data30M checkpoint.
+The implementation covers short-story corpus preparation, deterministic document splits, tokenizer training, indexed dataset packing, the custom Transformer, training, evaluation, checkpointing, and generation. No third-party pretrained tokenizer or model weights are used. The first recovery experiment fine-tuned FictionPulper's own sealed, from-scratch 50M/Data30M checkpoint and ended with `STOP_NO_PROMOTION` pending independent review.
 
 ## Current Status And Next Commands
 
@@ -33,6 +33,13 @@ is the source of truth for current work and dependencies.
   separate Scene Scorecard v1 and generated the complete sealed 50M/Data30M
   baseline matrix. Independent human review remains pending; status is recorded in
   [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md).
+- **Completed bounded continuation-SFT pilot:** issue #9 completed its one frozen
+  134-step run and post-selection matrix. Continuation test NLL improved from
+  `4.0619` to `3.8163`, clean-fiction loss regressed from `3.10176` to `3.10707`,
+  and automated scene diagnostics did not justify promotion. The decision is
+  `STOP_NO_PROMOTION`; independent review of the corrected matched packet is
+  pending. See
+  [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md).
 
 Activate the existing environment and reproduce the write-once scene baseline
 without rerunning training:
@@ -48,18 +55,17 @@ It does not perform training. Automated diagnostics are not human scores.
 
 ## Recovery Order
 
-Issues [#27](https://github.com/BearCatCoder/FictionPulper/issues/27) and
-[#8](https://github.com/BearCatCoder/FictionPulper/issues/8) are completed
+Issues [#27](https://github.com/BearCatCoder/FictionPulper/issues/27),
+[#8](https://github.com/BearCatCoder/FictionPulper/issues/8), and
+[#9](https://github.com/BearCatCoder/FictionPulper/issues/9) are completed
 prerequisites. Scorecard independent human review remains pending; continuation
 pilot approval is limited to the single-owner research mode described below.
 
-1. [#9](https://github.com/BearCatCoder/FictionPulper/issues/9): use the
-   completed #8 continuation pilot to preregister and run one bounded SFT
-   experiment on the existing sealed 50M/Data30M checkpoint.
-2. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): promote only
-   on independent evidence under the frozen scorecard, not on lower perplexity,
+1. [#12](https://github.com/BearCatCoder/FictionPulper/issues/12): remain
+   blocked until independent review of #9's corrected matched Scene packet;
+   promote only on evidence under the frozen scorecard, not lower perplexity,
    completed training, or a cherry-picked generation.
-3. [#20](https://github.com/BearCatCoder/FictionPulper/issues/20) plus
+2. [#20](https://github.com/BearCatCoder/FictionPulper/issues/20) plus
    [#22](https://github.com/BearCatCoder/FictionPulper/issues/22), then
    [#21](https://github.com/BearCatCoder/FictionPulper/issues/21), then
    [#24](https://github.com/BearCatCoder/FictionPulper/issues/24): diagnose
@@ -88,9 +94,9 @@ canonical content-bound preliminary diagnostic outputs and flags, deterministic
 50-row-plus-all-flags owner review, final owner verification, and the separately
 available `strict_independent` two-reviewer/adjudicator mode are documented with
 the existing split, contamination, serialization, and masking gates in
-[`docs/continuation-pilot-v1.md`](docs/continuation-pilot-v1.md). Issue #9 must
-define and freeze its own training export and protocol before training;
-prepared/review artifacts remain audit-only.
+[`docs/continuation-pilot-v1.md`](docs/continuation-pilot-v1.md). Issue #9 used a
+separate hash-bound training export and protocol; prepared/review artifacts
+remain audit-only.
 Public-domain bytes must be independently acquired from documented sources, not
 copied from unsealed Corpus-v3 candidates; disclosed source overlap remains
 allowed and does not erase pretraining exposure.
