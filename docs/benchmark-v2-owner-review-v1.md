@@ -116,6 +116,28 @@ The terminal interface asks inconsistent reviews whether the evidence is a
 verbatim contradiction/forbidden statement or an absent required proposition.
 Consistent and uncertain reviews continue to require verbatim evidence.
 
+## AI-Assisted Preliminary Review
+
+An explicitly non-human GPT-6 Astra preliminary review inspected all 80 public
+Stage 1 rows without the private key or model mapping. Its ignored local artifact
+is `runs/benchmark-v2/owner-review-v1/stage-1-gpt-6-astra-preliminary-review-v1.md`
+with SHA-256
+`acedeb13b06257d671d3f23e68e6e21dae7d091455f7c72bb131dbdd8df163c7`.
+
+The artifact reports 0 consistent, 80 inconsistent, and 0 uncertain model
+judgments. Its primary diagnosis is omission: none of the continuations states
+the required terminal proposition. It identifies rows 13, 21, 55, and 65 as
+whitespace-only and the other 76 as nonempty outputs missing the required fact.
+Structural validation confirmed that the report covers rows 1 through 80 exactly
+once, every listed missing terminal value matches the corresponding packet
+requirement, and the four whitespace row numbers match the packet bytes.
+
+This is AI-assisted preliminary evidence, not genuine owner review, independent
+validation, an official Stage 1 score, or a Stage 2 decision. It has no
+genuine-human attestation and must not be imported into
+`stage-1-owner-reviews.jsonl`. Actual owner decisions and final attestation
+remain pending.
+
 Preview without writing:
 
 ```bash
