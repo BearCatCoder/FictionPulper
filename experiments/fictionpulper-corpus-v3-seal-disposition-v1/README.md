@@ -52,6 +52,7 @@ evidence, admitted supply, authorized seal, or packed artifact fails closed.
 
 ## Validation
 
+- Implementation commit: `4a77233`.
 - Focused corpus, tokenizer, dataset, report, and preflight suite: 44 tests
   passed in 1.297 seconds.
 - Full repository suite: 375 tests passed in 107.226 seconds.
