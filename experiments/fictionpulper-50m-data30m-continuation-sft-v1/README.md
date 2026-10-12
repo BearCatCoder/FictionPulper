@@ -158,5 +158,6 @@ python -m src.continuation_sft --config-sha256 "$CONFIG_SHA256" post-selection \
 python -m src.continuation_sft --config-sha256 "$CONFIG_SHA256" correct-scene-packet \
   --source-dir runs/fictionpulper-50m-data30m-continuation-sft-v1/post-selection \
   --source-report-sha256 8f84a415bfa200aba250db660638bf471222190bfa9c3e4d70cfa9f40fcb7cdd \
+  --candidate-raw-sha256 ee91eb1c1ddffa0795e672797731f72c4959062e76904cd11bebdc79386aa767 \
   --protocol-sha256 f45041dcfb87e4f3dea8c0abce988beb346a8d77991305650cd8e46bebed0b87
 ```

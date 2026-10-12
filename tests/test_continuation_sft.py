@@ -76,7 +76,18 @@ class ContinuationSFTTests(unittest.TestCase):
             manifest_path = root / "manifest.json"
             write_json_atomic(manifest_path, manifest)
             digest = sha256_file(manifest_path)
-            self.assertEqual(set(load_export(config, manifest_path, digest)), {"train", "validation"})
+            expected_rows = {
+                "train": [
+                    {"split": "train", "input_ids": [1, 2, 3], "labels": [-100, 3, 4], "continuation_target_count_including_eos": 2, "value": index}
+                    for index in range(160)
+                ],
+                "validation": [
+                    {"split": "validation", "input_ids": [1, 2, 3], "labels": [-100, 3, 4], "continuation_target_count_including_eos": 2, "value": index}
+                    for index in range(20)
+                ],
+            }
+            with patch("src.continuation_sft._derive_export_rows", return_value=expected_rows):
+                self.assertEqual(set(load_export(config, manifest_path, digest)), {"train", "validation"})
             manifest["included_splits"].append("test")
             write_json_atomic(manifest_path, manifest)
             with self.assertRaisesRegex(RuntimeError, "manifest hash mismatch"):
@@ -85,14 +96,21 @@ class ContinuationSFTTests(unittest.TestCase):
     def test_selection_uses_validation_nll_then_earliest_step(self):
         metrics = [
             {"step": 0, "selection_eligible": False, "continuation_validation": {"nll": 1.0}},
-            {"step": 67, "selection_eligible": True, "continuation_validation": {"nll": 2.0}},
+            {"step": 67, "selection_eligible": True, "continuation_validation": {"nll": 2.0}, "exposure": {"sft_examples": 160, "replay_examples": 912}},
             {"step": 134, "selection_eligible": True, "continuation_validation": {"nll": 2.0}},
         ]
         self.assertEqual(select_checkpoint(metrics)["step"], 67)
 
     def test_selected_checkpoint_gate_checks_base_and_fresh_optimizer_provenance(self):
         config = load_config(CONFIG_PATH, sha256_file(CONFIG_PATH))
-        metrics = [{"epoch": 1, "step": 67, "selection_eligible": True, "continuation_validation": {"nll": 2.0}}]
+        metrics = [
+            {"epoch": 0, "step": 0, "selection_eligible": False, "continuation_validation": {"nll": 3.0}},
+            {
+                "epoch": 1, "step": 67, "selection_eligible": True,
+                "continuation_validation": {"nll": 2.0},
+                "exposure": {"sft_examples": 160, "replay_examples": 912},
+            },
+        ]
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             checkpoint_path = root / "candidate.pt"
@@ -103,6 +121,7 @@ class ContinuationSFTTests(unittest.TestCase):
                 "exposure": {"sft_examples": 160, "replay_examples": 912}, "config": config,
                 "config_sha256": "a" * 64, "export_manifest_sha256": "b" * 64,
                 "preflight_sha256": "c" * 64,
+                "epoch": 1, "metrics": metrics,
             }
             torch.save(payload, checkpoint_path)
             summary = {

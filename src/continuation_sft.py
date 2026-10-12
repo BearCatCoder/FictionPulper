@@ -106,9 +106,8 @@ def _approval(config: Mapping[str, Any]) -> dict[str, Any]:
     return approval
 
 
-def export_training_corpus(config: Mapping[str, Any], output_dir: Path) -> dict[str, Any]:
-    """Create a write-once token-only train/validation export from canonical examples."""
-    require(not output_dir.exists(), f"refusing to overwrite export: {output_dir}")
+def _derive_export_rows(config: Mapping[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    """Rebuild the authorized train/validation rows from canonical approved data."""
     _approval(config)
     corpus = config["corpus"]
     examples_path = Path(corpus["examples_path"])
@@ -132,6 +131,14 @@ def export_training_corpus(config: Mapping[str, Any], output_dir: Path) -> dict[
             "continuation_target_count_including_eos": encoded["continuation_target_count_including_eos"],
         })
     require({key: len(value) for key, value in rows.items()} == {"train": 160, "validation": 20}, "export split counts changed")
+    return rows
+
+
+def export_training_corpus(config: Mapping[str, Any], output_dir: Path) -> dict[str, Any]:
+    """Create a write-once token-only train/validation export from canonical examples."""
+    require(not output_dir.exists(), f"refusing to overwrite export: {output_dir}")
+    rows = _derive_export_rows(config)
+    corpus = config["corpus"]
     output_dir.mkdir(parents=True)
     artifacts = {}
     for split in ("train", "validation"):
@@ -174,6 +181,8 @@ def load_export(config: Mapping[str, Any], manifest_path: Path, expected_sha256:
             require(labels == [-100] * (len(labels) - target_count) + labels[-target_count:], f"{split} export mask is not continuation-only")
             require(all(value != -100 for value in labels[-target_count:]), f"{split} export target mask has a gap")
         result[split] = rows
+    expected_rows = _derive_export_rows(config)
+    require(result == expected_rows, "training export does not exactly reproduce the approved canonical corpus")
     return result
 
 
@@ -466,8 +475,25 @@ def verify_selection(config: Mapping[str, Any], summary_path: Path, checkpoint_p
     require(payload.get("base_checkpoint_sha256") == config["base"]["checkpoint_sha256"], "candidate base provenance changed")
     require(payload.get("optimizer_initialized_fresh") is True, "candidate optimizer provenance changed")
     require(payload.get("step") == summary["selected_step"], "candidate checkpoint step changed")
+    require(payload.get("epoch") == summary["selected_epoch"], "candidate checkpoint epoch changed")
+    expected_epoch = int(summary["selected_epoch"])
+    require(int(summary["selected_step"]) == expected_epoch * 67, "selected step does not match the frozen schedule")
+    expected_selected_examples = {
+        "sft_examples": expected_epoch * 160,
+        "replay_examples": expected_epoch * 912,
+    }
+    selected_exposure = summary.get("selected_checkpoint_exposure", {})
+    require(
+        all(selected_exposure.get(key) == value for key, value in expected_selected_examples.items()),
+        "selected exposure does not match the selected epoch",
+    )
+    require(selected.get("exposure") == selected_exposure, "selected metric exposure changed")
     require(payload.get("seed") == 9009 and payload.get("selection_metric") == "continuation_validation_nll", "candidate protocol changed")
     require(payload.get("exposure") == summary.get("selected_checkpoint_exposure"), "candidate selected exposure changed")
+    require(
+        payload.get("metrics") == summary["metrics"][:expected_epoch + 1],
+        "candidate checkpoint metrics do not match the selection summary",
+    )
     require(payload.get("config") == dict(config), "candidate frozen config changed")
     require(payload.get("config_sha256") == summary.get("config_sha256"), "candidate config hash changed")
     require(payload.get("export_manifest_sha256") == summary.get("export_manifest_sha256"), "candidate export hash changed")
@@ -503,6 +529,7 @@ def run_post_selection(
     require(post.get("experiment_id") == EXPERIMENT_ID and post.get("version") == 1, "post-selection protocol identity changed")
     device = torch.device("cuda")
     require(torch.cuda.is_available() and torch.cuda.is_bf16_supported(), "post-selection requires CUDA BF16")
+    verify_file(Path(config["tokenizer"]["path"]), config["tokenizer"]["sha256"], "post-selection tokenizer")
     tokenizer = Tokenizer.from_file(config["tokenizer"]["path"])
     model = FictionPulperLM(ModelConfig(**checkpoint["model_config"])).to(device)
     model.load_state_dict(checkpoint["model"], strict=True)
@@ -681,7 +708,8 @@ def run_post_selection(
 
 def correct_scene_review_packet(
     config: Mapping[str, Any], source_dir: Path, source_report_sha256: str,
-    output_dir: Path, protocol_path: Path, protocol_sha256: str,
+    candidate_raw_sha256: str, output_dir: Path, protocol_path: Path,
+    protocol_sha256: str,
 ) -> dict[str, Any]:
     """Derive a corrected scene packet without changing the completed run."""
     require(not output_dir.exists(), f"refusing to overwrite correction output: {output_dir}")
@@ -698,6 +726,7 @@ def correct_scene_review_packet(
     verify_file(base_path, base_spec["sha256"], "sealed base raw scene outputs")
     base_records = load_jsonl(base_path)
     candidate_path = source_dir / "scene-scorecard" / "candidate-raw.jsonl"
+    verify_file(candidate_path, candidate_raw_sha256, "candidate raw scene matrix")
     candidate_records = load_jsonl(candidate_path)
     validate_matrix(base_records, prompts, scene_protocol)
     validate_matrix(candidate_records, prompts, scene_protocol)
@@ -770,6 +799,7 @@ def parse_args() -> argparse.Namespace:
     correction = sub.add_parser("correct-scene-packet")
     correction.add_argument("--source-dir", type=Path, required=True)
     correction.add_argument("--source-report-sha256", required=True)
+    correction.add_argument("--candidate-raw-sha256", required=True)
     correction.add_argument("--protocol", type=Path, default=Path("experiments/fictionpulper-50m-data30m-continuation-sft-v1/post-selection-protocol.json"))
     correction.add_argument("--protocol-sha256", required=True)
     correction.add_argument("--output-dir", type=Path, default=Path("runs/fictionpulper-50m-data30m-continuation-sft-v1/post-selection-correction"))
@@ -799,8 +829,9 @@ def main() -> None:
         )
     else:
         result = correct_scene_review_packet(
-            config, args.source_dir, args.source_report_sha256, args.output_dir,
-            args.protocol, args.protocol_sha256,
+            config, args.source_dir, args.source_report_sha256,
+            args.candidate_raw_sha256, args.output_dir, args.protocol,
+            args.protocol_sha256,
         )
     print(json.dumps(result, indent=2, sort_keys=True))
 
