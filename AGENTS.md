@@ -41,6 +41,12 @@ The following distinctions are mandatory in code, reports, and status updates:
   evaluation. Continuation test NLL improved, clean-fiction loss slightly
   regressed, automated scene diagnostics remained insufficient, and the frozen
   decision is `STOP_NO_PROMOTION`. Independent matched Scene review is pending.
+- **Completed owner-authorized AI Scene review:** issue #41's amended AI-only
+  review scored all 80 corrected matched outputs using GPT-6.1 Sol. Both arms
+  retained 0/160 atomic facts and had 0/40 coherent outputs. Candidate length
+  compliance is 29/40 (nine short, two overlength), which mechanically rules out
+  promotion. This is non-independent AI exploratory evidence; 34 dimension
+  judgments remain uncertain, and historical independent human review is pending.
 - **Completed Corpus-v3 shortfall diagnosis:** issue #20 reproduced the
   4,362-record, 30,004,706-token funnel and identified 14,923,683 individually
   eligible tokens plus a 21,878,226-token provenance-only scenario. That is not
@@ -87,6 +93,7 @@ Evidence is retained in:
 - [`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md)
 - [`docs/benchmark-v2-owner-review-v1.md`](docs/benchmark-v2-owner-review-v1.md)
 - [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md)
+- [`docs/scene-scorecard-sol-ai-results-v1.md`](docs/scene-scorecard-sol-ai-results-v1.md)
 - [`experiments/fictionpulper-continuation-pilot-v1/`](experiments/fictionpulper-continuation-pilot-v1/README.md)
 - [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md)
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
@@ -104,11 +111,16 @@ sealed 50M/Data30M baseline generation are complete, but its independent human
 review remains pending. The continuation corpus has limited single-owner pilot
 approval, not independent validation.
 
-1. [#12] remains blocked pending independent review of issue #9's corrected
-   matched base/candidate Scene packet. It is promoted only if independent
-   evidence meets the frozen scene
-   scorecard. Training completion, lower perplexity, or one cherry-picked output
-   does not satisfy it.
+1. [#12] remains blocked: issue #9's candidate cannot meet the frozen coherence
+   gate even under its mechanical length upper bound. Independent human review
+   remains pending; promotion requires a qualifying candidate and independent
+   evidence meeting the frozen scorecard. Training completion, lower perplexity,
+   or one cherry-picked output does not satisfy it.
+2. [#41] completed its owner-authorized AI-only matched Scene review, not its
+   historical independent human review. See `docs/scene-scorecard-sol-ai-results-v1.md`.
+   Its failure-analysis handoff informs [#42]'s bounded development diagnosis;
+   [#43] chooses one intervention or NO-GO only after that diagnosis. No training
+   or tuning against inspected post-selection outputs is authorized.
 
 Issue [#28] completed the owner-authorized AI replacement evaluation of the
 80-row, 20-quartet Stage 1 Benchmark v2 sample. The AI-adapted decision is
@@ -148,6 +160,9 @@ Deferred work:
 [#27]: https://github.com/BearCatCoder/FictionPulper/issues/27
 [#28]: https://github.com/BearCatCoder/FictionPulper/issues/28
 [#38]: https://github.com/BearCatCoder/FictionPulper/issues/38
+[#41]: https://github.com/BearCatCoder/FictionPulper/issues/41
+[#42]: https://github.com/BearCatCoder/FictionPulper/issues/42
+[#43]: https://github.com/BearCatCoder/FictionPulper/issues/43
 
 ## Integrity Rules
 
