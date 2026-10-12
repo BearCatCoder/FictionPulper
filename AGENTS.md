@@ -36,9 +36,15 @@ The following distinctions are mandatory in code, reports, and status updates:
   selected/flagged examples; the other 150 have diagnostics but no direct human
   quality review. This is not independent validation or publication-grade
   certification.
-- **Pending human review:** Benchmark v2 generation produced 1,792
-  continuations, and Scene Scorecard v1 produced 40. Independent primary human
-  scoring and adjudication have not been completed for either evaluation.
+- **Completed bounded continuation-SFT pilot:** issue #9 trained one hash-locked
+  candidate from the sealed 50M/Data30M checkpoint and completed post-selection
+  evaluation. Continuation test NLL improved, clean-fiction loss slightly
+  regressed, automated scene diagnostics remained insufficient, and the frozen
+  decision is `STOP_NO_PROMOTION`. Independent matched Scene review is pending.
+- **Pending human review:** Benchmark v2 baseline generation produced 1,792
+  continuations; Scene Scorecard produced 40 base and 40 issue #9 candidate
+  outputs. Independent primary human scoring and adjudication have not been
+  completed for either evaluation.
   Automated lexical diagnostics and spot audits are not primary human scores.
 - **Blocked future runs:** Corpus-v3 currently has 14,923,683 unsealed tokens,
   failed its genre-distribution gate, and awaits deterministic human review.
@@ -51,6 +57,7 @@ Evidence is retained in:
 - [`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md)
 - [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md)
 - [`experiments/fictionpulper-continuation-pilot-v1/`](experiments/fictionpulper-continuation-pilot-v1/README.md)
+- [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md)
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
 - [`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md)
 
@@ -58,16 +65,14 @@ Evidence is retained in:
 
 Follow this order unless the project board records a newer decision:
 
-Issues [#27] and [#8] are completed prerequisites. Scene Scorecard v1 and its
+Issues [#27], [#8], and [#9] are complete. Scene Scorecard v1 and its
 sealed 50M/Data30M baseline generation are complete, but its independent human
 review remains pending. The continuation corpus has limited single-owner pilot
 approval, not independent validation.
 
-1. [#9] runs one preregistered, bounded continuation-SFT experiment on the
-   sealed, validation-selected 50M/Data30M checkpoint. This is controlled
-   fine-tuning of FictionPulper's own from-scratch checkpoint, not pretrained
-   model use and not another random-initialization pretraining run.
-2. [#12] is promoted only if independent evidence meets the frozen scene
+1. [#12] remains blocked pending independent review of issue #9's corrected
+   matched base/candidate Scene packet. It is promoted only if independent
+   evidence meets the frozen scene
    scorecard. Training completion, lower perplexity, or one cherry-picked output
    does not satisfy it.
 
