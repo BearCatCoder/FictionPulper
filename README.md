@@ -22,9 +22,11 @@ is the source of truth for current work and dependencies.
   storytelling improvement and `0/13` retained diagnostic facts.
 - **Completed evaluation execution, pending human decisions:** Benchmark v2
   forced-choice, teacher-forced, and free-generation baseline runs are complete.
-  Issue #28 preserves its 336-row full packet and has generated the staged
-  80-row Stage 1 blind owner packet, but actual owner review and scoring remain
-  pending. Strict independent review and
+  Issue #28 completed an explicitly owner-authorized GPT-6.1 Sol AI replacement
+  evaluation: 80 inconsistent rows, both arms 0/20 pairs, and an adapted
+  `STOP_AFTER_STAGE_1` decision. The historical human owner stage remains
+  incomplete. See [the AI-only report](docs/benchmark-v2-sol-ai-results-v1.md).
+  Strict independent review and
   adjudication moved to issue #38. Automated diagnostics and a 16-output spot
   audit are not human scores.
 - **Completed Corpus-v3 seal disposition:** issue #22 invalidated the historical
@@ -91,8 +93,9 @@ bounded result does not establish yield beyond its two selected catalogs. See
 [source-pilot report](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md),
 and [seal disposition](experiments/fictionpulper-corpus-v3-seal-disposition-v1/README.md).
 
-Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) owns the
-non-independent Level A Benchmark v2 owner sample. Strict independent validation
+Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) records the
+authorized AI-only disposition of the existing Stage 1 Benchmark v2 sample;
+its historical human owner stage remains incomplete. Strict independent validation
 is separately pending in [#38](https://github.com/BearCatCoder/FictionPulper/issues/38).
 
 Issue #8's 200-example continuation pilot passed its automated audit and its

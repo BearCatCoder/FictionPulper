@@ -67,8 +67,12 @@ The following distinctions are mandatory in code, reports, and status updates:
   exact for evaluated supply, not an upper bound on all external sources.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
   continuations. Issue #28 preserves its deterministic 336-row Level A packet
-  and has generated the staged 80-row Stage 1 packet, but actual owner decisions
-  and scoring remain pending. Strict
+  and generated the staged 80-row Stage 1 packet. The owner subsequently
+  authorized an AI replacement evaluation: GPT-6.1 Sol labeled all 80 rows
+  inconsistent, both anonymous arms scored 0/20 pairs, and the AI-adapted rule
+  returned `STOP_AFTER_STAGE_1`. Issue #28 closes on that AI-only disposition,
+  not human review. The historical human owner stage is incomplete (one saved
+  row, no final attestation). Strict
   independent Benchmark review is issue #38. Scene Scorecard produced 40 base
   and 40 issue #9 candidate outputs; its independent review is also pending.
   Automated lexical diagnostics and spot audits are not primary human scores.
@@ -106,9 +110,11 @@ approval, not independent validation.
    scorecard. Training completion, lower perplexity, or one cherry-picked output
    does not satisfy it.
 
-Issue [#28] owns the staged Level A single-owner Benchmark v2 sample. Stage 1 is
-80 rows from 20 matched quartet blocks; its review is pending. It is
-non-independent, exploratory evidence and cannot support agreement,
+Issue [#28] completed the owner-authorized AI replacement evaluation of the
+80-row, 20-quartet Stage 1 Benchmark v2 sample. The AI-adapted decision is
+`STOP_AFTER_STAGE_1`; this does not complete the historical human owner stage.
+See `docs/benchmark-v2-sol-ai-results-v1.md`. It is
+non-independent AI exploratory evidence and cannot support agreement,
 adjudication, representativeness, power, or confirmatory claims. Strict
 independent Benchmark validation remains in [#38].
 
