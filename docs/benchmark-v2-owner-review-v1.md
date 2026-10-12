@@ -93,9 +93,50 @@ only absent Stage 1 files. They never replace an artifact.
 The terminal interface shows only public packet content and frozen rubric
 guidance. It saves after every row and resumes by skipping completed rows. A
 completed original judgment cannot be edited or replaced through this command.
-Every saved row records its packet and manifest hashes, normalized owner ID,
-owner role, false independence, genuine-human attestation, label, confidence,
-verbatim evidence, nonempty note, and UTC `reviewed_at` timestamp.
+Every newly saved row uses review-record schema version `2` and records its
+packet and manifest hashes, normalized owner ID, owner role, false independence,
+genuine-human attestation, label, confidence, explicit `evidence_type`, evidence,
+nonempty note, and UTC `reviewed_at` timestamp. Existing schema-v1 progress rows
+without `review_record_schema_version` or `evidence_type` remain readable and
+resume unchanged; they retain the original quotation/empty-output semantics.
+
+Evidence types distinguish three cases without changing the frozen rubric:
+
+- `verbatim_quote`: required for a specific supporting statement,
+  contradiction, or forbidden proposition. `evidence_quote` must occur exactly
+  in the generated continuation.
+- `required_proposition_absent`: permitted only with an `inconsistent` label on
+  nonempty output. `evidence_quote` stays empty and `reviewer_note` gives a
+  concise explanation of the omitted required fact; reviewers do not invent a
+  quotation for an absence.
+- `empty_output`: permitted only when the generated continuation is genuinely
+  empty and binds the exact marker `<EMPTY_OUTPUT>`.
+
+The terminal interface asks inconsistent reviews whether the evidence is a
+verbatim contradiction/forbidden statement or an absent required proposition.
+Consistent and uncertain reviews continue to require verbatim evidence.
+
+## AI-Assisted Preliminary Review
+
+An explicitly non-human GPT-6 Astra preliminary review inspected all 80 public
+Stage 1 rows without the private key or model mapping. Its ignored local artifact
+is `runs/benchmark-v2/owner-review-v1/stage-1-gpt-6-astra-preliminary-review-v1.md`
+with SHA-256
+`acedeb13b06257d671d3f23e68e6e21dae7d091455f7c72bb131dbdd8df163c7`.
+
+The artifact reports 0 consistent, 80 inconsistent, and 0 uncertain model
+judgments. Its primary diagnosis is omission: none of the continuations states
+the required terminal proposition. It identifies rows 13, 21, 55, and 65 as
+whitespace-only and the other 76 as nonempty outputs missing the required fact.
+Structural validation confirmed that the report covers rows 1 through 80 exactly
+once, every listed missing terminal value matches the corresponding packet
+requirement, and the four whitespace row numbers match the packet bytes.
+
+This is AI-assisted preliminary evidence, not genuine owner review, independent
+validation, an official Stage 1 score, or a Stage 2 decision. It has no
+genuine-human attestation and must not be imported into
+`stage-1-owner-reviews.jsonl`. Actual owner decisions and final attestation
+remain pending.
 
 Preview without writing:
 
