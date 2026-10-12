@@ -19,8 +19,10 @@ generalization access additionally attests that test evaluation is complete.
 4. Run generalization forced-choice and teacher-forced scoring.
 5. Run the matched free-generation protocol for each split and model.
 6. Export deterministic blinded review packets.
-7. Obtain two independent human reviews plus independent adjudication where required.
-8. Score completed reviews. Until then, human primary scoring is `pending`.
+7. For issue #28 Level A, export the separate deterministic 336-row owner packet.
+8. Obtain the owner's genuine decisions and score only after complete attestation.
+9. Obtain two independent reviews plus adjudication under issue #38. Until then,
+   strict independent primary scoring remains `pending`.
 
 No cross-mode composite is permitted. Held-out fiction LM metrics remain a
 separate evaluation family. Historical legacy validation/test subsets overlap
@@ -150,9 +152,13 @@ in every overall cell. These lexical checks are diagnostic and can miss both
 valid paraphrases and implicit contradictions, so they are not treated as the
 primary score.
 
-The six blinded review packets contain all 1,792 continuations and are ready
-for two independent reviewers. Human pair-consistency scoring and adjudication
-remain `pending`; no review rows or primary human result were fabricated.
+The six historical blinded review packets contain all 1,792 continuations.
+Issue #28 now owns a separate Level A deterministic 336-row single-owner sample;
+its packet has been generated, but owner decisions and scoring remain `pending`.
+This sampled owner evidence is explicitly non-independent and has no agreement
+or adjudication claim. Strict two-reviewer validation moved to issue #38 and
+also remains pending. See
+[`benchmark-v2-owner-review-v1.md`](benchmark-v2-owner-review-v1.md).
 
 A limited manual quality-control audit inspected the first eight rows in each
 deterministically shuffled development review packet (16 continuations total,
