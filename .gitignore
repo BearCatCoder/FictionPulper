@@ -15,6 +15,7 @@ data/counterfactual_narrative_v1/
 data/state_transition_v1/
 data/dynamic_logit_v1/
 data/continuation_pilot_v1/
+data/continuation_sft_v1/
 
 checkpoints/
 runs/

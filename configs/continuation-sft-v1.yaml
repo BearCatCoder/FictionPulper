@@ -1,0 +1,56 @@
+version: 1
+experiment_id: fictionpulper-50m-data30m-continuation-sft-v1
+
+tokenizer:
+  path: data/tokenizer/tokenizer.json
+  sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+base:
+  checkpoint_path: checkpoints/fictionpulper-50m-data30m-v1/best-validation.pt
+  checkpoint_sha256: 8da266fb064719d3f38e78d672b2e5cec0f14551c37658210322b9f46cbecd01
+  seal_path: experiments/fictionpulper-50m-data30m-v1/seal.json
+  seal_sha256: ac9f0abf9c3c1c60f0ee02485918e86c8407e051c578e34cf1bfa7ae15451fb3
+  initialization: sealed_validation_selected_checkpoint
+  optimizer_state: fresh
+
+corpus:
+  examples_path: data/continuation_pilot_v1/examples.jsonl
+  examples_sha256: e3e17d0e0e2c8249158b215965ab5f4b15456db7248a198767b35721fd3f176b
+  approval_path: runs/continuation-pilot-v1/finalization-report.json
+  approval_sha256: cc61003491cf591e94d07b030c806cac7947cceae7305d0556fab07305fb5d78
+  split_seed: 8008
+  prepared_jsonl_authorized: false
+
+training:
+  seed: 9009
+  optimizer: adamw
+  learning_rate: 1.0e-5
+  weight_decay: 0.1
+  batch_size: 8
+  gradient_accumulation_steps: 2
+  precision: bf16
+  grad_clip: 1.0
+  sft_epochs: 2
+  sft_batches_per_epoch: 20
+  replay_batches_per_epoch: 114
+  target_sft_ratio: 0.15
+  actual_sft_batch_and_example_ratio: 0.14925373134328357
+  sft_presentations_per_example: 2
+  max_optimizer_steps: 134
+  resume: false
+  checkpoint_dir: checkpoints/fictionpulper-50m-data30m-continuation-sft-v1
+  output_dir: runs/fictionpulper-50m-data30m-continuation-sft-v1
+
+pre_selection:
+  permitted_splits: [train, validation]
+  replay:
+    bin_path: data/packed/corpus-v2-data30m/train.bin
+    bin_sha256: 1e7c3046fcc3c143c474458c6f26cf79d684b1099fa9ce4c4f4ec6493066b0d9
+    index_path: data/packed/corpus-v2-data30m/train.index.json
+    index_sha256: e6e4d2cb31f0e49660f05c553561f667fada6006362fe3dcbe04d8f869145799
+
+selection:
+  metric: continuation_validation_nll
+  validation_points: [0, 1, 2]
+  tie_break: earliest_optimizer_step
+  heldout_access: post_selection_only

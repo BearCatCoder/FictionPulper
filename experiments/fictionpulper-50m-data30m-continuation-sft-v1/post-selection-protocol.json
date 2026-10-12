@@ -1,0 +1,36 @@
+{
+  "base_scene_raw": {
+    "path": "runs/scene-scorecard-v1/fictionpulper-50m-data30m-v1/raw-generations.jsonl",
+    "sha256": "9bb73421e59ba23a1379931fbd3b9bbca169750bfb64359cc3616a1c77ccda69"
+  },
+  "benchmark_v2_authored_manifest_sha256": "f4ed9129acba773669e9a4e11acb6fe611fcbd7ec3e89f5a34e4477a9b079789",
+  "benchmark_v2_base_free_generation": {
+    "development": {
+      "path": "runs/benchmark-v2/50m/development/free-generation/raw-generations.jsonl",
+      "sha256": "1c60fda21eb72a38ab00c29d1ca59270de6770f7b5a0bdf216972daedd829544"
+    },
+    "generalization": {
+      "path": "runs/benchmark-v2/50m/generalization/free-generation/raw-generations.jsonl",
+      "sha256": "1ce9016936925f4699184969cf6b7448ed14243b6d5d2fe2d42d6358cdaf0233"
+    },
+    "test": {
+      "path": "runs/benchmark-v2/50m/test/free-generation/raw-generations.jsonl",
+      "sha256": "9cd15c014010752f2a0b2f6a0349c3a689889434c82ee90ca10a9568ed18ae2c"
+    }
+  },
+  "benchmark_v2_protocol_sha256": "84e34abf414d81ddef6e8baef71d07d2adf65b0dcfe152607b239f83b1095c79",
+  "benchmark_v2_root": "benchmarks/narrative-v2",
+  "clean_fiction": {
+    "bin_path": "data/packed/corpus-v2-data30m/test.bin",
+    "bin_sha256": "aaf858165d5b3ea347a10fc476400e5a5716c3631471d33cc69fda62399ccc3d8",
+    "index_path": "data/packed/corpus-v2-data30m/test.index.json",
+    "index_sha256": "6517e10c7e855c344836076eca04f61c6e0e6a4c919a35374df47f1755d409d8"
+  },
+  "continuation_examples_path": "data/continuation_pilot_v1/examples.jsonl",
+  "experiment_id": "fictionpulper-50m-data30m-continuation-sft-v1",
+  "scene_prompts_sha256": "fe828244fec8fda482452792451ecb86d34518ee5c5695646f76b3a43f04ff16",
+  "scene_protocol_root": "benchmarks/scene-scorecard-v1",
+  "scene_protocol_sha256": "7c438ad612d7c344f17ab32843f230e49ef3194565fc0aff45a4a06cb41f2718",
+  "scene_rubric_sha256": "cee906f1b5b3d93acb92120e3403c40776bc0da30f143453d1b3e5108bbffb8b",
+  "version": 1
+}
