@@ -28,7 +28,10 @@ is the source of truth for current work and dependencies.
 - **Prepared but blocked:** issue #22 invalidated the historical Corpus-v3
   rights and token-accounting pass claims. The corrected base-only rerun admits
   zero records: 1,841 fail legacy schema/provenance and 2,521 fail attributable
-  rights evidence. No seal exists; Data100M training remains deferred.
+  rights evidence. Issue #21 then measured the two highest-ranked external
+  catalogs: 174 extracted candidates and 204,805 gross tokenizer-v1 tokens, but
+  zero admitted tokens under the corrected evidence gates. No seal exists;
+  Data100M training remains deferred.
 - **Completed Scene Scorecard implementation and baseline generation:**
   [issue #27](https://github.com/BearCatCoder/FictionPulper/issues/27) froze the
   separate Scene Scorecard v1 and generated the complete sealed 50M/Data30M
@@ -59,7 +62,9 @@ It does not perform training. Automated diagnostics are not human scores.
 Issues [#27](https://github.com/BearCatCoder/FictionPulper/issues/27),
 [#8](https://github.com/BearCatCoder/FictionPulper/issues/8),
 [#9](https://github.com/BearCatCoder/FictionPulper/issues/9), and
-[#20](https://github.com/BearCatCoder/FictionPulper/issues/20) are complete.
+[#20](https://github.com/BearCatCoder/FictionPulper/issues/20),
+[#22](https://github.com/BearCatCoder/FictionPulper/issues/22), and
+[#21](https://github.com/BearCatCoder/FictionPulper/issues/21) are complete.
 Scorecard independent human review remains pending; continuation pilot approval
 is limited to the single-owner research mode described below.
 
@@ -67,18 +72,18 @@ is limited to the single-owner research mode described below.
    blocked until independent review of #9's corrected matched Scene packet;
    promote only on evidence under the frozen scorecard, not lower perplexity,
    completed training, or a cherry-picked generation.
-2. [#22](https://github.com/BearCatCoder/FictionPulper/issues/22) is complete;
-   [#21](https://github.com/BearCatCoder/FictionPulper/issues/21), then
-   [#24](https://github.com/BearCatCoder/FictionPulper/issues/24): resolve the
-   review, genre, and evidence-migration blockers identified by #20, pilot
-   lawful source expansion, and seal only an actually approved corpus.
+2. [#24](https://github.com/BearCatCoder/FictionPulper/issues/24) remains
+   blocked. The completed #21 pilot stopped both selected catalogs with zero
+   admitted yield; sealing requires a future nonempty corpus that passes every
+   corrected gate.
 
 Issue #20 historically measured 14,923,683 retained tokens and a 21,878,226
 token provenance-only scenario, not a full upper bound. Issue #22 subsequently
 invalidated the retained set's rights eligibility and corrected the audit. The
-current admitted count is zero. Data50M/Data100M remains unsupported; external
-expansion is unknown pending #21. See
-[the blocker disposition](experiments/fictionpulper-corpus-v3-blockers-v1/README.md).
+current admitted count is zero. Data50M/Data100M remains unsupported; #21's
+bounded result does not establish yield beyond its two selected catalogs. See
+[the blocker disposition](experiments/fictionpulper-corpus-v3-blockers-v1/README.md)
+and [source-pilot report](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md).
 
 Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
 the separate Benchmark v2 human reviews.

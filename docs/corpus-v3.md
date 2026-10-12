@@ -77,8 +77,7 @@ collections without trustworthy story boundaries are not silently split.
 
 ## Current Disposition
 
-No new-source Corpus-v3 acquisition was run for this implementation, and no
-100M result is claimed. The historical issue #20 feasibility pass retained
+No 100M result is claimed. The historical issue #20 feasibility pass retained
 1,947 stories and 14,923,683 tokens, with 57.04% unclassified and 32 provisional
 review records. Issue #22 demonstrated that its rights gate synthesized
 `inherited_source_assertion` as a review date and that its token and split audit
@@ -92,7 +91,15 @@ invented, no `seal.json` was written, and gates requiring a nonempty admitted
 corpus remain failed or unevaluable. The machine-readable disposition is
 [`fictionpulper-corpus-v3-blockers-v1`](../experiments/fictionpulper-corpus-v3-blockers-v1/README.md).
 
-The repository does not yet contain a reviewed, hash-pinned external inventory
-large enough to establish attainable v3 supply. Issue #21 owns evidence-backed
-source expansion, final membership, and the genuine review inputs needed before
-issue #24 can seal or pack anything. Thresholds and safeguards remain unchanged.
+The bounded issue #21 source pilot is recorded in
+[`fictionpulper-corpus-v3-source-pilot-v1`](../experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md).
+It verified the two highest-ranked issue #20 source artifacts and measured 174
+extracted candidates containing 204,805 gross tokenizer-v1 tokens. It did not
+upgrade medium-confidence boundaries or manufacture review evidence, so final
+incremental unique yield is zero and the decision is to stop those catalogs.
+Its metadata-only candidate inventory contains hashes and locators, never
+downloaded story text.
+
+The repository still has no nonempty approved Corpus-v3 inventory. Issue #24
+remains blocked until a future evidence-backed source decision produces one and
+every corrected gate passes. Thresholds and safeguards remain unchanged.
