@@ -19,8 +19,12 @@ generalization access additionally attests that test evaluation is complete.
 4. Run generalization forced-choice and teacher-forced scoring.
 5. Run the matched free-generation protocol for each split and model.
 6. Export deterministic blinded review packets.
-7. Obtain two independent human reviews plus independent adjudication where required.
-8. Score completed reviews. Until then, human primary scoring is `pending`.
+7. Preserve issue #28's deterministic 336-row packet and export its staged
+   80-row Stage 1 owner packet.
+8. Obtain Stage 1 genuine owner decisions, score, and apply the frozen Stage 2 rule.
+9. If triggered, authorize only the frozen disjoint Stage 2 expansion.
+10. Obtain two independent reviews plus adjudication under issue #38. Until then,
+   strict independent primary scoring remains `pending`.
 
 No cross-mode composite is permitted. Held-out fiction LM metrics remain a
 separate evaluation family. Historical legacy validation/test subsets overlap
@@ -150,9 +154,15 @@ in every overall cell. These lexical checks are diagnostic and can miss both
 valid paraphrases and implicit contradictions, so they are not treated as the
 primary score.
 
-The six blinded review packets contain all 1,792 continuations and are ready
-for two independent reviewers. Human pair-consistency scoring and adjudication
-remain `pending`; no review rows or primary human result were fabricated.
+The six historical blinded review packets contain all 1,792 continuations.
+Issue #28 preserves its Level A deterministic 336-row full packet and now uses a
+staged design. Its 80-row Stage 1 packet contains 20 matched quartet blocks and
+has been generated, but owner decisions, provisional scoring, and the frozen
+Stage 2 decision remain `pending`. This sampled evidence is exploratory,
+non-independent, and has no power, representativeness, agreement, adjudication,
+or confirmatory claim. Strict two-reviewer validation remains in issue #38 and
+is also pending. See
+[`benchmark-v2-owner-review-v1.md`](benchmark-v2-owner-review-v1.md).
 
 A limited manual quality-control audit inspected the first eight rows in each
 deterministically shuffled development review packet (16 continuations total,

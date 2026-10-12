@@ -20,11 +20,13 @@ is the source of truth for current work and dependencies.
   sealed 50M/Data30M runs are complete. The 50M baseline achieved test loss
   `3.1018` and perplexity `22.24`, but its controlled report found no material
   storytelling improvement and `0/13` retained diagnostic facts.
-- **Completed evaluation execution, pending primary review:** Benchmark v2
+- **Completed evaluation execution, pending human decisions:** Benchmark v2
   forced-choice, teacher-forced, and free-generation baseline runs are complete.
-  The 1,792 continuations still require independent human scoring and
-  adjudication. Automated diagnostics and a 16-output spot audit are not a
-  primary human score.
+  Issue #28 preserves its 336-row full packet and has generated the staged
+  80-row Stage 1 blind owner packet, but actual owner review and scoring remain
+  pending. Strict independent review and
+  adjudication moved to issue #38. Automated diagnostics and a 16-output spot
+  audit are not human scores.
 - **Completed Corpus-v3 seal disposition:** issue #22 invalidated the historical
   Corpus-v3 rights and token-accounting pass claims. The corrected base-only
   rerun admits zero records: 1,841 fail legacy schema/provenance and 2,521 fail
@@ -89,8 +91,9 @@ bounded result does not establish yield beyond its two selected catalogs. See
 [source-pilot report](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md),
 and [seal disposition](experiments/fictionpulper-corpus-v3-seal-disposition-v1/README.md).
 
-Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) coordinates
-the separate Benchmark v2 human reviews.
+Issue [#28](https://github.com/BearCatCoder/FictionPulper/issues/28) owns the
+non-independent Level A Benchmark v2 owner sample. Strict independent validation
+is separately pending in [#38](https://github.com/BearCatCoder/FictionPulper/issues/38).
 
 Issue #8's 200-example continuation pilot passed its automated audit and its
 hash-bound `single_owner_research_pilot` approval. The owner directly reviewed
@@ -157,8 +160,9 @@ python -m unittest tests.test_benchmark_v2
 ```
 
 This command validates the frozen protocol and scenario allocation. Scenario
-authoring and all baseline model runs are complete; independent primary human
-scoring remains pending. Historical protocols remain immutable.
+authoring and all baseline model runs are complete. The Level A owner packet
+exists but actual owner decisions and scoring remain pending; issue #38 owns
+future strict independent validation. Historical protocols remain immutable.
 
 Issue #2 adds deterministic authored scenarios without changing the frozen
 issue #1 artifacts. Generate all three split files and run the complete
@@ -214,8 +218,11 @@ scores exact authored spans, runs all three candidate controls, couples A/B
 world preferences, and writes hash-manifested raw outputs under ignored
 `runs/`. Exact stage ordering, checkpoint/seal identities, all split commands,
 and the deterministic blinded audit workflow are documented in
-[`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md). Human primary
-free-generation scoring remains pending until real independent reviews exist.
+[`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md). Human
+free-generation scoring remains pending. Issue #28's sampled owner workflow is
+documented in
+[`docs/benchmark-v2-owner-review-v1.md`](docs/benchmark-v2-owner-review-v1.md);
+it does not replace issue #38's independent-review requirement.
 
 Run development generation for a hash-locked selected checkpoint:
 

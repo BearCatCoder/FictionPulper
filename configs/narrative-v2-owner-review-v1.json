@@ -1,0 +1,79 @@
+{
+  "version": "narrative-v2-owner-review-v1",
+  "benchmark_root": "benchmarks/narrative-v2",
+  "expected_population": 1792,
+  "expected_sample": 336,
+  "selection_seed": 280001,
+  "packet_order_seed": 280002,
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 260209,
+  "rubric_sha256": "7132055bd0019fe5c7a7f3df4cf3c40060fcb4e9353e6f92fcc521a328476c97",
+  "runs": [
+    {
+      "model": "compute5",
+      "model_id": "fictionpulper-15m-data30m-compute5",
+      "blinded_model_id": "baseline-a",
+      "split": "development",
+      "path": "runs/benchmark-v2/compute5/development/free-generation",
+      "raw_generations_sha256": "5751eeb5416b2d811c1618a2b67d6df4c29a46a0be655aa9039468b94a675cda",
+      "generation_manifest_sha256": "a345ef8636af0d2d2e17167c8ab825cca216c5ffa9d11af6ea08ba76152a3468",
+      "review_packet_sha256": "839f39741e652a42f101778db711393f7175653ee1e0e97e8488105f427551de",
+      "review_key_sha256": "60da9233412cb3b7cad0006d431482d7fdef985124eaa1aba7cfdf550bbb38a1"
+    },
+    {
+      "model": "compute5",
+      "model_id": "fictionpulper-15m-data30m-compute5",
+      "blinded_model_id": "baseline-a",
+      "split": "test",
+      "path": "runs/benchmark-v2/compute5/test/free-generation",
+      "raw_generations_sha256": "eda12cc92ab394bfd459e46e880caf77389a7bd76e34991dc6adc9318ec7ea57",
+      "generation_manifest_sha256": "64a0d70be6d3809ffa702c186d5cde7cfeae5363c54025f09aa708a2d7468d00",
+      "review_packet_sha256": "bcdb0a87a6ca0fc31c16130a2889f9d45f56d1f89839ae481279d55593f3dc71",
+      "review_key_sha256": "2a2e34d8ab4b3f696396e52b7b22a3d6dec81aa688cb37bb99a55d71a774dd9c"
+    },
+    {
+      "model": "compute5",
+      "model_id": "fictionpulper-15m-data30m-compute5",
+      "blinded_model_id": "baseline-a",
+      "split": "generalization",
+      "path": "runs/benchmark-v2/compute5/generalization/free-generation",
+      "raw_generations_sha256": "938d36ef5db52e82fcf703064366843c507373099ec806ea3de18de340660e4c",
+      "generation_manifest_sha256": "1c3eff6908e1601cdcf73a459934af8f28dd124c68848750d64825def4dc5421",
+      "review_packet_sha256": "a333f2db22d0dac4e99c5e713674b8a241256050d90b2198c08c84fb4f14598a",
+      "review_key_sha256": "8f3651ffb7d702438f732f635a8a379741df2112a520bd171fdc54844b436583"
+    },
+    {
+      "model": "50m",
+      "model_id": "fictionpulper-50m-data30m-v1",
+      "blinded_model_id": "baseline-b",
+      "split": "development",
+      "path": "runs/benchmark-v2/50m/development/free-generation",
+      "raw_generations_sha256": "1c60fda21eb72a38ab00c29d1ca59270de6770f7b5a0bdf216972daedd829544",
+      "generation_manifest_sha256": "f8c6a08e798b6802c4293bce4d9be5140163b8c05cfb27d71c28cf63ee587d58",
+      "review_packet_sha256": "9aad0e6b49817ad7a6f896f494ab792d069341d3fe303967790d28252b73f561",
+      "review_key_sha256": "02aa34b1092aa91631d5c8b2598d220671f3ee553b04a8a467d6f5cc1ef194ea"
+    },
+    {
+      "model": "50m",
+      "model_id": "fictionpulper-50m-data30m-v1",
+      "blinded_model_id": "baseline-b",
+      "split": "test",
+      "path": "runs/benchmark-v2/50m/test/free-generation",
+      "raw_generations_sha256": "9cd15c014010752f2a0b2f6a0349c3a689889434c82ee90ca10a9568ed18ae2c",
+      "generation_manifest_sha256": "8302e741b62eab97cefb3b53c564e9b44bc280ef7bb8f283eeea7f814ea35772",
+      "review_packet_sha256": "b5cfe401366a80a9e1aca6dd7829be02db617be0aee5f5a01f26e64a8292b37a",
+      "review_key_sha256": "33f3147813ffc762add957579ebb5556d2b08e7b5b6c3f4f349eea952b406f41"
+    },
+    {
+      "model": "50m",
+      "model_id": "fictionpulper-50m-data30m-v1",
+      "blinded_model_id": "baseline-b",
+      "split": "generalization",
+      "path": "runs/benchmark-v2/50m/generalization/free-generation",
+      "raw_generations_sha256": "1ce9016936925f4699184969cf6b7448ed14243b6d5d2fe2d42d6358cdaf0233",
+      "generation_manifest_sha256": "57cdfb429cc893bcd7706485419f212d11f60792b6b1b3992feeff39f38d5da2",
+      "review_packet_sha256": "5e704c969fff95c4ddd78ea445673d419c1f39130708a77d2df22e052e563a29",
+      "review_key_sha256": "afbb88b8e260261020450ea9402ef098a3886a0d0fc14a1db5878794f0d55aab"
+    }
+  ]
+}

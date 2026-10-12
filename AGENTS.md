@@ -66,9 +66,11 @@ The following distinctions are mandatory in code, reports, and status updates:
   Data100M pack, real-data preflight, or training handoff was produced. This is
   exact for evaluated supply, not an upper bound on all external sources.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
-  continuations; Scene Scorecard produced 40 base and 40 issue #9 candidate
-  outputs. Independent primary human scoring and adjudication have not been
-  completed for either evaluation.
+  continuations. Issue #28 preserves its deterministic 336-row Level A packet
+  and has generated the staged 80-row Stage 1 packet, but actual owner decisions
+  and scoring remain pending. Strict
+  independent Benchmark review is issue #38. Scene Scorecard produced 40 base
+  and 40 issue #9 candidate outputs; its independent review is also pending.
   Automated lexical diagnostics and spot audits are not primary human scores.
 - **Blocked future runs:** Corpus-v3 currently has zero admitted tokens under
   the corrected gates, no seal, and no packed data. Data100M training has not
@@ -79,6 +81,7 @@ Evidence is retained in:
 - [`experiments/fictionpulper-5m-smoke-v1/`](experiments/fictionpulper-5m-smoke-v1/README.md)
 - [`experiments/fictionpulper-50m-data30m-v1/`](experiments/fictionpulper-50m-data30m-v1/README.md)
 - [`docs/benchmark-v2-baselines.md`](docs/benchmark-v2-baselines.md)
+- [`docs/benchmark-v2-owner-review-v1.md`](docs/benchmark-v2-owner-review-v1.md)
 - [`docs/scene-scorecard-baseline.md`](docs/scene-scorecard-baseline.md)
 - [`experiments/fictionpulper-continuation-pilot-v1/`](experiments/fictionpulper-continuation-pilot-v1/README.md)
 - [`experiments/fictionpulper-50m-data30m-continuation-sft-v1/`](experiments/fictionpulper-50m-data30m-continuation-sft-v1/README.md)
@@ -103,8 +106,11 @@ approval, not independent validation.
    scorecard. Training completion, lower perplexity, or one cherry-picked output
    does not satisfy it.
 
-Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews
-and remains required for primary Benchmark v2 score claims.
+Issue [#28] owns the staged Level A single-owner Benchmark v2 sample. Stage 1 is
+80 rows from 20 matched quartet blocks; its review is pending. It is
+non-independent, exploratory evidence and cannot support agreement,
+adjudication, representativeness, power, or confirmatory claims. Strict
+independent Benchmark validation remains in [#38].
 
 Issues [#20], [#22], [#21], and [#24] are complete. Issue #21 stopped its
 two-source pilot with zero admitted tokens rather than weakening evidence gates.
@@ -135,6 +141,7 @@ Deferred work:
 [#25]: https://github.com/BearCatCoder/FictionPulper/issues/25
 [#27]: https://github.com/BearCatCoder/FictionPulper/issues/27
 [#28]: https://github.com/BearCatCoder/FictionPulper/issues/28
+[#38]: https://github.com/BearCatCoder/FictionPulper/issues/38
 
 ## Integrity Rules
 
