@@ -1,0 +1,115 @@
+{
+  "report_id": "fictionpulper-corpus-v3-seal-disposition-v1",
+  "version": 1,
+  "status": "stop_complete_no_approved_corpus",
+  "inputs": {
+    "blocker_report": {
+      "path": "experiments/fictionpulper-corpus-v3-blockers-v1/blocker-report.json",
+      "sha256": "fe5e0b2037b7aacc0bb7bbdebcafc7db57be766c077d7b9c84178af3d9eb5e63"
+    },
+    "data100m_config": {
+      "path": "configs/data100m-50m-v1.yaml",
+      "sha256": "9a8c6b63a93455a48e8380d748d5293f6faf2967928a4507b54b08ca0af344b6"
+    },
+    "data100m_preflight": {
+      "path": "src/data100m_preflight.py",
+      "sha256": "45703b70740b1bdc296bd99209cdbeec713865011f361da07b0bf0abfd4278c6"
+    },
+    "report_builder": {
+      "path": "src/report_corpus_v3_seal_disposition.py",
+      "sha256": "82837623e0f212fe3a4874a78d2fceb1da45a20cbc8c0b9baeae8244fc16ded3"
+    },
+    "source_pilot_inventory": {
+      "path": "experiments/fictionpulper-corpus-v3-source-pilot-v1/candidate-inventory.jsonl",
+      "sha256": "d36d727d229c9e874219379f016813bc0fe193870a0a31ebc0630d112d64ab86"
+    },
+    "source_pilot_report": {
+      "path": "experiments/fictionpulper-corpus-v3-source-pilot-v1/source-yield-report.json",
+      "sha256": "616033fe00a5dcc5cc2c1eeb8b2a3d72bae21bfacfb0d29bd42a9f3c7680e6af"
+    },
+    "tokenizer": {
+      "path": "data/tokenizer/tokenizer.json",
+      "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+    }
+  },
+  "approved_supply": {
+    "records": 0,
+    "tokenizer_v1_document_tokens": 0,
+    "incremental_unique_records_vs_data30m": 0,
+    "incremental_unique_tokens_vs_data30m": 0,
+    "qualification": "This is the exact approved supply from the evaluated base and bounded two-source pilot, not an upper bound on all possible external supply."
+  },
+  "evidence": {
+    "corrected_base": {
+      "candidate_records": 4362,
+      "approved_records": 0,
+      "approved_tokens": 0,
+      "rejected_by_first_reason": {
+        "incomplete_rights_evidence": 2521,
+        "invalid_schema": 1841
+      },
+      "failed_required_gates": [
+        "author_concentration",
+        "collection_concentration",
+        "deterministic_review",
+        "genre_distribution",
+        "metadata_provenance",
+        "quality",
+        "rights_evidence",
+        "schema",
+        "source_hashes",
+        "split_leakage",
+        "story_boundaries",
+        "token_accounting"
+      ]
+    },
+    "bounded_source_pilot": {
+      "gross_records": 174,
+      "gross_tokens": 204805,
+      "approved_records": 0,
+      "approved_tokens": 0,
+      "action": "stop_selected_sources"
+    }
+  },
+  "artifact_disposition": {
+    "canonical_membership_frozen": false,
+    "approved_training_split_frozen": false,
+    "corpus_v3_seal_written": false,
+    "data100m_pack_written": false,
+    "forbidden_artifacts_verified_absent": [
+      "data/corpus_v3/seal.json",
+      "data/packed/corpus-v3-data100m/metadata.json",
+      "data/packed/corpus-v3-data100m/train.bin",
+      "data/packed/corpus-v3-data100m/train.index.json",
+      "data/packed/corpus-v3-data100m/validation.bin",
+      "data/packed/corpus-v3-data100m/validation.index.json",
+      "data/packed/corpus-v3-data100m/test.bin",
+      "data/packed/corpus-v3-data100m/test.index.json"
+    ],
+    "reason": "A zero-record corpus cannot pass the required nonempty gates or support training."
+  },
+  "preflight_disposition": {
+    "data100m_status": "prepared_blocked_on_corpus_v3",
+    "unset_data_hash_locks": [
+      "expected_corpus_sha256",
+      "expected_split_sha256",
+      "expected_packed_metadata_sha256"
+    ],
+    "real_data_preflight_run": false,
+    "reason": "The fail-closed preflight requires a valid seal, corpus and split hashes, packed metadata, binaries, indexes, and a locked schedule; none may be created from zero approved records."
+  },
+  "experiment_decision": {
+    "action": "no_go_data_scaling",
+    "data50m_supported": false,
+    "data100m_supported": false,
+    "training_issue_created": false,
+    "common_test_membership_audit_run": false,
+    "reason": "There is no candidate training membership to compare against both historical training sets, and no approved data increase to justify a scaling experiment."
+  },
+  "reopen_conditions": [
+    "A future bounded acquisition decision supplies a nonempty approved canonical corpus.",
+    "Every corrected rights, provenance, boundary, quality, diversity, duplicate, review, split, tokenizer, and hash-chain gate passes.",
+    "The actual attained size is accepted under truthful corpus and experiment naming.",
+    "A proposed common test split is audited against both historical baseline training memberships and the new candidate membership."
+  ]
+}

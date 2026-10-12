@@ -14,9 +14,12 @@ From the repository root:
 .venv/bin/python -m src.corpus_v3 --config configs/corpus-v3.yaml
 .venv/bin/python -m src.report_corpus_v3_blockers \
   --config configs/corpus-v3-blockers-v1.yaml
+.venv/bin/python -m src.report_corpus_v3_seal_disposition \
+  --config configs/corpus-v3-seal-disposition-v1.yaml
 .venv/bin/python -m unittest tests.test_corpus_v3 tests.test_corpus_v2 \
   tests.test_audit_corpus_v2 tests.test_dataset \
-  tests.test_report_corpus_v3_blockers
+  tests.test_report_corpus_v3_blockers \
+  tests.test_report_corpus_v3_seal_disposition
 ```
 
 The committed config has no external inventories. It is intentionally a safe
@@ -100,6 +103,16 @@ incremental unique yield is zero and the decision is to stop those catalogs.
 Its metadata-only candidate inventory contains hashes and locators, never
 downloaded story text.
 
-The repository still has no nonempty approved Corpus-v3 inventory. Issue #24
-remains blocked until a future evidence-backed source decision produces one and
-every corrected gate passes. Thresholds and safeguards remain unchanged.
+Issue #24's final
+[`fictionpulper-corpus-v3-seal-disposition-v1`](../experiments/fictionpulper-corpus-v3-seal-disposition-v1/README.md)
+reconciles those completed inputs and records exact approved supply of zero
+records and zero tokens, including zero incremental unique content versus
+Data30M. It therefore completes with `no_go_data_scaling`: no canonical
+membership or approved training split was frozen, no canonical seal or
+configured Data100M pack was produced, no real-data preflight ran, and no
+training issue was justified. The corrected audit's zero-member diagnostic
+split is not a training split. This exact zero covers the evaluated base and
+two-source pilot; it is not an upper bound on all possible external supply.
+Future corpus recovery requires a new bounded acquisition decision and a
+nonempty inventory that passes every corrected gate. Thresholds and safeguards
+remain unchanged.

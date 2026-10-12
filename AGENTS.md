@@ -59,6 +59,12 @@ The following distinctions are mandatory in code, reports, and status updates:
   is zero. The frozen decision is `stop_selected_sources`; this is measured
   negative evidence, not an approved inventory or proof that all external yield
   is zero.
+- **Completed Corpus-v3 seal disposition:** issue #24 reconciled the corrected
+  base and bounded source-pilot evidence and recorded exact approved supply of
+  zero records and tokens. The frozen decision is `no_go_data_scaling`; no
+  canonical membership, approved training split, canonical seal, configured
+  Data100M pack, real-data preflight, or training handoff was produced. This is
+  exact for evaluated supply, not an upper bound on all external sources.
 - **Pending human review:** Benchmark v2 baseline generation produced 1,792
   continuations; Scene Scorecard produced 40 base and 40 issue #9 candidate
   outputs. Independent primary human scoring and adjudication have not been
@@ -79,6 +85,7 @@ Evidence is retained in:
 - [`docs/corpus-v3.md`](docs/corpus-v3.md)
 - [`experiments/fictionpulper-corpus-v3-blockers-v1/`](experiments/fictionpulper-corpus-v3-blockers-v1/README.md)
 - [`experiments/fictionpulper-corpus-v3-source-pilot-v1/`](experiments/fictionpulper-corpus-v3-source-pilot-v1/README.md)
+- [`experiments/fictionpulper-corpus-v3-seal-disposition-v1/`](experiments/fictionpulper-corpus-v3-seal-disposition-v1/README.md)
 - [`experiments/fictionpulper-50m-data100m-v1/`](experiments/fictionpulper-50m-data100m-v1/README.md)
 
 ## Recovery Order
@@ -99,10 +106,12 @@ approval, not independent validation.
 Issue [#28] coordinates the outstanding independent Benchmark v2 human reviews
 and remains required for primary Benchmark v2 score claims.
 
-Issues [#20], [#22], and [#21] are complete. Issue #21 stopped its two-source
-pilot with zero admitted tokens rather than weakening evidence gates. Issue #24
-remains blocked until a future decision supplies a nonempty approved corpus that
-passes every corrected gate; the measured #21 result does not unblock sealing.
+Issues [#20], [#22], [#21], and [#24] are complete. Issue #21 stopped its
+two-source pilot with zero admitted tokens rather than weakening evidence gates.
+Issue #24 then applied its stop condition and recorded `no_go_data_scaling`
+without sealing or packing. Any future corpus recovery requires a new bounded
+acquisition decision that supplies a nonempty approved corpus passing every
+corrected gate.
 Corpus recovery is not a prerequisite for the completed first continuation-SFT
 pilot.
 

@@ -1,0 +1,45 @@
+version: 1
+report_id: fictionpulper-corpus-v3-seal-disposition-v1
+output_path: experiments/fictionpulper-corpus-v3-seal-disposition-v1/disposition.json
+
+inputs:
+  report_builder:
+    path: src/report_corpus_v3_seal_disposition.py
+    sha256: 82837623e0f212fe3a4874a78d2fceb1da45a20cbc8c0b9baeae8244fc16ded3
+  blocker_report:
+    path: experiments/fictionpulper-corpus-v3-blockers-v1/blocker-report.json
+    sha256: fe5e0b2037b7aacc0bb7bbdebcafc7db57be766c077d7b9c84178af3d9eb5e63
+  source_pilot_report:
+    path: experiments/fictionpulper-corpus-v3-source-pilot-v1/source-yield-report.json
+    sha256: 616033fe00a5dcc5cc2c1eeb8b2a3d72bae21bfacfb0d29bd42a9f3c7680e6af
+  source_pilot_inventory:
+    path: experiments/fictionpulper-corpus-v3-source-pilot-v1/candidate-inventory.jsonl
+    sha256: d36d727d229c9e874219379f016813bc0fe193870a0a31ebc0630d112d64ab86
+  data100m_config:
+    path: configs/data100m-50m-v1.yaml
+    sha256: 9a8c6b63a93455a48e8380d748d5293f6faf2967928a4507b54b08ca0af344b6
+  data100m_preflight:
+    path: src/data100m_preflight.py
+    sha256: 45703b70740b1bdc296bd99209cdbeec713865011f361da07b0bf0abfd4278c6
+  tokenizer:
+    path: data/tokenizer/tokenizer.json
+    sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+
+artifacts_that_must_be_absent:
+  - data/corpus_v3/seal.json
+  - data/packed/corpus-v3-data100m/metadata.json
+  - data/packed/corpus-v3-data100m/train.bin
+  - data/packed/corpus-v3-data100m/train.index.json
+  - data/packed/corpus-v3-data100m/validation.bin
+  - data/packed/corpus-v3-data100m/validation.index.json
+  - data/packed/corpus-v3-data100m/test.bin
+  - data/packed/corpus-v3-data100m/test.index.json
+
+expected:
+  base_candidate_records: 4362
+  base_approved_records: 0
+  base_approved_tokens: 0
+  source_pilot_gross_records: 174
+  source_pilot_gross_tokens: 204805
+  source_pilot_approved_records: 0
+  source_pilot_approved_tokens: 0
