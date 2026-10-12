@@ -12,8 +12,11 @@ From the repository root:
 
 ```bash
 .venv/bin/python -m src.corpus_v3 --config configs/corpus-v3.yaml
+.venv/bin/python -m src.report_corpus_v3_blockers \
+  --config configs/corpus-v3-blockers-v1.yaml
 .venv/bin/python -m unittest tests.test_corpus_v3 tests.test_corpus_v2 \
-  tests.test_audit_corpus_v2 tests.test_dataset
+  tests.test_audit_corpus_v2 tests.test_dataset \
+  tests.test_report_corpus_v3_blockers
 ```
 
 The committed config has no external inventories. It is intentionally a safe
@@ -29,8 +32,13 @@ Each inventory row describes one already bounded story. Required fields are
 `boundary_evidence`, and `genres`. Creator, genre, and known-publication-year
 claims must carry explicit evidence; an unknown publication year remains
 explicitly `unknown` and is never inferred from an ebook issue date.
+Controlled genres must be supported by a configured source term or by an
+attributable, dated `reviewed_mappings` decision; a label alone is not evidence.
+Evidence dates are checked against the config's frozen `evidence_cutoff_date`,
+not the wall clock, so identical inputs retain identical audit outcomes.
 `source_sha256` pins the exact downloadable
-story bytes. Rights evidence contains `basis`, `evidence_url`, and `checked_at`;
+story bytes. Rights evidence contains `basis`, `evidence_url`, `checked_at`, and
+`checked_by`;
 boundary evidence contains a method and `confidence: high`. Whole books or
 collections without trustworthy story boundaries are not silently split.
 
@@ -54,8 +62,10 @@ collections without trustworthy story boundaries are not silently split.
 - Source collections and fuzzy duplicate clusters are indivisible split groups.
   The generated split audit must report no collection or duplicate leakage.
 - A deterministic sample covers every observed genre and source plus high/low
-  dialogue strata. Its IDs must exactly equal `approved_sample_ids`; pending or
-  stale review blocks freezing.
+  dialogue strata. Its complete canonical records are SHA-256 locked, and every
+  approval must record a reviewer, review date, decision, and notes. Missing,
+  stale, duplicate, unexpected, unattributed, or content-mismatched decisions
+  block freezing.
 - Stage reports are written under `data/corpus_v3/stages/`. Final reports include
   `stats.json`, `audits.json`, `manifest.json`, split assignments, rejections,
   and duplicate evidence. `stats.json` records `exact_actual_token_count` and
@@ -65,21 +75,24 @@ collections without trustworthy story boundaries are not silently split.
   `stop_reason: compliant_supply_exhausted`; failed gates produce reports but no
   seal. An existing seal is never overwritten.
 
-## Current Limitation
+## Current Disposition
 
 No new-source Corpus-v3 acquisition was run for this implementation, and no
-100M result is claimed. A local feasibility pass using only the hash-locked
-Corpus-v2 input completed twice with the same canonical SHA-256
-`3c98f3f67afe395225949868d13044e3a226e87607edfd132a72344a288b88d0`.
-It found 1,947 individually eligible stories and exactly 14,923,683
-tokenizer-v1 document tokens. It stopped with
-`candidate_supply_exhausted_with_audit_failures` and did not write a seal:
-unclassified material was 57.04% of tokens versus the 35% cap, and the
-deterministic 32-story review remains pending. Rights/source-hash, exact and
-near-duplicate, metadata provenance, boundary, quality, author/collection
-concentration, token accounting, and collection/duplicate split-leakage gates
-passed; unresolved near duplicate clusters and cross-split leaks were both zero.
+100M result is claimed. The historical issue #20 feasibility pass retained
+1,947 stories and 14,923,683 tokens, with 57.04% unclassified and 32 provisional
+review records. Issue #22 demonstrated that its rights gate synthesized
+`inherited_source_assertion` as a review date and that its token and split audit
+checks were not independent. That 14,923,683-token result remains historical
+shortfall evidence, not a currently eligible corpus.
+
+The corrected base-only rerun considered the same 4,362 candidates and admitted
+none. Exactly 1,841 retain the first failure `invalid_schema`; the other 2,521
+now fail `incomplete_rights_evidence`. No review approvals or genre labels were
+invented, no `seal.json` was written, and gates requiring a nonempty admitted
+corpus remain failed or unevaluable. The machine-readable disposition is
+[`fictionpulper-corpus-v3-blockers-v1`](../experiments/fictionpulper-corpus-v3-blockers-v1/README.md).
 
 The repository does not yet contain a reviewed, hash-pinned external inventory
-large enough to establish attainable v3 supply. The next data task is source
-review and inventory construction, not relaxing the freeze gates.
+large enough to establish attainable v3 supply. Issue #21 owns evidence-backed
+source expansion, final membership, and the genuine review inputs needed before
+issue #24 can seal or pack anything. Thresholds and safeguards remain unchanged.

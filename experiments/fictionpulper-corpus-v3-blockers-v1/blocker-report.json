@@ -1,0 +1,256 @@
+{
+  "report_id": "fictionpulper-corpus-v3-blockers-v1",
+  "version": 1,
+  "status": "disposition_complete_unsealed",
+  "inputs": {
+    "corpus_v2": {
+      "path": "data/corpus_v2/corpus.jsonl",
+      "sha256": "0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087"
+    },
+    "corpus_v3_builder": {
+      "path": "src/corpus_v3.py",
+      "sha256": "c4d1e83f5fcd425d380623ed0895bfe69eee9665d7855a2107056c6699d1fbbe"
+    },
+    "corpus_v3_config": {
+      "path": "configs/corpus-v3.yaml",
+      "sha256": "d14673dc9c4ccaf950fc4c9e824796ed27f3e12febea9c28a2c5b92efa43360b"
+    },
+    "corpus_v3_review": {
+      "path": "configs/corpus-v3-review.yaml",
+      "sha256": "d1c27eeb54816eed98017b7b6eae68719fbe1027c627135b0e664b26e424cc46"
+    },
+    "corrected_acquisition_failures": {
+      "path": "data/corpus_v3/acquisition-failures.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corrected_attainable_stage": {
+      "path": "data/corpus_v3/stages/attainable.json",
+      "sha256": "914e4eaa9305f44459219b9617bb1b3a484d30cf4ed09e36ce7da03b62c7aa0f"
+    },
+    "corrected_audits": {
+      "path": "data/corpus_v3/audits.json",
+      "sha256": "188789b030b09af03649e480dd41c40d3daa68bb5b102917476bba82f1c1f1f8"
+    },
+    "corrected_corpus": {
+      "path": "data/corpus_v3/corpus.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corrected_manifest": {
+      "path": "data/corpus_v3/manifest.json",
+      "sha256": "ea6b06b3ca587c3e337f8cd3e30256a5af779006e533f667f8171f3e27e4e29b"
+    },
+    "corrected_near_duplicate_candidates": {
+      "path": "data/corpus_v3/near-duplicate-candidates.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corrected_near_duplicate_clusters": {
+      "path": "data/corpus_v3/near-duplicate-clusters.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corrected_rejections": {
+      "path": "data/corpus_v3/rejections.jsonl",
+      "sha256": "45096e8251024a3d73aef73a5f5f1398df00a006e791bb19d0f2a4b43f0058ec"
+    },
+    "corrected_source_artifacts": {
+      "path": "data/corpus_v3/source-artifacts.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "corrected_splits": {
+      "path": "data/corpus_v3/splits.json",
+      "sha256": "b656668a3c256c7210b920384a34397bbbed6f6b0426f5f955605abac75ac7f2"
+    },
+    "corrected_stats": {
+      "path": "data/corpus_v3/stats.json",
+      "sha256": "0a4cc78381ea5cd4c21fb491420af9d270c4a821b742264bede5079461391d08"
+    },
+    "historical_shortfall_report": {
+      "path": "experiments/fictionpulper-corpus-v3-shortfall-v1/shortfall-report.json",
+      "sha256": "c09e0a1c07182ac6a900b94566004cedcf6bba2e68271a8fd321d94952ce0424"
+    },
+    "tokenizer": {
+      "path": "data/tokenizer/tokenizer.json",
+      "sha256": "14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012"
+    }
+  },
+  "before_correction": {
+    "retained_records": 1947,
+    "retained_tokens": 14923683,
+    "failed_required_gates": [
+      "deterministic_review",
+      "genre_distribution"
+    ],
+    "unclassified_token_share": 0.5704083234681412,
+    "pending_review_records": 32,
+    "qualification": "Historical rights and token-accounting pass claims were invalidated by issue #22 defects."
+  },
+  "after_correction": {
+    "candidate_records": 4362,
+    "retained_records": 0,
+    "retained_tokens": 0,
+    "rejected_records": 4362,
+    "rejection_records_by_first_reason": {
+      "incomplete_rights_evidence": 2521,
+      "invalid_schema": 1841
+    },
+    "failed_required_gates": [
+      "author_concentration",
+      "collection_concentration",
+      "deterministic_review",
+      "genre_distribution",
+      "metadata_provenance",
+      "quality",
+      "rights_evidence",
+      "schema",
+      "source_hashes",
+      "split_leakage",
+      "story_boundaries",
+      "token_accounting"
+    ],
+    "status": "stopped_audit_failures",
+    "stop_reason": "candidate_supply_exhausted_with_audit_failures",
+    "freeze_ready": false,
+    "seal_written": false,
+    "gate_summary": {
+      "acquisition_complete": {
+        "passed": true,
+        "failed_sources": 0
+      },
+      "schema": {
+        "passed": false
+      },
+      "rights_evidence": {
+        "passed": false
+      },
+      "source_hashes": {
+        "passed": false
+      },
+      "metadata_provenance": {
+        "passed": false
+      },
+      "exact_duplicates": {
+        "passed": true
+      },
+      "near_duplicates": {
+        "passed": true,
+        "unresolved_clusters": 0
+      },
+      "story_boundaries": {
+        "passed": false
+      },
+      "quality": {
+        "passed": false
+      },
+      "author_concentration": {
+        "passed": false,
+        "metrics": {
+          "unique_count": 0,
+          "largest_token_share": 1.0,
+          "largest_story_share": 1.0,
+          "top_10_token_share": 1.0,
+          "top_20_token_share": 1.0
+        }
+      },
+      "collection_concentration": {
+        "passed": false,
+        "metrics": {
+          "unique_count": 0,
+          "largest_token_share": 1.0,
+          "largest_story_share": 1.0,
+          "top_10_token_share": 1.0,
+          "top_20_token_share": 1.0
+        }
+      },
+      "genre_distribution": {
+        "passed": false,
+        "unclassified_token_share": 0.0,
+        "token_counts": {}
+      },
+      "deterministic_review": {
+        "passed": false,
+        "sample_ids": [],
+        "sample_records_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_sample_records_sha256": null,
+        "approved_ids": [],
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "invalid_decision_ids": [],
+        "duplicate_decision_ids": [],
+        "malformed_decision_entries": []
+      },
+      "split_leakage": {
+        "passed": false,
+        "missing_assignment_ids": [],
+        "unexpected_assignment_ids": [],
+        "invalid_split_ids": [],
+        "collection_leaks": [],
+        "near_duplicate_cluster_leaks": [],
+        "split_tokens": {
+          "train": 0,
+          "validation": 0,
+          "test": 0
+        },
+        "constraint_groups": 0
+      },
+      "token_accounting": {
+        "passed": false,
+        "exact_document_tokens": 0,
+        "assigned_document_tokens": 0,
+        "recomputed_document_tokens": 0,
+        "mismatched_record_ids": []
+      }
+    }
+  },
+  "failure_dispositions": {
+    "synthetic_rights_check": {
+      "classification": "software_defect_corrected",
+      "root_cause": "Missing review dates were replaced with inherited_source_assertion.",
+      "result": "2521 candidates now fail incomplete_rights_evidence instead of receiving synthetic evidence.",
+      "follow_up": "Issue #21 must supply attributable rights evidence tied to immutable source bytes."
+    },
+    "legacy_schema_and_provenance": {
+      "classification": "data_evidence_limitation",
+      "root_cause": "1841 legacy rows lack the complete v3 source, rights, and metadata schema.",
+      "result": "Rows remain excluded; no source evidence was invented.",
+      "follow_up": "Issue #21 may recover only hash-linked, rights-validated sources; unsupported seed rows remain unavailable."
+    },
+    "genre_distribution": {
+      "classification": "data_evidence_limitation_and_software_defect_corrected",
+      "root_cause": "Historical retained tokens were 57.0408% unclassified, and arbitrary labels were not rejected.",
+      "result": "Genres now use the controlled vocabulary; the corrected empty eligible set is not treated as passing.",
+      "follow_up": "Issue #21 must provide evidence-backed genre metadata and meet the unchanged 35% cap."
+    },
+    "deterministic_review": {
+      "classification": "pending_human_evidence_and_software_defect_corrected",
+      "root_cause": "The historical 32-record provisional sample had no human decisions; bare ID approvals lacked attribution.",
+      "result": "Review now content-hash-locks complete sample records and requires a per-record reviewer, date, decision, and notes.",
+      "follow_up": "Issue #21 must freeze final membership before genuine deterministic review; provisional IDs were not auto-approved."
+    },
+    "split_and_token_accounting": {
+      "classification": "software_defects_corrected",
+      "root_cause": "The audit trusted a supplied split result and compared token totals to themselves.",
+      "result": "Assignments, collection and fuzzy-cluster leakage, positive counts, split totals, and every tokenizer-v1 document count are independently reconciled.",
+      "follow_up": "Re-run on every issue #21 candidate catalog; any mismatch remains a sealing blocker."
+    }
+  },
+  "safeguards_retained": [
+    "immutable source hashes and acquisition failure blocking",
+    "allowed rights status plus explicit attributable evidence",
+    "high-confidence story boundaries",
+    "exact and transitive fuzzy duplicate controls",
+    "creator and collection concentration limits",
+    "quality and prohibited-text quarantine",
+    "controlled genre vocabulary and unchanged unclassified-token cap",
+    "collection and duplicate-cluster split isolation",
+    "tokenizer-v1 document-token reconciliation",
+    "content-hash-locked attributable deterministic review"
+  ],
+  "seal_conditions": [
+    "A nonempty approved candidate corpus passes every required gate.",
+    "Every accepted record has immutable source-byte, rights, boundary, creator, genre, and year evidence.",
+    "Final deterministic sample records are content-hash-locked and have genuine attributable approvals.",
+    "Unclassified tokens are at or below 35% without inferred or fabricated labels.",
+    "No exact duplicate or unresolved accepted fuzzy cluster remains.",
+    "No collection or duplicate cluster crosses splits and tokenizer-v1 totals reconcile.",
+    "Issue #21 reports actual unique-token yield; issue #24 remains blocked until all conditions pass."
+  ]
+}

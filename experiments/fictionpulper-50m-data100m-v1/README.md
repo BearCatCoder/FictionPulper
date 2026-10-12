@@ -28,13 +28,13 @@ capacity run is unique training data.
 
 ## Current Decision
 
-**Stop before training.** Corpus-v3 has no seal or packed data. Its documented
-base-only feasibility run reached 14,923,683 tokenizer-v1 document tokens and
-stopped with audit failures: 57.04% unclassified-token share exceeded the 35%
-limit and deterministic review remained pending. Consequently the exact corpus,
-split, packed hashes, schedule, exposure, and common clean LM comparison cannot
-yet be frozen. No Data100M model training, validation, checkpoint selection, or
-held-out evaluation occurred.
+**Stop before training.** Corpus-v3 has no seal or packed data. Issue #22
+invalidated the historical 14,923,683-token retained set's rights eligibility
+and corrected non-independent split/token checks. The corrected base-only rerun
+admits zero records: 1,841 fail schema/provenance and 2,521 fail attributable
+rights evidence. Consequently the exact corpus, split, packed hashes, schedule,
+exposure, and common clean LM comparison cannot be frozen. No Data100M model
+training, validation, checkpoint selection, or held-out evaluation occurred.
 
 The preflight deliberately fails closed until those values exist:
 

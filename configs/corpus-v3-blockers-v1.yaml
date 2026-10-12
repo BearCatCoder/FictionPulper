@@ -1,0 +1,79 @@
+version: 1
+report_id: fictionpulper-corpus-v3-blockers-v1
+output_path: experiments/fictionpulper-corpus-v3-blockers-v1/blocker-report.json
+seal_path: data/corpus_v3/seal.json
+
+inputs:
+  historical_shortfall_report:
+    path: experiments/fictionpulper-corpus-v3-shortfall-v1/shortfall-report.json
+    sha256: c09e0a1c07182ac6a900b94566004cedcf6bba2e68271a8fd321d94952ce0424
+  corpus_v3_config:
+    path: configs/corpus-v3.yaml
+    sha256: d14673dc9c4ccaf950fc4c9e824796ed27f3e12febea9c28a2c5b92efa43360b
+  corpus_v3_review:
+    path: configs/corpus-v3-review.yaml
+    sha256: d1c27eeb54816eed98017b7b6eae68719fbe1027c627135b0e664b26e424cc46
+  corpus_v3_builder:
+    path: src/corpus_v3.py
+    sha256: c4d1e83f5fcd425d380623ed0895bfe69eee9665d7855a2107056c6699d1fbbe
+  corpus_v2:
+    path: data/corpus_v2/corpus.jsonl
+    sha256: 0fb5e5080b3c4ee26ea178201d349d6947052f664f2bc415b5a1b9219d496087
+  tokenizer:
+    path: data/tokenizer/tokenizer.json
+    sha256: 14d4abefa49a742dfdf62dbcb84223016ad6a9241362ac093d624161a00f7012
+  corrected_audits:
+    path: data/corpus_v3/audits.json
+    sha256: 188789b030b09af03649e480dd41c40d3daa68bb5b102917476bba82f1c1f1f8
+  corrected_stats:
+    path: data/corpus_v3/stats.json
+    sha256: 0a4cc78381ea5cd4c21fb491420af9d270c4a821b742264bede5079461391d08
+  corrected_rejections:
+    path: data/corpus_v3/rejections.jsonl
+    sha256: 45096e8251024a3d73aef73a5f5f1398df00a006e791bb19d0f2a4b43f0058ec
+  corrected_manifest:
+    path: data/corpus_v3/manifest.json
+    sha256: ea6b06b3ca587c3e337f8cd3e30256a5af779006e533f667f8171f3e27e4e29b
+  corrected_corpus:
+    path: data/corpus_v3/corpus.jsonl
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  corrected_splits:
+    path: data/corpus_v3/splits.json
+    sha256: b656668a3c256c7210b920384a34397bbbed6f6b0426f5f955605abac75ac7f2
+  corrected_source_artifacts:
+    path: data/corpus_v3/source-artifacts.jsonl
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  corrected_acquisition_failures:
+    path: data/corpus_v3/acquisition-failures.jsonl
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  corrected_near_duplicate_candidates:
+    path: data/corpus_v3/near-duplicate-candidates.jsonl
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  corrected_near_duplicate_clusters:
+    path: data/corpus_v3/near-duplicate-clusters.jsonl
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  corrected_attainable_stage:
+    path: data/corpus_v3/stages/attainable.json
+    sha256: 914e4eaa9305f44459219b9617bb1b3a484d30cf4ed09e36ce7da03b62c7aa0f
+
+expected_corrected:
+  candidate_records: 4362
+  retained_records: 0
+  retained_tokens: 0
+  rejected_records: 4362
+  rejection_records_by_first_reason:
+    incomplete_rights_evidence: 2521
+    invalid_schema: 1841
+  failed_required_gates:
+    - author_concentration
+    - collection_concentration
+    - deterministic_review
+    - genre_distribution
+    - metadata_provenance
+    - quality
+    - rights_evidence
+    - schema
+    - source_hashes
+    - split_leakage
+    - story_boundaries
+    - token_accounting
